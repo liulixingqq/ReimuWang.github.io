@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/myLogo.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在《图解设计模式》一书中，Command模式被归入了第10部分用类来表现。在GoF原书中，Command模式则被归入了行为型设计模式。">
+<meta name="keywords" content="Java,设计模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 设计模式-22.Command模式">
+<meta property="og:url" content="http://yoursite.com/2018/09/07/Java 设计模式-22Command模式/index.html">
+<meta property="og:site_name" content="ReimuWang&#39;s Blog">
+<meta property="og:description" content="在《图解设计模式》一书中，Command模式被归入了第10部分用类来表现。在GoF原书中，Command模式则被归入了行为型设计模式。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/22Command模式/0.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/22Command模式/1.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/22Command模式/2.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/22Command模式/3.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/22Command模式/4.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/22Command模式/5.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/22Command模式/6.jpg">
+<meta property="og:updated_time" content="2018-09-07T11:12:19.765Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 设计模式-22.Command模式">
+<meta name="twitter:description" content="在《图解设计模式》一书中，Command模式被归入了第10部分用类来表现。在GoF原书中，Command模式则被归入了行为型设计模式。">
+<meta name="twitter:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/22Command模式/0.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="ReimuWang's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/07/Java 设计模式-22Command模式/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java 设计模式-22.Command模式 | ReimuWang's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ReimuWang's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">189</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">117</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类<span class="badge">24</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404.html" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />公益 404</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+    
+      
+    
+    <a href="https://github.com/ReimuWang" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#222; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg>
+    
+      </a>
+    
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/07/Java 设计模式-22Command模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王艺凯">
+      <meta itemprop="description" content="Thou Shalt Comment">
+      <meta itemprop="image" content="/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ReimuWang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java 设计模式-22.Command模式
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-09-07 10:10:49 / 修改时间：19:12:19" itemprop="dateCreated datePublished" datetime="2018-09-07T10:10:49+08:00">2018-09-07</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java-设计模式/" itemprop="url" rel="index"><span itemprop="name">Java 设计模式</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在《图解设计模式》一书中，Command模式被归入了第10部分<a href="">用类来表现</a>。在GoF原书中，Command模式则被归入了<a href="">行为型设计模式</a>。</p>
+<a id="more"></a>
+<h1 id="综述"><a href="#综述" class="headerlink" title="综述"></a>综述</h1><p>在<a href="">19.State模式</a>中，我们介绍了用类来描述状态。今天我们介绍另一个可以用类来描述的相对抽象的概念：命令。</p>
+<p>宏观的说，一个类与其他类的关系可以归为两种：</p>
+<ul>
+<li>向其他类发出命令促使其他类发生变化。</li>
+<li>接到来自其他类的指令自身发生变化。</li>
+</ul>
+<p>通常来说，系统只会记录变化的结果，而不会记录变化的过程。换句话说，当我们在某个时间点对系统进行查询时，通常只能查到系统在当前时间的静态状态，也就是因命令导致的结果，而无法查知变化的过程。虽然程序一般都会把这个过程记录在日志中，但从严格的意义上来讲，日志文件已经不属于系统本身了。</p>
+<p>变化过程本身无法记录，但是如果我们将触发变化的命令作为对象记录下来呢？</p>
+<p>假设我们要画一系列的点(这也是本文的示例程序，先简要描述下)，通常来说，我们会告诉绘图实例：在位置p1绘制一个半径为r1，颜色为c1的点！绘图实例就赶紧按要求画了一个点。我们再说：在位置p2绘制一个半径为r2，颜色为c2的点！绘图程序赶紧又画了一个。最终我们得到了绘制着两个点的画布。但是触发绘制这两个点的命令却丢失了：因为我们根本不曾记录。</p>
+<p>如果我们将这两个命令记录下来，形成表示命令的实例：</p>
+<ul>
+<li>命令1：在位置p1绘制一个半径为r1，颜色为c1的点！</li>
+<li>命令2：在位置p2绘制一个半径为r2，颜色为c2的点！</li>
+</ul>
+<p>这样我们便算是将一个抽象的变化存储为了相对具体的实体。一旦完成了存储，我们可做的事一下子就变多了：</p>
+<ol>
+<li>引入命令后，类A将从直接调用类B转化为制造一条命令，而后执行这条命令：这就使得类A与类B之间完成了解耦。</li>
+<li>接上条，这种解耦并不仅仅是空间上的，同样还可以是时间上的，如果对命令结果的需求没那么迫切，类A完全可以只负责制造命令，而后就可以继续做自己的事了。这使得命令的执行变成了异步的。</li>
+<li>继续接上条，一旦命令的执行变为异步，就意味着我们可以把待执行的命令存储起来，形成一个指令集。在需要的时候统一执行。</li>
+<li><a href="">18.Memento模式</a>可以让我们进行存档与恢复。其做法就是把某个时间点的对象像拍照那样存储下来，而后在需要时再进行恢复；引入命令后，我们也可以做到类似的事，比如某实例最初处于初始状态，而后经过了命令1，2，3后变为了状态2。如果我们想要记录状态2，方法之一自然是使用<a href="">18.Memento模式</a>将状态2照下来。但我们同样也可以存储命令1，2，3。当我们需要状态2时，我们只需要再找一个处于初始状态的实例，而后再按顺序执行一遍命令1，2，3即可。</li>
+<li>接上条，很显然，如果要使用命令集来制作存档的话，在恢复存档时通常要比拍快照更花时间。</li>
+</ol>
+<p>将这种”引入命令”的思想理论化后，得到的就是Command模式啦。有时，我们也会将命令称为事件(event)，它与”事件驱动编程”中的”事件”的含义是相同的。我们会在GUI编程中大量的用到事件：点击一次鼠标是一个事件，按下键盘上的一个按键是一个事件。而每个事件其实都可以视为一个指令，以促使系统发生相应的变化。</p>
+<h1 id="示例程序需求分析"><a href="#示例程序需求分析" class="headerlink" title="示例程序需求分析"></a>示例程序需求分析</h1><p>下面我们就来设计一个应用了Command模式的小例子吧。这是一个使用Java Swing技术实现的画图小程序。启动时的初始面板为：</p>
+<p><img src="/images/blog_pic/Java 设计模式/22Command模式/0.jpg" alt="0.jpg"></p>
+<p>区域介绍：</p>
+<p><img src="/images/blog_pic/Java 设计模式/22Command模式/1.jpg" alt="1.jpg"></p>
+<p>默认画笔粗细为10(画笔形成的点的半径为10个像素)，默认颜色为黑色，在画布上按住鼠标左键拖动即可绘制图形。下图为使用初始参数绘制一条线：</p>
+<p><img src="/images/blog_pic/Java 设计模式/22Command模式/2.jpg" alt="2.jpg"></p>
+<p>然后我们调整画笔粗细为5，颜色为绿，在线的下面再画一个圈：</p>
+<p><img src="/images/blog_pic/Java 设计模式/22Command模式/3.jpg" alt="3.jpg"></p>
+<p>点击”清空”按钮后，画布会被清空。不过画笔颜色及粗细不会恢复为默认值。例如我们可以撤销部分绘制圆的操作：</p>
+<p><img src="/images/blog_pic/Java 设计模式/22Command模式/4.jpg" alt="4.jpg"></p>
+<p>点击”撤销”按钮可以让我们撤销一次操作，即取消绘制一个点。不过并不会撤销对画笔颜色及粗细的选择。</p>
+<p>点击”保存”按钮可以将当前画布上的图形保存到文件中。此后可以通过点击”读取”按钮恢复此前保存的图形。</p>
+<p>功能基本就是这么多，最后附上一幅我用这个程序画的一幢好丑好丑的房子，哈哈哈：</p>
+<p><img src="/images/blog_pic/Java 设计模式/22Command模式/5.jpg" alt="5.jpg"></p>
+<h1 id="示例程序"><a href="#示例程序" class="headerlink" title="示例程序"></a>示例程序</h1><p>本程序中的所有代码将被统一置于design22包下，结构如下：</p>
+<p><img src="/images/blog_pic/Java 设计模式/22Command模式/6.jpg" alt="6.jpg"></p>
+<p>下面将逐个贴出每个类的源码。</p>
+<p>首先介绍command包里的类，顾名思义，这个包下自然全都是命令啦。</p>
+<p><strong>Command接口</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">package design22.command;</span><br><span class="line"></span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">public interface Command &#123;</span><br><span class="line"></span><br><span class="line">    void execute();</span><br><span class="line"></span><br><span class="line">    List&lt;String&gt; strList();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Command是最顶层的命令接口。内部只有两个方法。其中execute()表示执行命令。而strList()则会将命令转换为字符串以用于存档。之所以返回类型是List，是因为实际实现Command接口的命令有可能并非单独一条指令，而是一个指令集。</p>
+<p><strong>MacroCommand类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line">package design22.command;</span><br><span class="line"></span><br><span class="line">import java.awt.Color;</span><br><span class="line">import java.awt.Point;</span><br><span class="line">import java.io.BufferedReader;</span><br><span class="line">import java.io.BufferedWriter;</span><br><span class="line">import java.io.File;</span><br><span class="line">import java.io.FileInputStream;</span><br><span class="line">import java.io.FileOutputStream;</span><br><span class="line">import java.io.InputStreamReader;</span><br><span class="line">import java.io.OutputStreamWriter;</span><br><span class="line">import java.util.ArrayList;</span><br><span class="line">import java.util.Iterator;</span><br><span class="line">import java.util.List;</span><br><span class="line">import java.util.Stack;</span><br><span class="line"></span><br><span class="line">import org.apache.commons.lang.StringUtils;</span><br><span class="line"></span><br><span class="line">import com.alibaba.fastjson.JSONObject;</span><br><span class="line"></span><br><span class="line">import design22.view.MyCanvas;</span><br><span class="line"></span><br><span class="line">public class MacroCommand implements Command &#123;</span><br><span class="line"></span><br><span class="line">    private Stack&lt;Command&gt; commands = new Stack&lt;Command&gt;();</span><br><span class="line"></span><br><span class="line">    private static final String SAVE = &quot;src/main/java/design22/save/save.txt&quot;;</span><br><span class="line"></span><br><span class="line">    private static final String ENCODING = &quot;UTF-8&quot;;</span><br><span class="line"></span><br><span class="line">    private MyCanvas canvas;</span><br><span class="line"></span><br><span class="line">    public MacroCommand(MyCanvas canvas) &#123;</span><br><span class="line">        this.canvas = canvas;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void execute() &#123;</span><br><span class="line">        Iterator&lt;Command&gt; iterator = this.commands.iterator();</span><br><span class="line">        while (iterator.hasNext()) iterator.next().execute();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void append(Command cmd) &#123;</span><br><span class="line">        if (this != cmd) this.commands.push(cmd);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void clear() &#123;</span><br><span class="line">        this.commands.clear();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void undo() &#123;</span><br><span class="line">        if (!this.commands.isEmpty()) this.commands.pop();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void save() &#123;</span><br><span class="line">        List&lt;String&gt; data = this.strList();</span><br><span class="line">        FileOutputStream fo = null;</span><br><span class="line">        OutputStreamWriter ow = null;</span><br><span class="line">        BufferedWriter bw = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            fo = new FileOutputStream(new File(MacroCommand.SAVE));</span><br><span class="line">            ow = new OutputStreamWriter(fo, MacroCommand.ENCODING);</span><br><span class="line">            bw = new BufferedWriter(ow);</span><br><span class="line">            for (String str : data) &#123;</span><br><span class="line">                bw.write(str);</span><br><span class="line">                bw.newLine();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            try &#123;</span><br><span class="line">                bw.close();</span><br><span class="line">                ow.close();</span><br><span class="line">                fo.close();</span><br><span class="line">            &#125; catch (Exception ef) &#123;</span><br><span class="line">                ef.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public List&lt;String&gt; strList() &#123;</span><br><span class="line">        List&lt;String&gt; list = new ArrayList&lt;String&gt;();</span><br><span class="line">        Iterator&lt;Command&gt; iterator = this.commands.iterator();</span><br><span class="line">        while (iterator.hasNext()) list.addAll(iterator.next().strList());</span><br><span class="line">        return list;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void load() &#123;</span><br><span class="line">        this.clear();</span><br><span class="line">        this.canvas.init();</span><br><span class="line">        FileInputStream fi = null;</span><br><span class="line">        InputStreamReader ir = null;</span><br><span class="line">        BufferedReader br = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            fi = new FileInputStream(new File(MacroCommand.SAVE));</span><br><span class="line">            ir = new InputStreamReader(fi, MacroCommand.ENCODING);</span><br><span class="line">            br = new BufferedReader(ir);</span><br><span class="line">            String lineTxt = null;</span><br><span class="line">            while (!StringUtils.isBlank((lineTxt = br.readLine()))) &#123;</span><br><span class="line">                JSONObject jo = JSONObject.parseObject(lineTxt);</span><br><span class="line">                String className = jo.get(&quot;type&quot;).toString();</span><br><span class="line">                Command cmd = null;</span><br><span class="line">                if (DrawCommand.class.getName().equals(className)) &#123;</span><br><span class="line">                    cmd = new DrawCommand(this.canvas, new Point(Integer.parseInt(jo.get(&quot;pointX&quot;).toString()), Integer.parseInt(jo.get(&quot;pointY&quot;).toString())));</span><br><span class="line">                &#125; else if (ColorCommand.class.getName().equals(className)) &#123;</span><br><span class="line">                    cmd = new ColorCommand(this.canvas, new Color(Integer.parseInt(jo.get(&quot;colorRGB&quot;).toString())));</span><br><span class="line">                &#125; else if (BrushCommand.class.getName().equals(className)) &#123;</span><br><span class="line">                    cmd = new BrushCommand(this.canvas, Integer.parseInt(jo.get(&quot;brushWidth&quot;).toString()));</span><br><span class="line">                &#125;</span><br><span class="line">                if (null != cmd) this.append(cmd);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            try &#123;</span><br><span class="line">                br.close();</span><br><span class="line">                ir.close();</span><br><span class="line">                fi.close();</span><br><span class="line">            &#125; catch (Exception ef) &#123;</span><br><span class="line">                ef.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>MacroCommand类就是前文提到的，实现了Command接口的指令集。其最核心的字段就是commands了。对于这个字段，我们有两点需要说明：</p>
+<ol>
+<li>之所以声明为栈，是为了便于进行撤销操作。</li>
+<li>栈的泛型类型是Command，而MacroCommand类本身又实现了Command接口。这意味着commands字段中同样可以添加MacroCommand类型的数据。也就是说，指令集中的某条指令同样可以是另一个指令集，这在MacroCommand类execute()中也有所体现：最终我们是使用递归执行栈中的所有指令的(为防止无限递归下去，我们禁止将自身添加到commands字段中)。这其实是对<a href="">11.Composite模式</a>的一种应用。</li>
+</ol>
+<p>commands是本程序中最核心的字段，其中存储了所有的指令。程序做的所有操作最终其实都是在操作这个字段：</p>
+<ul>
+<li>清空画布：即清空commands字段。而后按照commands字段重绘图形，因为commands已被清空，自然就起到了清空画布的效果。</li>
+<li>撤销最后一次操作：弹出最后一条指令，而后按照commands字段重绘图形，因为最后一条指令已被弹出，自然就相当于撤销操作了。</li>
+<li>保存：将commands中的命令按顺序存储入文件。</li>
+<li>读取：将文件中的命令按顺序读取入commands字段，而后依commands重绘图形，起到读档的作用。</li>
+</ul>
+<p><strong>DrawCommand类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">package design22.command;</span><br><span class="line"></span><br><span class="line">import java.awt.Point;</span><br><span class="line">import java.util.ArrayList;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">import com.alibaba.fastjson.JSONObject;</span><br><span class="line"></span><br><span class="line">import design22.view.MyCanvas;</span><br><span class="line"></span><br><span class="line">public class DrawCommand implements Command &#123;</span><br><span class="line"></span><br><span class="line">    private MyCanvas canvas;</span><br><span class="line"></span><br><span class="line">    private Point point;</span><br><span class="line"></span><br><span class="line">    public DrawCommand(MyCanvas canvas, Point point) &#123;</span><br><span class="line">        this.canvas = canvas;</span><br><span class="line">        this.point = point;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void execute() &#123;</span><br><span class="line">        this.canvas.draw(this.point);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public List&lt;String&gt; strList() &#123;</span><br><span class="line">        List&lt;String&gt; list = new ArrayList&lt;String&gt;(1);</span><br><span class="line">        JSONObject jo = new JSONObject();</span><br><span class="line">        jo.put(&quot;type&quot;, DrawCommand.class.getName());</span><br><span class="line">        jo.put(&quot;pointX&quot;, this.point.x);</span><br><span class="line">        jo.put(&quot;pointY&quot;, this.point.y);</span><br><span class="line">        list.add(jo.toJSONString());</span><br><span class="line">        return list;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>命令：在画布特定的位置上绘制一个点。</p>
+<p><strong>ColorCommand类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">package design22.command;</span><br><span class="line"></span><br><span class="line">import java.awt.Color;</span><br><span class="line">import java.util.ArrayList;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">import com.alibaba.fastjson.JSONObject;</span><br><span class="line"></span><br><span class="line">import design22.view.MyCanvas;</span><br><span class="line"></span><br><span class="line">public class ColorCommand implements Command &#123;</span><br><span class="line"></span><br><span class="line">    private MyCanvas canvas;</span><br><span class="line"></span><br><span class="line">    private Color color;</span><br><span class="line"></span><br><span class="line">    public ColorCommand(MyCanvas canvas, Color color) &#123;</span><br><span class="line">        this.canvas = canvas;</span><br><span class="line">        this.color = color;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void execute() &#123;</span><br><span class="line">        this.canvas.setColor(this.color);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public List&lt;String&gt; strList() &#123;</span><br><span class="line">        List&lt;String&gt; list = new ArrayList&lt;String&gt;(1);</span><br><span class="line">        JSONObject jo = new JSONObject();</span><br><span class="line">        jo.put(&quot;type&quot;, ColorCommand.class.getName());</span><br><span class="line">        jo.put(&quot;colorRGB&quot;, this.color.getRGB());</span><br><span class="line">        list.add(jo.toJSONString());</span><br><span class="line">        return list;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>命令：将画笔变更为特定的颜色。</p>
+<p><strong>BrushCommand类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">package design22.command;</span><br><span class="line"></span><br><span class="line">import java.util.ArrayList;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">import com.alibaba.fastjson.JSONObject;</span><br><span class="line"></span><br><span class="line">import design22.view.MyCanvas;</span><br><span class="line"></span><br><span class="line">public class BrushCommand implements Command &#123;</span><br><span class="line"></span><br><span class="line">    private MyCanvas canvas;</span><br><span class="line"></span><br><span class="line">    private int width;</span><br><span class="line"></span><br><span class="line">    public BrushCommand(MyCanvas canvas, int width) &#123;</span><br><span class="line">        this.canvas = canvas;</span><br><span class="line">        this.width = width;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void execute() &#123;</span><br><span class="line">        this.canvas.setR(this.width);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public List&lt;String&gt; strList() &#123;</span><br><span class="line">        List&lt;String&gt; list = new ArrayList&lt;String&gt;(1);</span><br><span class="line">        JSONObject jo = new JSONObject();</span><br><span class="line">        jo.put(&quot;type&quot;, BrushCommand.class.getName());</span><br><span class="line">        jo.put(&quot;brushWidth&quot;, this.width);</span><br><span class="line">        list.add(jo.toJSONString());</span><br><span class="line">        return list;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>命令：将画笔变更为特定的粗细。</p>
+<p>然后是view包：</p>
+<p><strong>MyCanvas类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">package design22.view;</span><br><span class="line"></span><br><span class="line">import java.awt.Canvas;</span><br><span class="line">import java.awt.Color;</span><br><span class="line">import java.awt.Graphics;</span><br><span class="line">import java.awt.Point;</span><br><span class="line"></span><br><span class="line">import design22.command.MacroCommand;</span><br><span class="line"></span><br><span class="line">public class MyCanvas extends Canvas &#123;</span><br><span class="line"></span><br><span class="line">    private static final long serialVersionUID = 1L;</span><br><span class="line"></span><br><span class="line">    private static final Color DEF_COLOR = Color.BLACK;</span><br><span class="line"></span><br><span class="line">    private static final int DEF_R = 10;</span><br><span class="line"></span><br><span class="line">    Color color = MyCanvas.DEF_COLOR;</span><br><span class="line"></span><br><span class="line">    int r = MyCanvas.DEF_R;</span><br><span class="line"></span><br><span class="line">    MacroCommand history = new MacroCommand(this);</span><br><span class="line"></span><br><span class="line">    public MyCanvas(int width, int height) &#123;</span><br><span class="line">        this.setSize(width, height);</span><br><span class="line">        this.setBackground(Color.WHITE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void paint(Graphics g) &#123;</span><br><span class="line">        this.init();</span><br><span class="line">        this.history.execute();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void draw(Point point) &#123;</span><br><span class="line">        Graphics g = this.getGraphics();</span><br><span class="line">        g.setColor(this.color);</span><br><span class="line">        g.fillOval(point.x - this.r, point.y - this.r, 2 * this.r, 2 * this.r);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setColor(Color color) &#123;</span><br><span class="line">        this.color = color;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setR(int r) &#123;</span><br><span class="line">        this.r = r;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void init() &#123;</span><br><span class="line">        this.color = MyCanvas.DEF_COLOR;</span><br><span class="line">        this.r = MyCanvas.DEF_R;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>即为自己实现的画板类。</p>
+<p><strong>View类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br></pre></td><td class="code"><pre><span class="line">package design22.view;</span><br><span class="line"></span><br><span class="line">import java.awt.Color;</span><br><span class="line">import java.awt.event.ActionEvent;</span><br><span class="line">import java.awt.event.ActionListener;</span><br><span class="line">import java.awt.event.MouseEvent;</span><br><span class="line">import java.awt.event.MouseMotionAdapter;</span><br><span class="line">import java.awt.event.WindowAdapter;</span><br><span class="line">import java.awt.event.WindowEvent;</span><br><span class="line">import java.util.ArrayList;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">import javax.swing.Box;</span><br><span class="line">import javax.swing.BoxLayout;</span><br><span class="line">import javax.swing.ButtonGroup;</span><br><span class="line">import javax.swing.JButton;</span><br><span class="line">import javax.swing.JCheckBox;</span><br><span class="line">import javax.swing.JFrame;</span><br><span class="line"></span><br><span class="line">import design22.command.BrushCommand;</span><br><span class="line">import design22.command.ColorCommand;</span><br><span class="line">import design22.command.Command;</span><br><span class="line">import design22.command.DrawCommand;</span><br><span class="line"></span><br><span class="line">public class View extends JFrame implements ActionListener &#123;</span><br><span class="line"></span><br><span class="line">    private static final long serialVersionUID = 1L;</span><br><span class="line"></span><br><span class="line">    MyCanvas canvas = new MyCanvas(50 * 16, 50 * 9);</span><br><span class="line"></span><br><span class="line">    private int maxBrush = 20;</span><br><span class="line"></span><br><span class="line">    private List&lt;JCheckBox&gt; brushBoxs = new ArrayList&lt;JCheckBox&gt;();</span><br><span class="line"></span><br><span class="line">    private List&lt;ColorBox&gt; colorBoxs = new ArrayList&lt;ColorBox&gt;();</span><br><span class="line"></span><br><span class="line">    private List&lt;JButton&gt; buttons = new ArrayList&lt;JButton&gt;();</span><br><span class="line"></span><br><span class="line">    public View() &#123;</span><br><span class="line">        // 制作按钮</span><br><span class="line">        this.buttons.add(new JButton(&quot;清空&quot;));</span><br><span class="line">        this.buttons.add(new JButton(&quot;撤销&quot;));</span><br><span class="line">        this.buttons.add(new JButton(&quot;保存&quot;));</span><br><span class="line">        this.buttons.add(new JButton(&quot;读取&quot;));</span><br><span class="line">        for (JButton button : this.buttons) button.addActionListener(this);</span><br><span class="line">        // 制作颜色CheckBox</span><br><span class="line">        this.colorBoxs.add(new ColorBox(Color.BLACK, &quot;黑&quot;, this));</span><br><span class="line">        this.colorBoxs.add(new ColorBox(Color.DARK_GRAY, &quot;深灰&quot;, this));</span><br><span class="line">        this.colorBoxs.add(new ColorBox(Color.GRAY, &quot;灰&quot;, this));</span><br><span class="line">        this.colorBoxs.add(new ColorBox(Color.LIGHT_GRAY, &quot;浅灰&quot;, this));</span><br><span class="line">        this.colorBoxs.add(new ColorBox(Color.BLUE, &quot;蓝&quot;, this));</span><br><span class="line">        this.colorBoxs.add(new ColorBox(Color.CYAN, &quot;青&quot;, this));</span><br><span class="line">        this.colorBoxs.add(new ColorBox(Color.GREEN, &quot;绿&quot;, this));</span><br><span class="line">        this.colorBoxs.add(new ColorBox(Color.MAGENTA, &quot;洋红&quot;, this));</span><br><span class="line">        this.colorBoxs.add(new ColorBox(Color.RED, &quot;红&quot;, this));</span><br><span class="line">        this.colorBoxs.add(new ColorBox(Color.PINK, &quot;粉&quot;, this));</span><br><span class="line">        this.colorBoxs.add(new ColorBox(Color.ORANGE, &quot;橘&quot;, this));</span><br><span class="line">        this.colorBoxs.add(new ColorBox(Color.YELLOW, &quot;黄&quot;, this));</span><br><span class="line">        ButtonGroup colorGroup = new ButtonGroup();</span><br><span class="line">        for (ColorBox colorBox : this.colorBoxs) &#123;</span><br><span class="line">            colorBox.checkBox.addActionListener(this);</span><br><span class="line">            colorGroup.add(colorBox.checkBox);</span><br><span class="line">        &#125;</span><br><span class="line">        // 制作画笔CheckBox</span><br><span class="line">        ButtonGroup brushGroup = new ButtonGroup();</span><br><span class="line">        for (int i = 1; i &lt;= this.maxBrush; i++) &#123;</span><br><span class="line">            JCheckBox brushCheckBox = new JCheckBox(i + &quot;&quot;, i == this.canvas.r);</span><br><span class="line">            this.brushBoxs.add(brushCheckBox);</span><br><span class="line">            brushCheckBox.addActionListener(this);</span><br><span class="line">            brushGroup.add(brushCheckBox);</span><br><span class="line">        &#125;</span><br><span class="line">        // 画布拖动监听</span><br><span class="line">        this.canvas.addMouseMotionListener(</span><br><span class="line">            new MouseMotionAdapter() &#123;</span><br><span class="line">                @Override</span><br><span class="line">                public void mouseDragged(MouseEvent e) &#123;</span><br><span class="line">                    Command cmd = new DrawCommand(View.this.canvas, e.getPoint());</span><br><span class="line">                    View.this.canvas.history.append(cmd);</span><br><span class="line">                    cmd.execute();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        );</span><br><span class="line">        // 布局</span><br><span class="line">        Box firstBox = new Box(BoxLayout.X_AXIS);</span><br><span class="line">        for (JButton button : this.buttons) firstBox.add(button);</span><br><span class="line">        Box secondBox = new Box(BoxLayout.X_AXIS);</span><br><span class="line">        Box brushBox = new Box(BoxLayout.Y_AXIS);</span><br><span class="line">        for (JCheckBox temp : this.brushBoxs) brushBox.add(temp);</span><br><span class="line">        secondBox.add(brushBox);</span><br><span class="line">        secondBox.add(this.canvas);</span><br><span class="line">        Box colorBox = new Box(BoxLayout.Y_AXIS);</span><br><span class="line">        for (ColorBox temp : this.colorBoxs) colorBox.add(temp.checkBox);</span><br><span class="line">        secondBox.add(colorBox);</span><br><span class="line">        Box mainBox = new Box(BoxLayout.Y_AXIS);</span><br><span class="line">        mainBox.add(firstBox);</span><br><span class="line">        mainBox.add(secondBox);</span><br><span class="line">        super.getContentPane().add(mainBox);</span><br><span class="line">        // 关闭</span><br><span class="line">        this.addWindowListener(</span><br><span class="line">            new WindowAdapter() &#123;</span><br><span class="line">                @Override</span><br><span class="line">                public void windowClosing(WindowEvent e) &#123;</span><br><span class="line">                    System.exit(0);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        );</span><br><span class="line">        // 显示</span><br><span class="line">        super.pack();</span><br><span class="line">        super.setVisible(true);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void actionPerformed(ActionEvent e) &#123;</span><br><span class="line">        for (JButton button : this.buttons) &#123;</span><br><span class="line">            if (e.getSource() == button) &#123;</span><br><span class="line">                if (&quot;清空&quot;.equals(button.getText())) &#123;</span><br><span class="line">                    this.canvas.history.clear();</span><br><span class="line">                    this.canvas.repaint();</span><br><span class="line">                &#125; else if (&quot;撤销&quot;.equals(button.getText())) &#123;</span><br><span class="line">                    this.canvas.history.undo();</span><br><span class="line">                    this.canvas.repaint();</span><br><span class="line">                &#125; else if (&quot;保存&quot;.equals(button.getText())) &#123;</span><br><span class="line">                    this.canvas.history.save();</span><br><span class="line">                &#125; else if (&quot;读取&quot;.equals(button.getText())) &#123;</span><br><span class="line">                    this.canvas.history.load();</span><br><span class="line">                    this.canvas.repaint();</span><br><span class="line">                &#125;</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        for (ColorBox colorBox : this.colorBoxs) &#123;</span><br><span class="line">            if (e.getSource() == colorBox.checkBox) &#123;</span><br><span class="line">                Command cmd = new ColorCommand(this.canvas, colorBox.color);</span><br><span class="line">                this.canvas.history.append(cmd);</span><br><span class="line">                cmd.execute();</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        for (JCheckBox brushBox : this.brushBoxs) &#123;</span><br><span class="line">            if (e.getSource() == brushBox) &#123;</span><br><span class="line">                Command cmd = new BrushCommand(this.canvas, Integer.parseInt(brushBox.getText()));</span><br><span class="line">                this.canvas.history.append(cmd);</span><br><span class="line">                cmd.execute();</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class ColorBox &#123;</span><br><span class="line"></span><br><span class="line">    Color color;</span><br><span class="line"></span><br><span class="line">    JCheckBox checkBox;</span><br><span class="line"></span><br><span class="line">    String desc;</span><br><span class="line"></span><br><span class="line">    ColorBox (Color color, String desc, View view) &#123;</span><br><span class="line">        this.color = color;</span><br><span class="line">        this.checkBox = new JCheckBox(desc, this.color == view.canvas.color);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>View负责创建及调用命令。方式主要有两种。</p>
+<p>第一种为创建命令并直接调用。以切换颜色为例，会触发actionPerformed()监听事件。从代码中可以看到，我们会创建并直接执行命令。当然，我们也会将该命令存入MacroCommand类的commands字段中，以形成存档，View作为面板，每个实例都会创建并绑定一个MyCanvas(画布)类的实例，而每一个画布，同样会创建并绑定一个MacroCommand类的实例：在MyCanvas中，这个MacroCommand被称为history。</p>
+<p>第二种并不会创建新命令，但会导致commands中的已有命令会被重新全部执行一遍。例如当我们按下”撤销”按钮后，会触发actionPerformed()方法。其中undo()会导致commands中最新的命令被弹出，而repaint()则会先清空画布，而后将commands中剩余的命令重新执行一遍。</p>
+<p><strong>save.txt</strong></p>
+<p>我们会在save包下存放存档。该存档只有一份，反复存档只会导致存档覆盖。因为拖动时每一个点都会生成1条命令，因此这个文件行数通常都会很多。上文绘制房子的那个存档文件就有16000+的行数。现只截取最开始的那部分：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;brushWidth&quot;:20,&quot;type&quot;:&quot;design22.command.BrushCommand&quot;&#125;</span><br><span class="line">&#123;&quot;colorRGB&quot;:-16711936,&quot;type&quot;:&quot;design22.command.ColorCommand&quot;&#125;</span><br><span class="line">&#123;&quot;pointX&quot;:4,&quot;pointY&quot;:411,&quot;type&quot;:&quot;design22.command.DrawCommand&quot;&#125;</span><br><span class="line">&#123;&quot;pointX&quot;:6,&quot;pointY&quot;:411,&quot;type&quot;:&quot;design22.command.DrawCommand&quot;&#125;</span><br><span class="line">&#123;&quot;pointX&quot;:8,&quot;pointY&quot;:411,&quot;type&quot;:&quot;design22.command.DrawCommand&quot;&#125;</span><br><span class="line">&#123;&quot;pointX&quot;:10,&quot;pointY&quot;:411,&quot;type&quot;:&quot;design22.command.DrawCommand&quot;&#125;</span><br><span class="line">&#123;&quot;pointX&quot;:13,&quot;pointY&quot;:411,&quot;type&quot;:&quot;design22.command.DrawCommand&quot;&#125;</span><br><span class="line">&#123;&quot;pointX&quot;:16,&quot;pointY&quot;:411,&quot;type&quot;:&quot;design22.command.DrawCommand&quot;&#125;</span><br><span class="line">&#123;&quot;pointX&quot;:20,&quot;pointY&quot;:411,&quot;type&quot;:&quot;design22.command.DrawCommand&quot;&#125;</span><br><span class="line">&#123;&quot;pointX&quot;:25,&quot;pointY&quot;:411,&quot;type&quot;:&quot;design22.command.DrawCommand&quot;&#125;</span><br><span class="line">&#123;&quot;pointX&quot;:29,&quot;pointY&quot;:411,&quot;type&quot;:&quot;design22.command.DrawCommand&quot;&#125;</span><br><span class="line">&#123;&quot;pointX&quot;:32,&quot;pointY&quot;:411,&quot;type&quot;:&quot;design22.command.DrawCommand&quot;&#125;</span><br><span class="line">&#123;&quot;pointX&quot;:35,&quot;pointY&quot;:411,&quot;type&quot;:&quot;design22.command.DrawCommand&quot;&#125;</span><br><span class="line">&#123;&quot;pointX&quot;:37,&quot;pointY&quot;:411,&quot;type&quot;:&quot;design22.command.DrawCommand&quot;&#125;</span><br><span class="line">&#123;&quot;pointX&quot;:40,&quot;pointY&quot;:411,&quot;type&quot;:&quot;design22.command.DrawCommand&quot;&#125;</span><br><span class="line">&#123;&quot;pointX&quot;:42,&quot;pointY&quot;:411,&quot;type&quot;:&quot;design22.command.DrawCommand&quot;&#125;</span><br><span class="line">&#123;&quot;pointX&quot;:45,&quot;pointY&quot;:411,&quot;type&quot;:&quot;design22.command.DrawCommand&quot;&#125;</span><br><span class="line">&#123;&quot;pointX&quot;:48,&quot;pointY&quot;:411,&quot;type&quot;:&quot;design22.command.DrawCommand&quot;&#125;</span><br><span class="line">&#123;&quot;pointX&quot;:52,&quot;pointY&quot;:411,&quot;type&quot;:&quot;design22.command.DrawCommand&quot;&#125;</span><br><span class="line">&#123;&quot;pointX&quot;:54,&quot;pointY&quot;:411,&quot;type&quot;:&quot;design22.command.DrawCommand&quot;&#125;</span><br><span class="line">&#123;&quot;pointX&quot;:56,&quot;pointY&quot;:411,&quot;type&quot;:&quot;design22.command.DrawCommand&quot;&#125;</span><br><span class="line">&#123;&quot;pointX&quot;:60,&quot;pointY&quot;:411,&quot;type&quot;:&quot;design22.command.DrawCommand&quot;&#125;</span><br><span class="line">&#123;&quot;pointX&quot;:63,&quot;pointY&quot;:411,&quot;type&quot;:&quot;design22.command.DrawCommand&quot;&#125;</span><br><span class="line">&#123;&quot;pointX&quot;:67,&quot;pointY&quot;:411,&quot;type&quot;:&quot;design22.command.DrawCommand&quot;&#125;</span><br><span class="line">&#123;&quot;pointX&quot;:72,&quot;pointY&quot;:412,&quot;type&quot;:&quot;design22.command.DrawCommand&quot;&#125;</span><br></pre></td></tr></table></figure>
+<p>最后是直接位于design22包下的Main.java：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">package design22;</span><br><span class="line"></span><br><span class="line">import design22.view.View;</span><br><span class="line"></span><br><span class="line">public class Main &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        new View();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行该类后，即可启动程序。</p>
+<h1 id="登场角色"><a href="#登场角色" class="headerlink" title="登场角色"></a>登场角色</h1><p>上面的示例程序介绍了Command模式的Java实现，下面咱们试着跳出语言层面，抽象出Command模式中登场的角色。</p>
+<p><strong>Command(命令)</strong></p>
+<p>在示例程序中，由Command接口扮演这个角色。</p>
+<p><strong>ConcreteCommand(具体的命令)</strong></p>
+<p>在示例程序中，由MacroCommand类，DrawCommand类，ColorCommand类，BrushCommand类联袂扮演这个角色。</p>
+<p><strong>Receiver(接收者)</strong></p>
+<p>接收命令，或是受命令影响的角色。在示例程序中，由MyCanvas类扮演这个角色。</p>
+<p><strong>Invoker(发动者)</strong></p>
+<p>Invoker是Command的触发者(通常也是创建者)。在示例程序中，由View类扮演这个角色。</p>
+<h1 id="适配器"><a href="#适配器" class="headerlink" title="适配器"></a>适配器</h1><p>在此，我想说点与Command模式没什么关系的事。</p>
+<p>在示例程序中，View实现监听的方式是写匿名的适配器类。例如我们在为画布添加拖动鼠标的监听时，是这样做的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">this.canvas.addMouseMotionListener(</span><br><span class="line">    new MouseMotionAdapter() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void mouseDragged(MouseEvent e) &#123;</span><br><span class="line">            Command cmd = new DrawCommand(View.this.canvas, e.getPoint());</span><br><span class="line">            View.this.canvas.history.append(cmd);</span><br><span class="line">            cmd.execute();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>我们不妨稍微看下源码。这个this.canvas.addMouseMotionListener()的方法定义为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public synchronized void addMouseMotionListener(MouseMotionListener l)</span><br></pre></td></tr></table></figure>
+<p>很显然，它接收一个MouseMotionListener类型的数据，而这个MouseMotionListener则是一个接口：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">package java.awt.event;</span><br><span class="line"></span><br><span class="line">import java.util.EventListener;</span><br><span class="line"></span><br><span class="line">public interface MouseMotionListener extends EventListener &#123;</span><br><span class="line"></span><br><span class="line">    public void mouseDragged(MouseEvent e);</span><br><span class="line"></span><br><span class="line">    public void mouseMoved(MouseEvent e);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面是MouseMotionListener接口的全部源码。其中mouseDragged()表示”按住鼠标拖动”这一事件；而mouseMoved()则表示鼠标移动事件。</p>
+<p>那么自然，我们传入的这个MouseMotionAdapter就该实现MouseMotionListener啦，那么是不是呢：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">package java.awt.event;</span><br><span class="line"></span><br><span class="line">public abstract class MouseMotionAdapter implements MouseMotionListener &#123;</span><br><span class="line"></span><br><span class="line">    public void mouseDragged(MouseEvent e) &#123;&#125;</span><br><span class="line"></span><br><span class="line">    public void mouseMoved(MouseEvent e) &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码不长，我就全部贴出了。可以看到，MouseMotionAdapter除了将接口中约束的两个方法声明非抽象的以外，实际上什么都没做。</p>
+<p>其实比起这种使用匿名内部类，也就是适配器的做法，我们其实可以直接找一个类实现MouseMotionListener接口，然后将这个类的实例传给addMouseMotionListener()方法(通常来说，我们会让面板去实现这个接口，也就是说传入this)。那么二者各有什么利弊呢？</p>
+<p>先说说使用匿名类的好处吧。如果要自己写一个类去实现监听接口，这就意味着必须要强制实现接口中所有约束的方法。例如，此时我们就必须实现mouseMoved()了，即便我们根本不关心鼠标移动事件，那也要写一个空方法放在那里才行。这在接口本身约束很多(例如WindowListener)，而实际用到的很少时尤其的麻烦：我们需要写大量的空方法，使得代码有失优雅。而使用适配器类则解决了这个问题。MouseMotionAdapter被声明为了抽象类，但其中并没有抽象方法。这样做的原因有二：类被声明为抽象的是不希望直接new出对象来，要写继承的子类才行；而方法均不是抽象的则让自己只需要重写需要的约束即可。</p>
+<p>然后说一下继承接口的好处。使用匿名类的问题在于，每次使用都会初始化一个新的匿名类，在需要多次使用同一个监听时将会很不方便。如果专门弄一个类去监听，又显得小题大做。当然，直接让面板或其他组件更是糟糕的决策：从使用上讲，因为Java是单继承的语言，这会消耗掉宝贵的继承机会；另一方面，组件根本就不是监听器，也就是根本不符合里氏替换原则及合成聚合复用原则，从逻辑上更是说不通。因此，此时让面板直接实现接口就成为了最好的选择：View便直接实现了ActionListener，而后将需要此监听的按钮及选框均与其绑定。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechat.png" alt="王艺凯 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/ali.jpg" alt="王艺凯 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>王艺凯</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2018/09/07/Java 设计模式-22Command模式/" title="Java 设计模式-22.Command模式">http://yoursite.com/2018/09/07/Java 设计模式-22Command模式/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/05/Java 设计模式-21Proxy模式/" rel="next" title="Java 设计模式-21.Proxy模式">
+                <i class="fa fa-chevron-left"></i> Java 设计模式-21.Proxy模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/10/Java 设计模式-23Interpreter模式/" rel="prev" title="Java 设计模式-23.Interpreter模式">
+                Java 设计模式-23.Interpreter模式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/avatar.jpg"
+                alt="王艺凯" />
+            
+              <p class="site-author-name" itemprop="name">王艺凯</p>
+              <p class="site-description motion-element" itemprop="description">Thou Shalt Comment</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">189</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">117</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/ReimuWang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:1505580759@qq.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用网站
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.bilibili.com/" title="bilibili" target="_blank">bilibili</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://acg12.com/" title="ACG调查小队" target="_blank">ACG调查小队</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.com/" title="leetcode" target="_blank">leetcode</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#综述"><span class="nav-number">1.</span> <span class="nav-text">综述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#示例程序需求分析"><span class="nav-number">2.</span> <span class="nav-text">示例程序需求分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#示例程序"><span class="nav-number">3.</span> <span class="nav-text">示例程序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#登场角色"><span class="nav-number">4.</span> <span class="nav-text">登场角色</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#适配器"><span class="nav-number">5.</span> <span class="nav-text">适配器</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老滚6催更协会</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+  <div class="footer-custom"><i>明明可以靠脸吃饭，你却要靠才华，这就是你和明明的差距</i></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+
+</body>
+</html>

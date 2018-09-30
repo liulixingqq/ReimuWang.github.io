@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/myLogo.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在《图解设计模式》一书中，Factory Method模式被归入了第2部分交给子类。在GoF原书中，Factory Method模式则被归入了创建型设计模式。简单来说，Factory Method模式可以被描述为：在抽象的父类工厂中定义生成抽象的父类产品的逻辑，然后由具体的子类工厂生产出具体的子类产品。也就是所谓的”将实例的生成交给子类”。">
+<meta name="keywords" content="Java,设计模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 设计模式-4.Factory Method模式">
+<meta property="og:url" content="http://yoursite.com/2018/06/14/Java 设计模式-4Factory Method模式/index.html">
+<meta property="og:site_name" content="ReimuWang&#39;s Blog">
+<meta property="og:description" content="在《图解设计模式》一书中，Factory Method模式被归入了第2部分交给子类。在GoF原书中，Factory Method模式则被归入了创建型设计模式。简单来说，Factory Method模式可以被描述为：在抽象的父类工厂中定义生成抽象的父类产品的逻辑，然后由具体的子类工厂生产出具体的子类产品。也就是所谓的”将实例的生成交给子类”。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/4Factory%20Method模式/0.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/4Factory%20Method模式/1.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/4Factory%20Method模式/2.jpg">
+<meta property="og:updated_time" content="2018-07-27T07:13:23.914Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 设计模式-4.Factory Method模式">
+<meta name="twitter:description" content="在《图解设计模式》一书中，Factory Method模式被归入了第2部分交给子类。在GoF原书中，Factory Method模式则被归入了创建型设计模式。简单来说，Factory Method模式可以被描述为：在抽象的父类工厂中定义生成抽象的父类产品的逻辑，然后由具体的子类工厂生产出具体的子类产品。也就是所谓的”将实例的生成交给子类”。">
+<meta name="twitter:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/4Factory%20Method模式/0.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="ReimuWang's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/14/Java 设计模式-4Factory Method模式/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java 设计模式-4.Factory Method模式 | ReimuWang's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ReimuWang's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">189</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">117</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类<span class="badge">24</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404.html" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />公益 404</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+    
+      
+    
+    <a href="https://github.com/ReimuWang" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#222; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg>
+    
+      </a>
+    
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/14/Java 设计模式-4Factory Method模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王艺凯">
+      <meta itemprop="description" content="Thou Shalt Comment">
+      <meta itemprop="image" content="/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ReimuWang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java 设计模式-4.Factory Method模式
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-06-14 18:44:49" itemprop="dateCreated datePublished" datetime="2018-06-14T18:44:49+08:00">2018-06-14</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-07-27 15:13:23" itemprop="dateModified" datetime="2018-07-27T15:13:23+08:00">2018-07-27</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java-设计模式/" itemprop="url" rel="index"><span itemprop="name">Java 设计模式</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在《图解设计模式》一书中，Factory Method模式被归入了第2部分<a href="">交给子类</a>。在GoF原书中，Factory Method模式则被归入了<a href="">创建型设计模式</a>。简单来说，Factory Method模式可以被描述为：在抽象的父类工厂中定义生成抽象的父类产品的逻辑，然后由具体的子类工厂生产出具体的子类产品。也就是所谓的”将实例的生成交给子类”。</p>
+<a id="more"></a>
+<h1 id="综述"><a href="#综述" class="headerlink" title="综述"></a>综述</h1><p>简单来说，我们可以认为Factory Method模式是<a href="">3.Template Method模式</a>的特例。Template Method模式是指父类定义流程，却不负责具体的实现。而Factory Method模式则是进一步将流程限定为”实例的生成”。</p>
+<p>因此，后文在介绍Factory Method模式时，基本都会对照着Template Method模式来说。</p>
+<h1 id="示例程序"><a href="#示例程序" class="headerlink" title="示例程序"></a>示例程序</h1><p>本程序会分种族的使用工厂创建东方Project的角色，下面先给出类图：</p>
+<p><img src="/images/blog_pic/Java 设计模式/4Factory Method模式/0.jpg" alt="0.jpg"></p>
+<p>本程序中的所有代码将被统一置于design4包下，结构如下：</p>
+<p><img src="/images/blog_pic/Java 设计模式/4Factory Method模式/1.jpg" alt="1.jpg"></p>
+<p>其中Main.java是测试代码，并没有出现在类图中。</p>
+<p>下面将逐个贴出每个类的源码。</p>
+<p><strong>RoleFactory类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">package design4;</span><br><span class="line"></span><br><span class="line">public abstract class RoleFactory &#123;</span><br><span class="line"></span><br><span class="line">    public Role create(String name) &#123;</span><br><span class="line">        return this.createRole(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected abstract Role createRole(String name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中，create()方法就是Template Method模式中的模版方法，而createRole()方法则是Template Method模式中需子类实现的抽象方法。</p>
+<p><strong>Role类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">package design4;</span><br><span class="line"></span><br><span class="line">public abstract class Role &#123;</span><br><span class="line"></span><br><span class="line">    private String name;</span><br><span class="line"></span><br><span class="line">    protected Role(String name) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;我叫&quot; + this.name + &quot;，我的种族是&quot; + this.race();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected abstract String race();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>HumanFactory类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">package design4;</span><br><span class="line"></span><br><span class="line">public class HumanFactory extends RoleFactory &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected Role createRole(String name) &#123;</span><br><span class="line">        return new Human(name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Human类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">package design4;</span><br><span class="line"></span><br><span class="line">public class Human extends Role &#123;</span><br><span class="line"></span><br><span class="line">    protected Human(String name) &#123;</span><br><span class="line">        super(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected String race() &#123;</span><br><span class="line">        return &quot;人类&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>VampireFactory类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">package design4;</span><br><span class="line"></span><br><span class="line">public class VampireFactory extends RoleFactory &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected Role createRole(String name) &#123;</span><br><span class="line">        return new Vampire(name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Vampire类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">package design4;</span><br><span class="line"></span><br><span class="line">public class Vampire extends Role &#123;</span><br><span class="line"></span><br><span class="line">    protected Vampire(String name) &#123;</span><br><span class="line">        super(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected String race() &#123;</span><br><span class="line">        return &quot;吸血鬼&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Main类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">package design4;</span><br><span class="line"></span><br><span class="line">import java.util.ArrayList;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">public class Main &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        List&lt;Role&gt; roleList = new ArrayList&lt;Role&gt;(5);</span><br><span class="line">        RoleFactory roleFactory = new HumanFactory();</span><br><span class="line">        roleList.add(roleFactory.create(&quot;博丽灵梦&quot;));</span><br><span class="line">        roleList.add(roleFactory.create(&quot;雾雨魔理沙&quot;));</span><br><span class="line">        roleList.add(roleFactory.create(&quot;十六夜咲夜&quot;));</span><br><span class="line">        roleFactory = new VampireFactory();</span><br><span class="line">        roleList.add(roleFactory.create(&quot;蕾米莉亚·斯卡雷特&quot;));</span><br><span class="line">        roleList.add(roleFactory.create(&quot;芙兰朵露·斯卡蕾特&quot;));</span><br><span class="line">        for (Role role : roleList) System.out.println(role);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行Main.java后输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">我叫博丽灵梦，我的种族是人类</span><br><span class="line">我叫雾雨魔理沙，我的种族是人类</span><br><span class="line">我叫十六夜咲夜，我的种族是人类</span><br><span class="line">我叫蕾米莉亚·斯卡雷特，我的种族是吸血鬼</span><br><span class="line">我叫芙兰朵露·斯卡蕾特，我的种族是吸血鬼</span><br></pre></td></tr></table></figure>
+<h1 id="登场角色"><a href="#登场角色" class="headerlink" title="登场角色"></a>登场角色</h1><p>上面的示例程序介绍了Factory Method模式的Java实现，下面咱们试着跳出语言层面，抽象出Factory Method模式中登场的角色。</p>
+<p><strong>Creator(创建者)</strong></p>
+<p>Creator对应于Template Method模式中的抽象父类，其中至少应包含两个方法，首先是create()方法，它对应于Template Method模式中的模版方法，用来控制”生成实例”这个业务流程。然后是factoryMethod()方法，它对应于Template Method模式中的抽象方法，需要子类角色ConcreteCreator去具体的实现。</p>
+<p>在示例程序中，抽象类RoleFactory扮演了这个角色。</p>
+<p><strong>Product(产品)</strong></p>
+<p>Product是Creator创建出的实例所属的类。当然，Creator是抽象的工厂，是无法创建实例的。因此Product是抽象的产品。</p>
+<p>Creator与Product均是抽象上的概念，它们之间是互相对应的，不承载具体的业务逻辑。Creator就是抽象的生成产品的工厂，至于具体是生成什么产品的，它不知道。而Product是抽象意义上的产品，它不是某种具体的产品，它代表的是”产品”这个概念。</p>
+<p>在示例程序中，抽象类Role扮演了这个角色。当然啦，在示例程序中，因为Role类中包含抽象方法race()，因此必须要被声明为抽象的。但实际上，Product中并非必须要包含抽象方法，所以仅从Java语言规范的角度来讲，此时Product也可以是非抽象的。</p>
+<p>至于是否要将Product声明为抽象的，则要依具体的情境而定。如果Product非常抽象，真的就只是代表一个概念，绝不会被实例化，那么建议大家将Product声明为抽象的(即便其中没有抽象方法)，从语法的角度上讲，这可以保证Product不会被new出实例。更重要的是，这表明了一种态度：Product代表的是抽象的”产品”这一概念，而不是某个具体的产品。反之，如果Product虽然也代表”产品”这个概念，但是它却没有那么抽象，我们甚至可以实例化一个代表”产品”的实例出来，那么自然就不能声明为抽象的了。</p>
+<p><strong>ConcreteCreator(具体的创建者)</strong></p>
+<p>ConcreteCreator对应于Template Method模式中的子类，它会实现其抽象父类Creator中的抽象方法。在示例程序中，HumanFactory及VampireFactory均饰演这个角色。作为工厂它们分别负责生成具体的产品Human及Vampire。</p>
+<p>之所以创建了两个工厂，是为了说明抽象与具体之间的关系：抽象角色(Creator,Product)是唯一的，Creator代表”工厂”这个概念，而”Product”代表”产品”这个概念，概念自然是唯一的。但是属于这个概念的个体则是无穷多个的，在本程序中，就有生产人类的工厂及生产吸血鬼的工厂。如果我们需要，还可以很轻松的添加其他的工厂：诸如生产魔法使的工厂及生产神的工厂等。</p>
+<p><strong>ConcreteProduct(具体的产品)</strong></p>
+<p>ConcreteProduct与ConcreteCreator是一一对应的。什么样的工厂就会生产什么样的产品。在示例程序中，Human及Vampire均扮演了这个角色。</p>
+<p>下面是抽象后，无关语言的类图：</p>
+<p><img src="/images/blog_pic/Java 设计模式/4Factory Method模式/2.jpg" alt="2.jpg"></p>
+<h1 id="Factory-Method模式的变种"><a href="#Factory-Method模式的变种" class="headerlink" title="Factory Method模式的变种"></a>Factory Method模式的变种</h1><p>除了实例代码中的RoleFactory类之外，Creator这个角色其实还可以这样写：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public class TestFactory &#123;</span><br><span class="line"></span><br><span class="line">    public TestProduct create() &#123;</span><br><span class="line">        return this.createTest();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected TestProduct createTest() &#123;</span><br><span class="line">        return new TestProduct();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>较之前文中的示例程序，这段代码中的Creator角色其实就不完全遵循Template Method模式了。此时的Factory Method模式(假设我们还认为这样的变种算是Factory Method模式的话)就不再是Template Method模式的特例了，因为createTest()方法不再是抽象的了。相应的，因为需要切实的实例化，作为抽象产品的TestProduct类自然不能再被声明为abstract的了，这也就是前文我们在介绍Product角色时提到的”不那么抽象的情况”。</p>
+<p>这样做的好处和坏处都是显而易见的。从好的角度来讲，此时抽象工厂实际上是有生产能力的了，所以从严格的意义上讲，TestFactory不应该被叫做抽象工厂，而应该被叫做默认工厂。相应的，Product也应该被叫做默认产品。在子类没有什么特殊需要的情况下，它们直接用父类提供的统一规格的产品就行。如果它们有特殊的需求，那么重写createTest()方法就好。</p>
+<p>而从坏的角度上讲，这相当于是”坏了规矩”。此时的Creator及Product不再代表一个概念了，必须是非抽象的了，因为无论它们被声明的多通用化，它们都是有实体的了，是要产生实例的。而子类由重写父类抽象方法到重写父类非抽象方法，其强制力也进一步降低：前者是非做不可，而后者则是可做可不做。</p>
+<p>说”坏了规矩”，貌似是个挺严重的事。不过在实际编程中，规矩有时也没那么重要，根据实际的情况，做出最合理的应对才是最重要的。事实上，并不仅仅是Factory Method模式，所有的设计模式说穿了都是经验的总结，并不是规范性的东西，因此一切设计模式，其实都应该根据实际情况做出灵活的应对。</p>
+<h1 id="相关设计模式"><a href="#相关设计模式" class="headerlink" title="相关设计模式"></a>相关设计模式</h1><p><strong><a href="">3.Template Method模式</a></strong><br><strong><a href="">7.Builder模式</a></strong><br><strong><a href="">8.Abstract Factory模式</a></strong></p>
+<p>关于这4个设计模式间的联系与区别，详见<a href="">8.Abstract Factory模式</a>。</p>
+<hr>
+<p><strong><a href="">5.Singleton模式</a></strong></p>
+<p>Creator与ConcreteCreator这个角色通常都是唯一的。Creator的唯一性比较好理解，表示”工厂”的概念只有一个，Creator自然只需要一个就够了。需要进一步解释一下的是ConcreteCreator这个角色。具体的工厂可以有多个类型，但是每个类型的工厂通常只需要一个。例如我们可以同时创建生产桔子与生产苹果的工厂。从总数上说，扮演ConcreteCreator角色的实例有两个，但具体到每种特定的类型，则只会有一个。</p>
+<p>正因为这种唯一性，Creator与ConcreteCreator通常都会应用单例模式来确保单一性。实际上，并不仅仅是这两个角色，也不仅仅是局限在Factory Method模式，任何需要从逻辑上确保单一性的角色都可以应用单例模式。</p>
+<p>当然，我们的示例程序仅仅只是举例，因此不想弄得太复杂，自然就没使用单例模式啦。</p>
+<hr>
+<p><strong><a href="">1.Iterator模式</a></strong></p>
+<p>我们可以应用Factory Method模式来实现Iterator模式。角色对应如下：</p>
+<ul>
+<li>Creator：生产”迭代器”这个概念的抽象工厂。</li>
+<li>Product：代表”迭代器”这个概念的抽象类。</li>
+<li>ConcreteCreator：生成具体迭代器的工厂。</li>
+<li>ConcreteProduct：具体的迭代器，例如链表的迭代器，数组的迭代器等。</li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechat.png" alt="王艺凯 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/ali.jpg" alt="王艺凯 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>王艺凯</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2018/06/14/Java 设计模式-4Factory Method模式/" title="Java 设计模式-4.Factory Method模式">http://yoursite.com/2018/06/14/Java 设计模式-4Factory Method模式/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/12/Java 设计模式-3Template Method模式/" rel="next" title="Java 设计模式-3.Template Method模式">
+                <i class="fa fa-chevron-left"></i> Java 设计模式-3.Template Method模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/19/Java 设计模式-5Singleton模式/" rel="prev" title="Java 设计模式-5.Singleton模式">
+                Java 设计模式-5.Singleton模式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/avatar.jpg"
+                alt="王艺凯" />
+            
+              <p class="site-author-name" itemprop="name">王艺凯</p>
+              <p class="site-description motion-element" itemprop="description">Thou Shalt Comment</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">189</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">117</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/ReimuWang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:1505580759@qq.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用网站
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.bilibili.com/" title="bilibili" target="_blank">bilibili</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://acg12.com/" title="ACG调查小队" target="_blank">ACG调查小队</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.com/" title="leetcode" target="_blank">leetcode</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#综述"><span class="nav-number">1.</span> <span class="nav-text">综述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#示例程序"><span class="nav-number">2.</span> <span class="nav-text">示例程序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#登场角色"><span class="nav-number">3.</span> <span class="nav-text">登场角色</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Factory-Method模式的变种"><span class="nav-number">4.</span> <span class="nav-text">Factory Method模式的变种</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#相关设计模式"><span class="nav-number">5.</span> <span class="nav-text">相关设计模式</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老滚6催更协会</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+  <div class="footer-custom"><i>明明可以靠脸吃饭，你却要靠才华，这就是你和明明的差距</i></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+
+</body>
+</html>

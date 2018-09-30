@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/myLogo.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="“分治法”是一种非常有效的解决问题的思路，大名鼎鼎的MapReduce就是它的实际应用。 我们可以以一个小例子来简单介绍下分治法的基本思想：假如我们需要处理1000个数据，而这1000个数据的处理是彼此独立的，不需要建立特定的处理顺序。比较极端的方式有两种：其一是同时处理这1000个数据，这样做效率最高，但对系统的负担也最大。其二是每次只处理1个，处理1000次，这样做对系统的负担最小，但效率最低">
+<meta name="keywords" content="Java,并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 并发-Fork Join框架">
+<meta property="og:url" content="http://yoursite.com/2018/01/23/Java 并发-Fork Join框架/index.html">
+<meta property="og:site_name" content="ReimuWang&#39;s Blog">
+<meta property="og:description" content="“分治法”是一种非常有效的解决问题的思路，大名鼎鼎的MapReduce就是它的实际应用。 我们可以以一个小例子来简单介绍下分治法的基本思想：假如我们需要处理1000个数据，而这1000个数据的处理是彼此独立的，不需要建立特定的处理顺序。比较极端的方式有两种：其一是同时处理这1000个数据，这样做效率最高，但对系统的负担也最大。其二是每次只处理1个，处理1000次，这样做对系统的负担最小，但效率最低">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20并发/Fork%20Join框架/0.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20并发/Fork%20Join框架/1.jpg">
+<meta property="og:updated_time" content="2018-04-03T03:30:40.349Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 并发-Fork Join框架">
+<meta name="twitter:description" content="“分治法”是一种非常有效的解决问题的思路，大名鼎鼎的MapReduce就是它的实际应用。 我们可以以一个小例子来简单介绍下分治法的基本思想：假如我们需要处理1000个数据，而这1000个数据的处理是彼此独立的，不需要建立特定的处理顺序。比较极端的方式有两种：其一是同时处理这1000个数据，这样做效率最高，但对系统的负担也最大。其二是每次只处理1个，处理1000次，这样做对系统的负担最小，但效率最低">
+<meta name="twitter:image" content="http://yoursite.com/images/blog_pic/Java%20并发/Fork%20Join框架/0.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="ReimuWang's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/23/Java 并发-Fork Join框架/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java 并发-Fork Join框架 | ReimuWang's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ReimuWang's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">189</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">117</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类<span class="badge">24</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404.html" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />公益 404</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+    
+      
+    
+    <a href="https://github.com/ReimuWang" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#222; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg>
+    
+      </a>
+    
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/23/Java 并发-Fork Join框架/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王艺凯">
+      <meta itemprop="description" content="Thou Shalt Comment">
+      <meta itemprop="image" content="/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ReimuWang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java 并发-Fork Join框架
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-01-23 16:27:36" itemprop="dateCreated datePublished" datetime="2018-01-23T16:27:36+08:00">2018-01-23</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-04-03 11:30:40" itemprop="dateModified" datetime="2018-04-03T11:30:40+08:00">2018-04-03</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java-并发/" itemprop="url" rel="index"><span itemprop="name">Java 并发</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>“分治法”是一种非常有效的解决问题的思路，大名鼎鼎的MapReduce就是它的实际应用。</p>
+<p>我们可以以一个小例子来简单介绍下分治法的基本思想：假如我们需要处理1000个数据，而这1000个数据的处理是彼此独立的，不需要建立特定的处理顺序。比较极端的方式有两种：其一是同时处理这1000个数据，这样做效率最高，但对系统的负担也最大。其二是每次只处理1个，处理1000次，这样做对系统的负担最小，但效率最低。</p>
+<a id="more"></a>
+<p>其实这两种处理方式可以看作同一个模式下的两个极端情况：每次处理x个，处理y轮，保证x*y为数据总数即可。其实这已经运用了分治法的思想，将一个大的问题，分解成了y轮。</p>
+<p>因此分治法的本质就是分解：将无法直接解决的大的问题分解为一个个小的，可以通过现有资源解决的问题。在解决这些小的问题后再进行汇总，最终间接解决大的问题。其实不仅仅是编程，为人处事也是这个道理。</p>
+<p>具体到Java API中，分治法的应用便是Fork Join框架。Fork的原义是叉子，引申义就是问题的分解：像叉子的前端一样被分解为多个更小的问题。事实上，Java的这种起名方式源自Linux。在Linux中，fork()函数用来创建子进程。</p>
+<p>而Join则与Java API中的join方法相同，代表等待。</p>
+<p>因此Fork Join确实是很形象的描述了分治法的精髓：当问题需要分解时，它便像叉子的前端一样被分解为多个分叉，而先完成的分叉会等待尚未完成的分叉，待全部分叉均完成后再汇聚起来，向下进行。</p>
+<p>依然以开篇的那个小例子为例，fork出1000个叉确实是太多了，而只fork出一个叉相当于就没分治。因此合乎逻辑的做法应当是根据系统的承载能力及对性能的要求fork出一个(1,1000)之间的整数。很显然，这里需要用到线程池。</p>
+<p>这个线程池名为java.util.concurrent.ForkJoinPool，它的类定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class ForkJoinPool extends AbstractExecutorService</span><br></pre></td></tr></table></figure>
+<p>果不其然，它继承了AbstractExecutorService，承接自线程池一脉。在<a href="/2017/10/03/Java 并发-线程池/">Java 并发-线程池</a>中，我们曾给出过线程池核心类/接口的层次关系图：</p>
+<p><img src="/images/blog_pic/Java 并发/Fork Join框架/0.jpg" alt="0.jpg"></p>
+<p>现在，我们可以进一步丰富这张图：</p>
+<p><img src="/images/blog_pic/Java 并发/Fork Join框架/1.jpg" alt="1.jpg"></p>
+<p>它的常用构造函数有两个：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public ForkJoinPool(int parallelism) &#123;</span><br><span class="line">    this(parallelism, defaultForkJoinWorkerThreadFactory, null, false);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public ForkJoinPool() &#123;</span><br><span class="line">    this(Runtime.getRuntime().availableProcessors(),</span><br><span class="line">         defaultForkJoinWorkerThreadFactory, null, false);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>前者会按照使用者的要求创建一个大小为parallelism的线程池，而后者则会直接取可用CPU数作为线程池的大小。二者内部实际上调用的是同一个方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">public ForkJoinPool(int parallelism,</span><br><span class="line">                    ForkJoinWorkerThreadFactory factory,</span><br><span class="line">                    Thread.UncaughtExceptionHandler handler,</span><br><span class="line">                    boolean asyncMode) &#123;</span><br><span class="line">    checkPermission();</span><br><span class="line">    if (factory == null)</span><br><span class="line">        throw new NullPointerException();</span><br><span class="line">    if (parallelism &lt;= 0 || parallelism &gt; MAX_ID)</span><br><span class="line">        throw new IllegalArgumentException();</span><br><span class="line">    this.parallelism = parallelism;</span><br><span class="line">    this.factory = factory;</span><br><span class="line">    this.ueh = handler;</span><br><span class="line">    this.locallyFifo = asyncMode;</span><br><span class="line">    long np = (long)(-parallelism);</span><br><span class="line">    this.ctl = ((np &lt;&lt; AC_SHIFT) &amp; AC_MASK) | ((np &lt;&lt; TC_SHIFT) &amp; TC_MASK);</span><br><span class="line">    this.submissionQueue = new ForkJoinTask&lt;?&gt;[INITIAL_QUEUE_CAPACITY];</span><br><span class="line">    int n = parallelism &lt;&lt; 1;</span><br><span class="line">    if (n &gt;= MAX_ID)</span><br><span class="line">        n = MAX_ID;</span><br><span class="line">    else &#123;</span><br><span class="line">        n |= n &gt;&gt;&gt; 1; n |= n &gt;&gt;&gt; 2; n |= n &gt;&gt;&gt; 4; n |= n &gt;&gt;&gt; 8;</span><br><span class="line">    &#125;</span><br><span class="line">    workers = new ForkJoinWorkerThread[n + 1];</span><br><span class="line">    this.submissionLock = new ReentrantLock();</span><br><span class="line">    this.termination = submissionLock.newCondition();</span><br><span class="line">    StringBuilder sb = new StringBuilder(&quot;ForkJoinPool-&quot;);</span><br><span class="line">    sb.append(poolNumberGenerator.incrementAndGet());</span><br><span class="line">    sb.append(&quot;-worker-&quot;);</span><br><span class="line">    this.workerNamePrefix = sb.toString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>很长，而且看起来做了很多事，挺复杂的样子。不过我们很简单就可以确定的是，这确实是在构建一个和我们最常用的ThreadPoolExecutor完全不同的线程池，并且这个线程池应该是比ThreadPoolExecutor要复杂得多。</p>
+<p>事实上也的确如此，不过这种复杂对于使用者基本是透明的，因为它们绝大多数都被用以实现ForkJoinPool更复杂的逻辑需求以及优化它的性能。例如，对于普通的线程池，也就是ThreadPoolExecutor而言，提交给它的任务可以是不同的，因此两个线程之间是无法互相帮助的。而ForkJoinPool中的任务都是相同的(叉子的每个尖端当然都是相同的)，因此两个线程间可以互相帮助：例如线程1已将线程池分配给它的任务全部执行完，而线程2的阻塞队列中尚有任务积压，那么线程1就可以帮着线程2完成一部分积压的任务。当然，这里只是简单说下思路，实际实现起来还是比较麻烦的。例如，为了避免在帮助时发生冲突，从自身队列中取数据时应取队首的，而帮助他人时则从队尾开始拿数据。</p>
+<p>再比如，ForkJoinPool会使用一个无锁的栈来管理空闲线程。如果一个工作线程没有被分配任务，那么它除了帮助他人外，还有可能(注意仅仅只是可能)被挂起，被挂起的线程将会被压入ForkJoinPool所管理的那个栈中，待需要时再唤醒线程。</p>
+<p>在任务的提交上，ForkJoinPool最常用的提交方法为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public &lt;T&gt; ForkJoinTask&lt;T&gt; submit(ForkJoinTask&lt;T&gt; task) &#123;</span><br><span class="line">    if (task == null)</span><br><span class="line">        throw new NullPointerException();</span><br><span class="line">    forkOrSubmit(task);</span><br><span class="line">    return task;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从入参所属类的名字上我们便可看出，这个方法是为ForkJoinPool量身打造的，而java.util.concurrent.ForkJoinTask的类定义为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public abstract class ForkJoinTask&lt;V&gt; implements Future&lt;V&gt;, Serializable</span><br></pre></td></tr></table></figure>
+<p>它是ForkJoinPool专用的任务，其设计思路与我们最熟悉的构成Thread的核心Runnable完全不同，不过二者的性质是相同的，都代表要线程池执行的任务本身，其内部封装着具体的任务逻辑。</p>
+<p>我们在使用时通常会使用ForkJoinTask的如下两个方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public final ForkJoinTask&lt;V&gt; fork()</span><br><span class="line"></span><br><span class="line">public final V join()</span><br></pre></td></tr></table></figure>
+<p>fork及join不必多说，它们所实现的就是Fork Join的核心功能，join返回任务的执行结果，其类型就是ForkJoinTask类定义中的V。</p>
+<p>ForkJoinTask是一个抽象类，我们常用的它的子类有两个，它们的类定义分别为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public abstract class RecursiveTask&lt;V&gt; extends ForkJoinTask&lt;V&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public abstract class RecursiveAction extends ForkJoinTask&lt;Void&gt;</span><br></pre></td></tr></table></figure>
+<p>这又是两个抽象类，也就是说摆明了是要我们继承了才能用。</p>
+<p>理所当然的，它们都位于java.util.concurrent包中。需要注意的是，单看ForkJoinTask，仿佛它的子类都应有返回值，但事实上，Java API不仅提供了有返回值的子类(RecursiveTask，类比于Callable)，同时也提供了无返回值的子类(RecursiveAction，类比于Runnable)。</p>
+<p>无论是RecursiveTask，亦或是RecursiveAction，执行任务的逻辑都被封装在了方法compute()中：</p>
+<p>有意思的是，这个方法并未出现在ForkJoinTask中，也就是RecursiveTask及RecursiveAction特有的执行方法，相当于Runnable的run()，或是Callable的call()。事实上，ForkJoinTask确实不仅仅这两个子类，我并未关注其他子类是怎么实现的，不过估计应该是有子类不依靠compute()来执行吧。</p>
+<p>这个compute()在RecursiveTask的代码为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">protected abstract V compute();</span><br></pre></td></tr></table></figure>
+<p>在RecursiveAction中的代码为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">protected abstract void compute();</span><br></pre></td></tr></table></figure>
+<p>自然，这便是需要我们自行实现，封装任务逻辑的关键代码(也是RecursiveTask及RecursiveAction中唯一的抽象方法)。</p>
+<p>无论分治法在内部将问题分解为了多少个小问题，从外部调用者来看，只需提交一个任务，然后等待ForkJoinPool得到该问题的解，这个解包含在submit的返回值ForkJoinTask中，它对应未经分解的那个大问题，其值可以通过它的get方法得到：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public final V get() throws InterruptedException, ExecutionException</span><br></pre></td></tr></table></figure>
+<p>最后再提一点，既然ForkJoinTask从概念上对应于Runnable或Callable，那么它也该有个类似于Thread一样的容器来封装才对。没错，这个容器名为java.util.concurrent.ForkJoinWorkerThread，它的类定义为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class ForkJoinWorkerThread extends Thread</span><br></pre></td></tr></table></figure>
+<p>看来较之于任务，容器倒是没那么另类，是直接继承了最常见的Thread。</p>
+<p>下面我们来看一个小例子：要求做1-200000的数列求和，假设当前系统一个线程单次最多只能计算10000个数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">import java.util.concurrent.ExecutionException;</span><br><span class="line">import java.util.concurrent.ForkJoinPool;</span><br><span class="line">import java.util.concurrent.ForkJoinTask;</span><br><span class="line">import java.util.concurrent.RecursiveTask;</span><br><span class="line"></span><br><span class="line">public class Test &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws InterruptedException, ExecutionException &#123;</span><br><span class="line">        ForkJoinPool forkJoinPool = new ForkJoinPool();</span><br><span class="line">        MyTask myTask = new MyTask(1L, 200000L);</span><br><span class="line">        ForkJoinTask&lt;Long&gt; forkJoinTask = forkJoinPool.submit(myTask);</span><br><span class="line">        System.out.println(forkJoinTask.get());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class MyTask extends RecursiveTask&lt;Long&gt; &#123;</span><br><span class="line"></span><br><span class="line">    private static final long serialVersionUID = 1L;</span><br><span class="line"></span><br><span class="line">    private static final int LIMIT = 10000;</span><br><span class="line"></span><br><span class="line">    private long begin;</span><br><span class="line"></span><br><span class="line">    private long end;</span><br><span class="line"></span><br><span class="line">    MyTask(long begin, long end) &#123;</span><br><span class="line">        this.begin = begin;</span><br><span class="line">        this.end = end;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected Long compute() &#123;</span><br><span class="line">        long sum = 0L;</span><br><span class="line">        long count = this.end - this.begin + 1;</span><br><span class="line">        if (count &lt;= MyTask.LIMIT) &#123;</span><br><span class="line">            for (long i = this.begin; i &lt;= this.end; i++) sum += i;</span><br><span class="line">            return sum;</span><br><span class="line">        &#125;</span><br><span class="line">        long mid = this.begin + (this.end - this.begin) / 2;    // 将规模缩减至一半</span><br><span class="line"></span><br><span class="line">        MyTask myTask1 = new MyTask(this.begin, mid);</span><br><span class="line">        myTask1.fork();</span><br><span class="line">        sum += myTask1.join();</span><br><span class="line"></span><br><span class="line">        MyTask myTask2 = new MyTask(mid + 1, this.end);</span><br><span class="line">        myTask2.fork();</span><br><span class="line">        sum += myTask2.join();</span><br><span class="line">        </span><br><span class="line">        return sum;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">20000100000</span><br></pre></td></tr></table></figure>
+<p>看完这个小例子，想必很自然的就会联想到递归：因为这与递归实在是太像了。没错，事实上，大家不妨认真思考下，递归也是分治思想的体现啊！</p>
+<p>不过，递归默认是不支持并发的，如果想将原生的递归改造为并发也是非常麻烦的。所以我们其实也可以这样想：Fork Join框架可以看作是并发环境下的递归。</p>
+<p>既然Fork Join框架本质上和递归类似，那么如果调用的层次过深，它也同样可能出现栈溢出。同时，由于Fork Join底层使用的是线程池，那么它也可能出现普通线程池容易引发的错误：例如程序占用的线程数量过多，导致系统性能下降甚至崩溃。这都是使用Fork Join框架时需要注意的地方。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechat.png" alt="王艺凯 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/ali.jpg" alt="王艺凯 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>王艺凯</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2018/01/23/Java 并发-Fork Join框架/" title="Java 并发-Fork Join框架">http://yoursite.com/2018/01/23/Java 并发-Fork Join框架/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/并发/" rel="tag"># 并发</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/09/Java 并发-Future/" rel="next" title="Java 并发-Future">
+                <i class="fa fa-chevron-left"></i> Java 并发-Future
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/24/Java 并发-线程安全的容器/" rel="prev" title="Java 并发-线程安全的容器">
+                Java 并发-线程安全的容器 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/avatar.jpg"
+                alt="王艺凯" />
+            
+              <p class="site-author-name" itemprop="name">王艺凯</p>
+              <p class="site-description motion-element" itemprop="description">Thou Shalt Comment</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">189</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">117</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/ReimuWang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:1505580759@qq.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用网站
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.bilibili.com/" title="bilibili" target="_blank">bilibili</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://acg12.com/" title="ACG调查小队" target="_blank">ACG调查小队</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.com/" title="leetcode" target="_blank">leetcode</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老滚6催更协会</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+  <div class="footer-custom"><i>明明可以靠脸吃饭，你却要靠才华，这就是你和明明的差距</i></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+
+</body>
+</html>

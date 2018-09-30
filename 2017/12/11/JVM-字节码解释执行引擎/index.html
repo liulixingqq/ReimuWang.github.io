@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/myLogo.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="JVM对于字节码指令的执行方法有两种：  解释执行：通过解释器执行。  编译执行：通过即时编译器(JIT)产生本地代码执行。   本文重点探讨解释执行的具体过程。">
+<meta name="keywords" content="Java,JVM,Java虚拟机,虚拟机">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM-字节码解释执行引擎">
+<meta property="og:url" content="http://yoursite.com/2017/12/11/JVM-字节码解释执行引擎/index.html">
+<meta property="og:site_name" content="ReimuWang&#39;s Blog">
+<meta property="og:description" content="JVM对于字节码指令的执行方法有两种：  解释执行：通过解释器执行。  编译执行：通过即时编译器(JIT)产生本地代码执行。   本文重点探讨解释执行的具体过程。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/JVM/字节码解释执行引擎/0.png">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/JVM/字节码解释执行引擎/1.png">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/JVM/字节码解释执行引擎/2.png">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/JVM/字节码解释执行引擎/3.png">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/JVM/字节码解释执行引擎/4.png">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/JVM/字节码解释执行引擎/5.png">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/JVM/字节码解释执行引擎/6.png">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/JVM/字节码解释执行引擎/7.png">
+<meta property="og:updated_time" content="2018-04-24T08:47:34.490Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JVM-字节码解释执行引擎">
+<meta name="twitter:description" content="JVM对于字节码指令的执行方法有两种：  解释执行：通过解释器执行。  编译执行：通过即时编译器(JIT)产生本地代码执行。   本文重点探讨解释执行的具体过程。">
+<meta name="twitter:image" content="http://yoursite.com/images/blog_pic/JVM/字节码解释执行引擎/0.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="ReimuWang's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/12/11/JVM-字节码解释执行引擎/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>JVM-字节码解释执行引擎 | ReimuWang's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ReimuWang's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">189</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">117</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类<span class="badge">24</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404.html" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />公益 404</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+    
+      
+    
+    <a href="https://github.com/ReimuWang" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#222; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg>
+    
+      </a>
+    
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/11/JVM-字节码解释执行引擎/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王艺凯">
+      <meta itemprop="description" content="Thou Shalt Comment">
+      <meta itemprop="image" content="/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ReimuWang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">JVM-字节码解释执行引擎
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-12-11 14:54:49" itemprop="dateCreated datePublished" datetime="2017-12-11T14:54:49+08:00">2017-12-11</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-04-24 16:47:34" itemprop="dateModified" datetime="2018-04-24T16:47:34+08:00">2018-04-24</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>JVM对于字节码指令的执行方法有两种：</p>
+<ul>
+<li><p>解释执行：通过解释器执行。</p>
+</li>
+<li><p>编译执行：通过即时编译器(JIT)产生本地代码执行。</p>
+</li>
+</ul>
+<p>本文重点探讨解释执行的具体过程。</p>
+<a id="more"></a>
+<h1 id="解释执行与编译执行"><a href="#解释执行与编译执行" class="headerlink" title="解释执行与编译执行"></a>解释执行与编译执行</h1><p>在真正开始讲解解释执行的具体过程之前，我想先提纲挈领的描述下解释执行与编译执行的区别。</p>
+<p>Java经常会被人(尤其是主语言是其他开发语言的程序员)定位为解释执行的语言。其原因就在于1996年JDK1.0诞生时，其所使用的默认JVM为Sun Classic VM，这是一个纯解释执行的JVM，因此此时这样定位尚属准确。而到了1998年JDK1.2时，虽然默认JVM依然是Sun Classic VM，然而此时Sun Classic VM已不是唯一的JVM了，HotSpot VM这个解释与编译混合执行的JVM已被作为可选JVM加入JDK。而到了2000年的JDK1.3，HotSpot VM成为了默认JVM，Sun Classic VM降为可选JVM(JDK1.2到JDK1.3默认JVM的变化正所谓扶上马送一程)。自此以后用解释执行来描述Java就不再准确了，因为Class文件中的内容到底会被解释执行还是编译执行，就成了只有JVM自己才能准确判断的事情了。因此准确来说，Java是一门解释与编译混合执行的语言。</p>
+<p>不过说真的，空洞的从理论上争论一个语言到底是解释执行还是编译执行其实意义并没有那么大。关键还是要结合实现，具体问题具体分析。高级编程语言也发展了这么多年了，其实际套路已无法完全遵循最初制定的框架(也就是计划赶不上变化)，C与C++现在也已经有了通过解释器执行的版本(如CINT)。而Java也不总是编译期与运行期断为两截了，也出现了直接将.java编译为本地机器代码的编译器(如GNU Compiler for the Java，即GCJ)。因此我们平常所说的”C/C++是编译执行的语言”，”Java是解释与编译混合执行的语言”等等所指的都是主流情况，而无法涵盖全部(因为实在也没必要较那个真)。</p>
+<p>其实无论是基于物理机，JVM，亦或是其他的高级语言虚拟机(High Level Language Virtual Machine,HLLVM)，现代高级编程语言的执行流程都大同小异。在逻辑上基本不出下图的藩篱：</p>
+<p><img src="/images/blog_pic/JVM/字节码解释执行引擎/0.png" alt="0.png"></p>
+<p>显然，最下面那行对应编译执行，中间那行对应解释执行。而中间那行中的”指令流”一步指的自然是javac编译器生成.class文件的过程了。</p>
+<p>上图中的思路即为现代经典编译原理的思路。在执行前先对程序源码进行词法分析和语法分析处理，把源码转化为抽象语法树(Abstract Syntax Tree,AST)。具体到每一门语言，这一步大体上会有3种实现思路：</p>
+<ul>
+<li><p>词法分析，语法分析，乃至后续的优化器及目标代码生成器等一切编译相关的组件均独立于执行器实现，形成一个完成的编译器。例如C/C++。</p>
+</li>
+<li><p>将一部分组件(例如生成抽象语法树之前的步骤)实现为一个独立的编译器，而后续的步骤则与执行器混合在一起。例如Java。</p>
+</li>
+<li><p>将所有的编译组件及执行组件均封装在一个黑盒中，例如大多数的JavaScript(JavaScript真不愧是以简单暴躁著称)。</p>
+</li>
+</ul>
+<p>或者我们可以更具体一些，对于JDK而言，javac编译器完成了上图中程序源码到第二行中指令流之间的过程。因为这一部分动作是在JVM之外进行的，而解释器在JVM内部，所以我们也说Java的编译器是半独立实现的(JVM之外javac实现的那部分是独立的，而JVM内部的那部分则不是)。</p>
+<h1 id="基于栈的指令集与基于寄存器的指令集"><a href="#基于栈的指令集与基于寄存器的指令集" class="headerlink" title="基于栈的指令集与基于寄存器的指令集"></a>基于栈的指令集与基于寄存器的指令集</h1><p>JVM基本上是一种基于栈的指令集架构(Instruction Set Architecture,ISA)，指令依赖方法区-局部变量表-操作数栈进行工作。之所以说基本上，是因为纯粹的基于栈的指令集架构中的指令应该全部都是零地址指令，或者说是不带参数的指令。而JVM的指令集中有小部分指令是需要参数的。之所以做这个变通，是为了提高代码的可校验性。</p>
+<p>与基于栈的指令集架构相对的另一套同样很常用的指令集架构是基于寄存器的指令集架构。最典型的就是x86的二地址指令集架构，或者更通俗的说，就是现在主流的PC微型机中直接支持的指令集架构，其中的指令依赖寄存器进行工作。那么，二者之间有何不同呢？</p>
+<p>举个小例子，如果要计算1+1的结果，那么对于JVM中的基于栈的指令集而言是这样的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iconst_1    // 将1压入操作数栈</span><br><span class="line">iconst_1    // 将1压入操作数栈</span><br><span class="line">iadd    // 弹出操作数栈栈顶的两个int型元素求和后再将int型结果压回操作数栈</span><br><span class="line">istore_0    // 将操作数栈栈顶的int型元素弹出并存入局部变量表索引为0的Slot中</span><br></pre></td></tr></table></figure>
+<p>如果是针对基于寄存器的指令集架构的pc机而言，那么1+1是这样的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mov eax, 1    // 将eax寄存器的值设为1</span><br><span class="line">add eax, 1    // 将eax寄存器中的值加1并存回eax寄存器</span><br></pre></td></tr></table></figure>
+<p>那么这两套指令集哪一个更好一些呢？</p>
+<p>其实这两套指令集能齐头并进的共同发展这么多年，本身便已给出答案了：自然是各有其优劣之处：某些场景下基于寄存器的指令集更好，另一些场景下则是基于栈的指令集更优秀一些。</p>
+<p>基于栈的指令集较之基于寄存器的指令集最大的优势就在于栈更为抽象，从而易于移植。基于寄存器的指令集中所使用的寄存器往往由物理机在硬件上直接提供(之所以说往往，是因为也有基于虚拟机寄存器的例子。例如Google Android平台的Dalvik VM。不过，即便是基于虚拟机寄存器，也希望把虚拟机寄存器尽量映射到物理寄存器上以获得更高的性能)，这就不可避免的会受到硬件的约束。例如，32位80x86体系(主流PC机)的CPU提供了8个32位的寄存器，而ARM(主流手机)的CPU则提供了16个32位的通用寄存器。若使用基于寄存器架构的指令集，用户在编写指令时必须针对不同的物理寄存器设计不同的代码。而使用基于栈的指令集则屏蔽了这些底层的细节，用户使用的是抽象过的栈，至于具体的底层实现则交由虚拟机完成。</p>
+<p>总结来说，基于栈的指令集会让程序员更为舒服，那么此消彼长，实际工作的虚拟机就不那么舒服了。上文中”具体的底层实现则交由虚拟机完成”意味着此时虚拟机需要做更多的操作，从而降低执行速度。因此，几乎所有主流的物理机的指令集都是基于寄存器的(因为也没什么可迁移的)。</p>
+<p>通过上文1+1的小例子也可以看出：实现同一个功能，栈架构所用的指令往往要比寄存器架构所用的指令多(正如高级语言的源码通常会比汇编长那样)，因为对于实际功能而言，出栈入栈其实是多余的操作(更本质的来说，栈本身其实就是个多余的东西，因为虚拟机总归是要跑在物理机上的，而物理机又大多是基于寄存器的，因此最终干活的依然是寄存器。换句话说，栈架构相当于在寄存器架构的基础上为了便于迁移和理解加入了新的操作，自然就更长了)。</p>
+<p>说栈架构比寄存器架构慢，上文给出的原因其实只是次要原因，更重要的是，栈并不是物理机实际提供的一个硬件，它只是存在于内存中的一个抽象概念。寄存器是距离CPU最近的存储单元，其次是缓存，然后才是内存。使用栈意味着指令中的那些出栈入栈其实都是CPU在与内存交互，尽管部分热点数据会进入缓存甚至寄存器，然而这无法从本质上解决问题，毕竟栈的主体依然还在内存中，而且频繁的内存-缓存-寄存器间数据的流动本身就是一项开销，因此栈架构比寄存器架构要慢很多。</p>
+<h1 id="JVM的解释器的执行过程"><a href="#JVM的解释器的执行过程" class="headerlink" title="JVM的解释器的执行过程"></a>JVM的解释器的执行过程</h1><p>既然说JVM是基于栈的指令集架构的，那么下面就具体说说其解释器的执行过程。</p>
+<p>首先我们看一个小例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123; </span><br><span class="line"></span><br><span class="line">    public int calc() &#123;</span><br><span class="line">        int a = 100;</span><br><span class="line">        int b = 200;</span><br><span class="line">        int c = 300;</span><br><span class="line">        return (a + b) * c;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后我们用javap将这段代码反编译，我们只看其中的calc()方法的Code属性：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public int calc();</span><br><span class="line">  Code:</span><br><span class="line">    stack=2, locals=4, args_size=1</span><br><span class="line">       0: bipush        100</span><br><span class="line">       2: istore_1      </span><br><span class="line">       3: sipush        200</span><br><span class="line">       6: istore_2      </span><br><span class="line">       7: sipush        300</span><br><span class="line">      10: istore_3      </span><br><span class="line">      11: iload_1       </span><br><span class="line">      12: iload_2       </span><br><span class="line">      13: iadd          </span><br><span class="line">      14: iload_3       </span><br><span class="line">      15: imul          </span><br><span class="line">      16: ireturn</span><br></pre></td></tr></table></figure>
+<p>这段信息首先告诉我们：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">stack=2, locals=4, args_size=1</span><br></pre></td></tr></table></figure>
+<p>即操作数栈的最大深度为2，局部变量表的长度为4个Slot，传入参数个数为1(this)。</p>
+<p>现在我们以如下7张图描述解释器的执行过程：</p>
+<p><img src="/images/blog_pic/JVM/字节码解释执行引擎/1.png" alt="1.png"></p>
+<p><img src="/images/blog_pic/JVM/字节码解释执行引擎/2.png" alt="2.png"></p>
+<p><img src="/images/blog_pic/JVM/字节码解释执行引擎/3.png" alt="3.png"></p>
+<p><img src="/images/blog_pic/JVM/字节码解释执行引擎/4.png" alt="4.png"></p>
+<p><img src="/images/blog_pic/JVM/字节码解释执行引擎/5.png" alt="5.png"></p>
+<p><img src="/images/blog_pic/JVM/字节码解释执行引擎/6.png" alt="6.png"></p>
+<p><img src="/images/blog_pic/JVM/字节码解释执行引擎/7.png" alt="7.png"></p>
+<p>需要说明的是，上面的过程仅仅是理论上的概念模型，而大多数的JVM实现都会做一些优化来提高性能，因此实际运行起来通常不会与这个概念模型完全相同。其实更准确的说，主流JVM的实际情况会与这个概念模型的差别非常大。例如HotSpot的指令集中有很多以”fast_”开头的非标准字节码指令用于合并，替换输入的字节码以提升解释执行的性能。而对于即时编译器(JIT)而言，优化的手段就更加花样繁多了。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechat.png" alt="王艺凯 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/ali.jpg" alt="王艺凯 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>王艺凯</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2017/12/11/JVM-字节码解释执行引擎/" title="JVM-字节码解释执行引擎">http://yoursite.com/2017/12/11/JVM-字节码解释执行引擎/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
+          
+            <a href="/tags/Java虚拟机/" rel="tag"># Java虚拟机</a>
+          
+            <a href="/tags/虚拟机/" rel="tag"># 虚拟机</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/09/Java IO-File类/" rel="next" title="Java IO-File类">
+                <i class="fa fa-chevron-left"></i> Java IO-File类
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/12/Tomcat-CATALINA_HOME与CATALINA_BASE/" rel="prev" title="Tomcat-CATALINA_HOME与CATALINA_BASE">
+                Tomcat-CATALINA_HOME与CATALINA_BASE <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/avatar.jpg"
+                alt="王艺凯" />
+            
+              <p class="site-author-name" itemprop="name">王艺凯</p>
+              <p class="site-description motion-element" itemprop="description">Thou Shalt Comment</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">189</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">117</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/ReimuWang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:1505580759@qq.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用网站
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.bilibili.com/" title="bilibili" target="_blank">bilibili</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://acg12.com/" title="ACG调查小队" target="_blank">ACG调查小队</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.com/" title="leetcode" target="_blank">leetcode</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#解释执行与编译执行"><span class="nav-number">1.</span> <span class="nav-text">解释执行与编译执行</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基于栈的指令集与基于寄存器的指令集"><span class="nav-number">2.</span> <span class="nav-text">基于栈的指令集与基于寄存器的指令集</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM的解释器的执行过程"><span class="nav-number">3.</span> <span class="nav-text">JVM的解释器的执行过程</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老滚6催更协会</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+  <div class="footer-custom"><i>明明可以靠脸吃饭，你却要靠才华，这就是你和明明的差距</i></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+
+</body>
+</html>

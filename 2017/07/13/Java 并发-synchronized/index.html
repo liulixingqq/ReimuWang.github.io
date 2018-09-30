@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/myLogo.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在synchronized标记范围内的同步块同时只能被一个线程进入并执行操作，所有其他等待进入该同步块的线程将被阻塞，直到该同步块中的线程退出。">
+<meta name="keywords" content="Java,并发,synchronized">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 并发-synchronized">
+<meta property="og:url" content="http://yoursite.com/2017/07/13/Java 并发-synchronized/index.html">
+<meta property="og:site_name" content="ReimuWang&#39;s Blog">
+<meta property="og:description" content="在synchronized标记范围内的同步块同时只能被一个线程进入并执行操作，所有其他等待进入该同步块的线程将被阻塞，直到该同步块中的线程退出。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-03-29T08:21:40.709Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 并发-synchronized">
+<meta name="twitter:description" content="在synchronized标记范围内的同步块同时只能被一个线程进入并执行操作，所有其他等待进入该同步块的线程将被阻塞，直到该同步块中的线程退出。">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="ReimuWang's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/07/13/Java 并发-synchronized/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java 并发-synchronized | ReimuWang's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ReimuWang's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">189</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">117</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类<span class="badge">24</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404.html" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />公益 404</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+    
+      
+    
+    <a href="https://github.com/ReimuWang" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#222; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg>
+    
+      </a>
+    
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/13/Java 并发-synchronized/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王艺凯">
+      <meta itemprop="description" content="Thou Shalt Comment">
+      <meta itemprop="image" content="/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ReimuWang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java 并发-synchronized
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-07-13 19:33:36" itemprop="dateCreated datePublished" datetime="2017-07-13T19:33:36+08:00">2017-07-13</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-03-29 16:21:40" itemprop="dateModified" datetime="2018-03-29T16:21:40+08:00">2018-03-29</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java-并发/" itemprop="url" rel="index"><span itemprop="name">Java 并发</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在synchronized标记范围内的同步块同时只能被一个线程进入并执行操作，所有其他等待进入该同步块的线程将被阻塞，直到该同步块中的线程退出。</p>
+<a id="more"></a>
+<p>synchronized的含义为同步。在表现上，synchronized实现了监视器机制。</p>
+<p>被阻塞的是尝试进入synchronized同步块的线程，如果说线程被阻塞相当于在前行的路上被一道门挡住了，则synchronized所修饰的对象(称为监视器对象)则相当于加于这道门上的监视器。在这里被当做监视器的对象仅仅相当于一个记号，所有对象都可被用作监视器，而被作为监视器对对象而言也没什么影响，受影响的仅仅是被阻塞了的线程。</p>
+<p>synchronized相当于在线程前进的路上设置了两道门。进第一道门时需要获得监视器对象的认可，同一时间点最多只能有一个线程可以得到这个认可。若线程获得认可进入第一道门后，则可继续前行直至第二道门，第二道门没有监视器，其只相当于一个线程的退出标记，当线程离开第二道门后第一道门上的监视器对象将收回对该线程的认可，并可将该认可再次发给其他线程(当然只要刚离开第二道门的线程愿意，它也可以马上再次申请该认可)。</p>
+<p>本质上，synchronized只能修饰对象，synchronized有如下具体的使用方式：</p>
+<p>修饰实例方法。实际是修饰该实例方法所属的对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public synchronized void m() &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>修饰静态方法。实际是修饰该静态方法所属类的类对象(即Class对象)。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public static synchronized void m() &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>实例/静态 方法中的同步块。此时synchronized会显示指明监视器对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">synchronized(o) &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>如果一个线程在等待监视器对象的认可，那么等待的结果只有两种：要么获得认可结束等待；要么无限期的等下去。换句话说，等待监视器对象认可是没有中断机制的。</p>
+<p>synchronized同步块中的变量具有可见性。且并发线程执行到synchronized同步块时相当于变回了串行执行，因此synchronized天然具有有序性。由此synchronized可实现volatile的所有功能，只是付出的代价要大一些。</p>
+<h1 id="通信：wait-wait-long-timeout-，notify-notifyAll-。"><a href="#通信：wait-wait-long-timeout-，notify-notifyAll-。" class="headerlink" title="通信：wait()/wait(long timeout)，notify()/notifyAll()。"></a>通信：wait()/wait(long timeout)，notify()/notifyAll()。</h1><p>这几个方法都出自Object类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public final void wait() throws InterruptedException &#123;</span><br><span class="line">    wait(0);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public final native void wait(long timeout) throws InterruptedException;</span><br><span class="line"></span><br><span class="line">public final native void notify();</span><br><span class="line"></span><br><span class="line">public final native void notifyAll();</span><br></pre></td></tr></table></figure>
+<p>wait()内部实际上就是调用wait(long timeout)，0表示无限期等待：</p>
+<p>因此本质上二者的实现机制是一致的，wait()表示无限等待，只要没有接到唤醒信号就会一直等下去。wait(long timeout)除了会在接到唤醒信号时结束等待之外，也会在设置的限定时间到期后自动结束等待。除此之外二者没有其他差异。为了论述方便，下文仅以wait()来代指 wait()/wait(long timeout) 。</p>
+<p>关于wait()，notify()和notifyAll()与Java线程状态转换的关系，详见<a href="/2017/07/12/Java 并发-线程状态转换/">Java 并发-线程状态转换</a>。</p>
+<p>为了进行线程间的通信，可采用”自定义通信对象+忙等待查询”的方式，详见<a href="/2017/07/13/Java 并发-线程通信/">Java 并发-线程通信</a>。</p>
+<p>忙等待的缺陷：从JVM的角度来看，JVM并不知道进行忙等待的线程是在做无法产生有效结果的等待操作，在它看来，该线程依然在正常的运行着并在切实执行用户程序。此时该线程并没有让出它已获得的所有资源。用户程序人为的让该线程在等待时适当的进行睡眠可以在一定程度上缓解这个问题，但是睡眠频度及睡眠时间的长短很难根据系统当前情况调整为一个最优值。</p>
+<p>因此，Java提供了一个内建机制以从根本上解决这个问题，将用户程序从复杂的通信问题中解放出来。</p>
+<p>java.lang.Object类定义了三个实例方法：wait()，notify()和notifyAll()来实现这个等待机制。注意该机制必须配合synchronized关键字使用，即这3个实例方法必须存在于synchronized标记范围内的同步块中，且该synchronized所监视的监视器对象即为这3个实例方法所属的对象(若不是，可通过编译，运行时抛出运行时异常IllegalMonitorStateException)。换句话说，要想使用某监视器对象的通信机制，必须要先获得该监视器对象的认可。因为同一时间点最多只能有一个线程可以得到这个认可，所以在同一时间点，对于某特定监视器对象而言，最多只有一个线程能调用这3个方法中的任意一个。</p>
+<p>wait()：让出监视器对象的认可及CPU。因为唯有这样其他线程才有机会获得这个认可从而调用notify()或notifyAll()正常结束该线程的等待状态。该方法会throws受检查异常：InterruptedException。</p>
+<p>notify()：随机唤醒监视器对象等待池中的一个线程。</p>
+<p>notifyAll()：唤醒监视器对象等待池中的所有线程。</p>
+<p>因为监视器对象的认可只有一个，因此notify()及notifyAll()只负责通知被唤醒的线程：你被唤醒了，可以不用等了。至于被唤醒的线程能否获得监视器对象的认可。这两个方法就不管了。具体来说，需要关注的问题有两个：</p>
+<ol>
+<li><p>和wait()不同，线程调用notify()或notifyAll()相当于只发出了一个通知，notify()或notifyAll()对其而言只是一个普通的方法，调用完成后线程不会让出任何资源，并且会继续向下执行。因为不让出任何资源，自然也不会让出其已获得的监视器对象的认可。因此不是调用notify()或notifyAll()后被唤醒线程立刻就能获得监视器对象的认可了，起码也要等调用线程让出该认可后才有可能。而只有重新获得了监视器对象的认可，被阻塞的线程才能够从等锁池中解放出来从而继续向下执行。</p>
+</li>
+<li><p>基于同样的原理，notifyAll()虽然唤醒了所有线程，但是哪个线程能先得到监视器对象的认可，则要靠真本事去竞争了。不过这也只是先后问题，除非死锁或饿死，所有被唤醒的线程总有机会执行完成。</p>
+</li>
+</ol>
+<p>该通信机制有一个问题：notify()及notifyAll()是非常不负责任的方法，它们只是姑且通知一下，如果在通知的时候监视器对象的等待池中并没有在等待的线程。那么没有也就没有了，本次通知相当于作废。因此如果程序流程不当，导致notify()或notifyAll()调用在了其对应的wait()之前，这就会导致wait()永远无法再次接到唤醒信号了。</p>
+<p>如下所示，该程序运行后无法结束。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Runnable wait = new Runnable() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    Thread.sleep(1000L);    // 设置情境：保证notify信号先发出</span><br><span class="line">                    synchronized (Test.class) &#123;</span><br><span class="line">                        Test.class.wait();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;    </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        Runnable notify = new Runnable() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                synchronized (Test.class) &#123;</span><br><span class="line">                    Test.class.notify();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        new Thread(wait).start();</span><br><span class="line">        new Thread(notify).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为解决该问题，可配合自定义通信对象一起使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line"></span><br><span class="line">    private static boolean NOTIFY_FLAG = false;</span><br><span class="line"></span><br><span class="line">    private static final synchronized void setNOTIFY_FLAG(boolean nOTIFY_FLAG) &#123;</span><br><span class="line">        NOTIFY_FLAG = nOTIFY_FLAG;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Runnable wait = new Runnable() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    Thread.sleep(1000L);    // 设置情境：保证notify信号先发出</span><br><span class="line">                    if (!Test.NOTIFY_FLAG) &#123;</span><br><span class="line">                        synchronized (Test.class) &#123;</span><br><span class="line">                            Test.class.wait();</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                Test.setNOTIFY_FLAG(false);    // 保证一个notify只为一个wait所用</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        Runnable notify = new Runnable() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                synchronized (Test.class) &#123;</span><br><span class="line">                    Test.setNOTIFY_FLAG(true);</span><br><span class="line">                    Test.class.notify();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        new Thread(wait).start();</span><br><span class="line">        new Thread(notify).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>改造后，程序可执行完成。</p>
+<h1 id="JVM中synchronized的实现方式"><a href="#JVM中synchronized的实现方式" class="headerlink" title="JVM中synchronized的实现方式"></a>JVM中synchronized的实现方式</h1><p>synchronized可以支持方法级的同步及方法内部一段指令序列的同步，在底层是通过管程(Monitor)来支持的。</p>
+<p>方法级的同步是隐式的，即无需通过字节码指令来控制，它实现在方法调用和返回操作之中。JVM可通过判断class文件-&gt;方法表集合-&gt;方法表-&gt;access_flags中标记同步的标志ACC_SYNCHRONIZED是否为1来判断该方法是否是同步方法。若被设置为同步方法，执行线程需要先成功持有管程(即上文中的监视器许可)，然后才能执行方法，最后当执行完成(无论是正常完成还是非正常完成，即若一个同步方法在执行期间抛出了异常，且该方法无法处理这个异常，则执行线程将在该异常被抛出到同步方法之外时自动释放其所持有的管程)，都会释放管程。在其释放管程之前，其他任何线程都无法再取得这个管程。</p>
+<p>而对于方法内部一段指令序列的同步，JVM提供了monitorenter及monitorexit指令标记同步区域。因此欲正确实现synchronized对方法内部一段指令序列的同步需javac编译器(将源码中被synchronized关键字修饰的代码块替换为对应的被monitorenter及monitorexit标记的字节码指令区域)及解释器(正确读取并执行monitorenter及monitorexit指令)二者共同支持。</p>
+<p>例如有如下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line"></span><br><span class="line">    public void m(Object o) &#123;</span><br><span class="line">        synchronized (o) &#123;</span><br><span class="line">            System.out.println(&quot;in synchronized...&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用javap反编译其class文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br></pre></td><td class="code"><pre><span class="line">Classfile /E:/Test.class</span><br><span class="line">  Last modified 2017-11-22; size 531 bytes</span><br><span class="line">  MD5 checksum e7d825a53a74620971ce4799ed6aad4a</span><br><span class="line">  Compiled from &quot;Test.java&quot;</span><br><span class="line">public class Test</span><br><span class="line">  SourceFile: &quot;Test.java&quot;</span><br><span class="line">  minor version: 0</span><br><span class="line">  major version: 51</span><br><span class="line">  flags: ACC_PUBLIC, ACC_SUPER</span><br><span class="line">Constant pool:</span><br><span class="line">   #1 = Methodref          #6.#19         //  java/lang/Object.&quot;&lt;init&gt;&quot;:()V</span><br><span class="line">   #2 = Fieldref           #20.#21        //  java/lang/System.out:Ljava/io/PrintStream;</span><br><span class="line">   #3 = String             #22            //  in synchronized...</span><br><span class="line">   #4 = Methodref          #23.#24        //  java/io/PrintStream.println:(Ljava/lang/String;)V</span><br><span class="line">   #5 = Class              #25            //  Test</span><br><span class="line">   #6 = Class              #26            //  java/lang/Object</span><br><span class="line">   #7 = Utf8               &lt;init&gt;</span><br><span class="line">   #8 = Utf8               ()V</span><br><span class="line">   #9 = Utf8               Code</span><br><span class="line">  #10 = Utf8               LineNumberTable</span><br><span class="line">  #11 = Utf8               m</span><br><span class="line">  #12 = Utf8               (Ljava/lang/Object;)V</span><br><span class="line">  #13 = Utf8               StackMapTable</span><br><span class="line">  #14 = Class              #25            //  Test</span><br><span class="line">  #15 = Class              #26            //  java/lang/Object</span><br><span class="line">  #16 = Class              #27            //  java/lang/Throwable</span><br><span class="line">  #17 = Utf8               SourceFile</span><br><span class="line">  #18 = Utf8               Test.java</span><br><span class="line">  #19 = NameAndType        #7:#8          //  &quot;&lt;init&gt;&quot;:()V</span><br><span class="line">  #20 = Class              #28            //  java/lang/System</span><br><span class="line">  #21 = NameAndType        #29:#30        //  out:Ljava/io/PrintStream;</span><br><span class="line">  #22 = Utf8               in synchronized...</span><br><span class="line">  #23 = Class              #31            //  java/io/PrintStream</span><br><span class="line">  #24 = NameAndType        #32:#33        //  println:(Ljava/lang/String;)V</span><br><span class="line">  #25 = Utf8               Test</span><br><span class="line">  #26 = Utf8               java/lang/Object</span><br><span class="line">  #27 = Utf8               java/lang/Throwable</span><br><span class="line">  #28 = Utf8               java/lang/System</span><br><span class="line">  #29 = Utf8               out</span><br><span class="line">  #30 = Utf8               Ljava/io/PrintStream;</span><br><span class="line">  #31 = Utf8               java/io/PrintStream</span><br><span class="line">  #32 = Utf8               println</span><br><span class="line">  #33 = Utf8               (Ljava/lang/String;)V</span><br><span class="line">&#123;</span><br><span class="line">  public Test();</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=1, locals=1, args_size=1</span><br><span class="line">         0: aload_0       </span><br><span class="line">         1: invokespecial #1                  // Method java/lang/Object.&quot;&lt;init&gt;&quot;:()V</span><br><span class="line">         4: return        </span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line 1: 0</span><br><span class="line"></span><br><span class="line">  public void m(java.lang.Object);</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=2, locals=4, args_size=2    // 操作数栈最大深度为2</span><br><span class="line">                                        // 局部变量表长度为4Slot，即支持的索引为[0,3]</span><br><span class="line">					// 方法传入参数为2：this,java.lang.Object(后文记为o)</span><br><span class="line">					// 初始时：</span><br><span class="line">					// 局部变量表：this,o,无,无</span><br><span class="line">					// 操作数栈(自栈底至栈顶)：无,无</span><br><span class="line"></span><br><span class="line">         0: aload_1    // 将局部变量表1号Slot中的引用类型压入操作数栈</span><br><span class="line">	               // 本指令完成后：</span><br><span class="line">                       // 局部变量表：this,o,无,无</span><br><span class="line">	               // 操作数栈(自栈底至栈顶)：o,无</span><br><span class="line"></span><br><span class="line">         1: dup    // 弹出操作数栈栈顶数值，复制该值并将原值及复制值压入操作数栈</span><br><span class="line">	           // 该复制值后文记为o_c</span><br><span class="line">	           // 本指令完成后：</span><br><span class="line">	           // 局部变量表：this,o,无,无</span><br><span class="line">                   // 操作数栈(自栈底至栈顶)：o,o_c</span><br><span class="line"></span><br><span class="line">         2: astore_2    // 将栈顶引用类型弹出并存入局部变量表2号索引处</span><br><span class="line">	                // 本指令完成后：</span><br><span class="line">			// 局部变量表：this,o,o_c,无</span><br><span class="line">		        // 操作数栈(自栈底至栈顶)：o,无    </span><br><span class="line"></span><br><span class="line">         3: monitorenter    // 弹出并获得操作数栈栈顶对象的管程，用于被synchronized关键字修饰的同步块</span><br><span class="line">	                    // 本指令完成后：</span><br><span class="line">			    // 局部变量表：this,o,o_c,无</span><br><span class="line">			    // 操作数栈(自栈底至栈顶)：无,无</span><br><span class="line"></span><br><span class="line">         4: getstatic     #2    // Field java/lang/System.out:Ljava/io/PrintStream;</span><br><span class="line">	                        // 获取指定类的指定类变量，并将其值压入操作数栈。该指令的操作码之后会紧跟一个u2的操作数说明具体需要的是哪个类变量，该参数指向常量池集合中的一个CONSTANT_UTF8_info类型的索引项，也就是该字段的字段符号引用</span><br><span class="line">			        // 本指令取得的类变量后文将记为out</span><br><span class="line">			        // 本指令完成后：</span><br><span class="line">				// 局部变量表：this,o,o_c,无</span><br><span class="line">		                // 操作数栈(自栈底至栈顶)：out,无  </span><br><span class="line"></span><br><span class="line">         7: ldc           #3    // String in synchronized...</span><br><span class="line">	                        // 将int,float或String型常量值从常量池中推送至操作数栈栈顶。该指令的操作码之后会紧跟一个u2的操作数作为具体的值，该参数指向常量池集合中的一个对应类型的索引项</span><br><span class="line">			        // 本指令对应的字符串后文中记为s</span><br><span class="line">			        // 本指令完成后：</span><br><span class="line">				// 局部变量表：this,o,o_c,无</span><br><span class="line">				// 操作数栈(自栈底至栈顶)：out,s</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">         9: invokevirtual #4    // Method java/io/PrintStream.println:(Ljava/lang/String;)V</span><br><span class="line">	                        // 调用实例方法。会根据对象的实际类型进行动态单分派(虚方法分派)</span><br><span class="line">				// 弹出操作数栈中的out及s，out作为被调用方法的对象，s为方法所需的参数</span><br><span class="line">			        // 本指令完成后：</span><br><span class="line">				// 局部变量表：this,o,o_c,无</span><br><span class="line">				// 操作数栈(自栈底至栈顶)：无,无</span><br><span class="line"></span><br><span class="line">        12: aload_2    // 将局部变量表2号Slot中的引用类型压入操作数栈</span><br><span class="line">		       // 本指令完成后：</span><br><span class="line">		       // 局部变量表：this,o,o_c,无</span><br><span class="line">		       // 操作数栈(自栈底至栈顶)：o_c,无</span><br><span class="line"></span><br><span class="line">        13: monitorexit    // 弹出并释放操作数栈栈顶对象的管程，用于被synchronized关键字修饰的同步块</span><br><span class="line">                           // 之所以用o_c而非o是为防止o被改变</span><br><span class="line">			   // 本指令完成后：</span><br><span class="line">		           // 局部变量表：this,o,o_c,无</span><br><span class="line">			   // 操作数栈(自栈底至栈顶)：无,无</span><br><span class="line"></span><br><span class="line">        14: goto          22    // 无条件跳转至指令22</span><br><span class="line"></span><br><span class="line">        17: astore_3    // 将栈顶引用类型弹出并存入局部变量表3号索引处</span><br><span class="line">	                // [4,13]发生异常后会跳转至本指令，不妨设12结束后发生异常。则操作数栈栈顶会被压入抛出的异常e</span><br><span class="line">			// 本指令完成后：</span><br><span class="line">			// 局部变量表：this,o,o_c,e</span><br><span class="line">			// 操作数栈(自栈底至栈顶)：o_c,无</span><br><span class="line">	</span><br><span class="line">        18: aload_2    // 将局部变量表2号Slot中的引用类型压入操作数栈</span><br><span class="line">		       // 本指令完成后：</span><br><span class="line">		       // 局部变量表：this,o,o_c,e</span><br><span class="line">		       // 操作数栈(自栈底至栈顶)：o_c,o_c</span><br><span class="line">	</span><br><span class="line">        19: monitorexit    // 弹出并释放操作数栈栈顶对象的管程，用于被synchronized关键字修饰的同步块</span><br><span class="line">                           // 之所以用o_c而非o是为防止o被改变</span><br><span class="line">			   // 本指令完成后：</span><br><span class="line">		           // 局部变量表：this,o,o_c,e</span><br><span class="line">			   // 操作数栈(自栈底至栈顶)：o_c,无</span><br><span class="line"></span><br><span class="line">        20: aload_3    // 将局部变量表3号Slot中的引用类型压入操作数栈</span><br><span class="line">		       // 本指令完成后：</span><br><span class="line">		       // 局部变量表：this,o,o_c,e</span><br><span class="line">		       // 操作数栈(自栈底至栈顶)：o_c,e</span><br><span class="line"></span><br><span class="line">        21: athrow    // 弹出操作数栈栈顶的异常并将其抛出</span><br><span class="line">	</span><br><span class="line">        22: return    // 从当前方法返回void，本方法结束</span><br><span class="line">	</span><br><span class="line">      Exception table:</span><br><span class="line">         from    to  target type</span><br><span class="line">             4    14    17   any</span><br><span class="line">            17    20    17   any</span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line 4: 0</span><br><span class="line">        line 5: 4</span><br><span class="line">        line 6: 12</span><br><span class="line">        line 7: 22</span><br><span class="line">      StackMapTable: number_of_entries = 2</span><br><span class="line">           frame_type = 255 /* full_frame */</span><br><span class="line">          offset_delta = 17</span><br><span class="line">          locals = [ class Test, class java/lang/Object, class java/lang/Object ]</span><br><span class="line">          stack = [ class java/lang/Throwable ]</span><br><span class="line">           frame_type = 250 /* chop */</span><br><span class="line">          offset_delta = 4</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由上述反编译文件可证实，无论方法是否正常退出，只要执行了monitorenter(3)，就会执行对应的monitorexit(13,19，各可能的分支上都会冗余存储一份)。</p>
+<h1 id="一个隐蔽的错误加锁的示例"><a href="#一个隐蔽的错误加锁的示例" class="headerlink" title="一个隐蔽的错误加锁的示例"></a>一个隐蔽的错误加锁的示例</h1><p>现有如下程序：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public class Test implements Runnable &#123;</span><br><span class="line"></span><br><span class="line">    private static Integer I = 0;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        for (int j = 0; j &lt; 1000_0000; j++) &#123;</span><br><span class="line">            synchronized (Test.I) &#123;</span><br><span class="line">                I++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws InterruptedException &#123;</span><br><span class="line">        Test r = new Test();</span><br><span class="line">        Thread t1 = new Thread(r);</span><br><span class="line">        Thread t2 = new Thread(r);</span><br><span class="line">        t1.start();</span><br><span class="line">        t2.start();</span><br><span class="line">        t1.join();</span><br><span class="line">        t2.join();</span><br><span class="line">        System.out.println(Test.I);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该程序实现了一个简单的计算器，乍看之下没有任何问题，预期运行结果为2000_0000。然而实际的运行结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">15429002</span><br></pre></td></tr></table></figure>
+<p>这比预期的结果小了很多，那么问题出在哪里呢？</p>
+<p>在<a href="/2017/10/05/Java 并发-Thread类/">Java 并发-Thread类</a>中，我们得出了这样一个结论：以Thread类的实例为监视器对象可能会引起未知的并发错误。可见监视器对象的错误选择是引起并发错误的一个重要原因，那么本例的错误是否也是由监视器对象I的选择错误引起的呢？</p>
+<p>正是这样！I的类型为Integer:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public final class Integer extends Number implements Comparable&lt;Integer&gt;</span><br></pre></td></tr></table></figure>
+<p>这是一个被final修饰的不可变的类。也就是说一旦Integer的实例被创建，比如我们将其赋值为1，那么它终其一生就只能是1，不能变成其他值。而我们在程序中为什么又可以使用诸如I++来改变I的值呢？这其实是Java的一个小戏法：改变I的值相当于新建了一个Integer实例。</p>
+<p>更具体的说，I++其实是这样实现的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">I = Integer.valueOf(I.intValue() + 1);</span><br></pre></td></tr></table></figure>
+<p>然后我们再来看valueOf()这个方法的源码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public static Integer valueOf(int i) &#123;</span><br><span class="line">    assert IntegerCache.high &gt;= 127;</span><br><span class="line">    if (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)</span><br><span class="line">        return IntegerCache.cache[i + (-IntegerCache.low)];</span><br><span class="line">    return new Integer(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样原因就明确了：监视器对象I所指向的实例相当于始终处于变化中，自然无法保证同步。由此看来，尽量不要选择不可变对象为监视器才好。</p>
+<p>修改本例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">package com.test;</span><br><span class="line"></span><br><span class="line">public class Test implements Runnable &#123;</span><br><span class="line"></span><br><span class="line">    private static Integer I = 0;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        for (int j = 0; j &lt; 1000_0000; j++) &#123;</span><br><span class="line">            synchronized (Test.class) &#123;</span><br><span class="line">                I++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws InterruptedException &#123;</span><br><span class="line">        Test r = new Test();</span><br><span class="line">        Thread t1 = new Thread(r);</span><br><span class="line">        Thread t2 = new Thread(r);</span><br><span class="line">        t1.start();</span><br><span class="line">        t2.start();</span><br><span class="line">        t1.join();</span><br><span class="line">        t2.join();</span><br><span class="line">        System.out.println(Test.I);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">20000000</span><br></pre></td></tr></table></figure>
+<p>符合预期，没有发生并发问题。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechat.png" alt="王艺凯 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/ali.jpg" alt="王艺凯 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>王艺凯</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2017/07/13/Java 并发-synchronized/" title="Java 并发-synchronized">http://yoursite.com/2017/07/13/Java 并发-synchronized/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/并发/" rel="tag"># 并发</a>
+          
+            <a href="/tags/synchronized/" rel="tag"># synchronized</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/13/Java 并发-线程通信/" rel="next" title="Java 并发-线程通信">
+                <i class="fa fa-chevron-left"></i> Java 并发-线程通信
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/13/传智springmvcmybatisday1-10mapper代理开发方式/" rel="prev" title="传智 springmvc+mybatis day1-10.mapper代理开发方式">
+                传智 springmvc+mybatis day1-10.mapper代理开发方式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/avatar.jpg"
+                alt="王艺凯" />
+            
+              <p class="site-author-name" itemprop="name">王艺凯</p>
+              <p class="site-description motion-element" itemprop="description">Thou Shalt Comment</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">189</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">117</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/ReimuWang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:1505580759@qq.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用网站
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.bilibili.com/" title="bilibili" target="_blank">bilibili</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://acg12.com/" title="ACG调查小队" target="_blank">ACG调查小队</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.com/" title="leetcode" target="_blank">leetcode</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#通信：wait-wait-long-timeout-，notify-notifyAll-。"><span class="nav-number">1.</span> <span class="nav-text">通信：wait()/wait(long timeout)，notify()/notifyAll()。</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM中synchronized的实现方式"><span class="nav-number">2.</span> <span class="nav-text">JVM中synchronized的实现方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一个隐蔽的错误加锁的示例"><span class="nav-number">3.</span> <span class="nav-text">一个隐蔽的错误加锁的示例</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老滚6催更协会</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+  <div class="footer-custom"><i>明明可以靠脸吃饭，你却要靠才华，这就是你和明明的差距</i></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+
+</body>
+</html>

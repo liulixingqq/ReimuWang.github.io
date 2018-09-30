@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/myLogo.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="源码">
+<meta name="keywords" content="Java,源码,Collection">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java JDK7源码-java.util.List&amp;lt;E&amp;gt;">
+<meta property="og:url" content="http://yoursite.com/2017/05/25/Java JDK7源码-javautilListE/index.html">
+<meta property="og:site_name" content="ReimuWang&#39;s Blog">
+<meta property="og:description" content="源码">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-03-07T11:03:52.646Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java JDK7源码-java.util.List&amp;lt;E&amp;gt;">
+<meta name="twitter:description" content="源码">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="ReimuWang's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/05/25/Java JDK7源码-javautilListE/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java JDK7源码-java.util.List&lt;E&gt; | ReimuWang's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ReimuWang's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">189</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">117</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类<span class="badge">24</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404.html" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />公益 404</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+    
+      
+    
+    <a href="https://github.com/ReimuWang" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#222; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg>
+    
+      </a>
+    
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/25/Java JDK7源码-javautilListE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王艺凯">
+      <meta itemprop="description" content="Thou Shalt Comment">
+      <meta itemprop="image" content="/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ReimuWang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java JDK7源码-java.util.List&lt;E&gt;
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-05-25 21:38:33" itemprop="dateCreated datePublished" datetime="2017-05-25T21:38:33+08:00">2017-05-25</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-03-07 19:03:52" itemprop="dateModified" datetime="2018-03-07T19:03:52+08:00">2018-03-07</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java-JDK7源码/" itemprop="url" rel="index"><span itemprop="name">Java JDK7源码</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h1><a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br><span class="line">433</span><br><span class="line">434</span><br></pre></td><td class="code"><pre><span class="line">package java.util;</span><br><span class="line"></span><br><span class="line">public interface List&lt;E&gt; extends Collection&lt;E&gt; &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 继承父接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 查询操作。</span><br><span class="line">     * 返回列表包含的元素个数。</span><br><span class="line">     * 若列表包含的元素个数大于Integer.MAX_VALUE，则返回Integer.MAX_VALUE。</span><br><span class="line">     */</span><br><span class="line">    int size();</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 继承父接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 查询操作。</span><br><span class="line">     * 若列表不包含元素则返回true，反之返回false。</span><br><span class="line">     */</span><br><span class="line">    boolean isEmpty();</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 继承父接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 查询操作。</span><br><span class="line">     * 若列表包含o则返回true，反之返回false。</span><br><span class="line">     * 更具体的说，当且仅当列表包含至少一个元素e，满足(o==null ? e==null : o.equals(e))时，返回true。</span><br><span class="line">     * </span><br><span class="line">     * 本方法与后文介绍的containsAll(Collection&lt;?&gt; c)方法很相似，可对比学习。</span><br><span class="line">     * </span><br><span class="line">     * @throws ClassCastException o的类型与列表不相容。</span><br><span class="line">     * @throws NullPointerException o==null且列表不允许空元素存在。</span><br><span class="line">     */</span><br><span class="line">    boolean contains(Object o);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 继承父接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 返回一个列表的迭代器，该迭代器默认从头开始迭代。</span><br><span class="line">     * 该迭代器遍历得到的元素有序(与列表的固有顺序相同)。</span><br><span class="line">     * </span><br><span class="line">     * 后文介绍的listIterator()方法是本方法基于List接口的特化，可对比学习。</span><br><span class="line">     * 后文介绍的listIterator(int index)方法是本方法基于List接口的特化，可对比学习。</span><br><span class="line">     */</span><br><span class="line">    Iterator&lt;E&gt; iterator();</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 继承父接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 查询操作。</span><br><span class="line">     * 本方法是连接集合与数组之间的桥梁。</span><br><span class="line">     * </span><br><span class="line">     * 返回包含列表所有元素的数组。该数组的顺序与列表的固有顺序相同。</span><br><span class="line">     * 返回的数组与列表之间不存在引用关系(即使列表是基于数组的)，数组中的元素是列表中元素的浅拷贝。</span><br><span class="line">     * </span><br><span class="line">     * 本方法与后文介绍的toArray(T[] a)方法很相似，可对比学习。</span><br><span class="line">     */</span><br><span class="line">    Object[] toArray();</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 继承父接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 查询操作。</span><br><span class="line">     * 本方法是连接集合与数组之间的桥梁。</span><br><span class="line">     * </span><br><span class="line">     * 返回包含列表所有元素的数组。该数组的顺序与列表的固有顺序相同。返回数组的类型即为a的类型。</span><br><span class="line">     * 具体规则的伪代码为：</span><br><span class="line">     * if (a.length &lt; list.size())</span><br><span class="line">     *     不修改a，而是以a的类型新建长度为list.size()的数组并填入列表中的值，随后返回这个新生成的数组。</span><br><span class="line">     * else if (a.length == list.size()</span><br><span class="line">     *     将返回的结果直接填入a后返回a(若a中已有值，则a中的原值会被覆盖)。</span><br><span class="line">     * else</span><br><span class="line">     *     数组索引在[0, list.size() -1]的元素会被列表对应位置的元素覆盖。</span><br><span class="line">     *     数组索引 == list.size()的元素会被置为null</span><br><span class="line">     *     数组中后续元素(如果有的话)不变。</span><br><span class="line">     * </span><br><span class="line">     * 若列表不允许包含空元素，则本方法此时可用来计算列表的长度：返回的数组第一次出现null的索引即为列表的长度。</span><br><span class="line">     * </span><br><span class="line">     * 返回的数组与列表之间不存在引用关系(即使列表的底层就是基于数组实现的)，数组中的元素是列表中元素的浅拷贝。</span><br><span class="line">     * </span><br><span class="line">     * 小例子：</span><br><span class="line">     * String[] y = x.toArray(new String[0]);</span><br><span class="line">     * x是一个元素类型为String的列表，则上述语句会将x中的元素依序复制一份浅拷贝到数组y。</span><br><span class="line">     * </span><br><span class="line">     * 关于本方法与前文介绍的toArray()方法，需明确：</span><br><span class="line">     * list.toArray()</span><br><span class="line">     * list.toArray(new Object[s])</span><br><span class="line">     * 当s &lt; list.size()时，上述两行代码的效果等价。</span><br><span class="line">     * </span><br><span class="line">     * 本方法与前文介绍的toArray()方法很相似，可对比学习。</span><br><span class="line">     * </span><br><span class="line">     * @throws ArrayStoreException a的类型列表不支持。</span><br><span class="line">     * @throws NullPointerException null==a。</span><br><span class="line">     */</span><br><span class="line">    &lt;T&gt; T[] toArray(T[] a);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 继承父接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 修改操作。</span><br><span class="line">     * 本方法属于破坏性方法，可选。</span><br><span class="line">     * </span><br><span class="line">     * 将e加入列表的末尾。</span><br><span class="line">     * 若列表因本方法而改变则返回true，反之则返回false。</span><br><span class="line">     * </span><br><span class="line">     * 即便实现类支持本方法，它也可能会做某种限制(禁止插入null，限制可插入的元素类型等)。</span><br><span class="line">     * </span><br><span class="line">     * 本方法与后文介绍的addAll(Collection&lt;? extends E&gt; c)方法很相似，可对比学习。</span><br><span class="line">     * 本方法与后文介绍的方法addAll(int index, Collection&lt;? extends E&gt; c)很相似，可对比学习。</span><br><span class="line">     * 本方法与后文介绍的方法add(int index, E element)很相似，可对比学习。</span><br><span class="line">     * </span><br><span class="line">     * @throws UnsupportedOperationException 列表不支持本方法。</span><br><span class="line">     * @throws ClassCastException e因其类型禁止被插入列表。</span><br><span class="line">     * @throws NullPointerException e==null且列表禁止包含null。</span><br><span class="line">     * @throws IllegalArgumentException e因其某些属性禁止被插入列表。</span><br><span class="line">     */</span><br><span class="line">    boolean add(E e);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 继承父接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 修改操作。</span><br><span class="line">     * 本方法属于破坏性方法，可选。</span><br><span class="line">     * </span><br><span class="line">     * 移除o在列表中第一次出现的位置的元素。即：</span><br><span class="line">     * o==null ? get(i)==null : o.equals(get(i))</span><br><span class="line">     * 其中为i满足相等条件的最小索引值。</span><br><span class="line">     * </span><br><span class="line">     * 若本方法改变了列表则返回true，反之返回false。</span><br><span class="line">     * </span><br><span class="line">     * 本方法与后文介绍的removeAll(Collection&lt;?&gt; c)方法很相似，可对比学习。</span><br><span class="line">     * 本方法与后文介绍的remove(int index)方法很相似，可对比学习。</span><br><span class="line">     * </span><br><span class="line">     * @throws UnsupportedOperationException 列表不支持本方法。</span><br><span class="line">     * @throws ClassCastException o的类型与列表不相容。</span><br><span class="line">     * @throws NullPointerException o==null且列表不允许空元素存在。</span><br><span class="line">     */</span><br><span class="line">    boolean remove(Object o);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 继承父接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 批量查询操作。</span><br><span class="line">     * 若列表包含c中所有元素则返回true，反之返回false。</span><br><span class="line">     *</span><br><span class="line">     * 本方法与前文介绍的contains(Object o)方法很相似，可对比学习。</span><br><span class="line">     * </span><br><span class="line">     * @throws ClassCastException c中至少有一个元素的类型与列表不相容。</span><br><span class="line">     * @throws NullPointerException c==null或</span><br><span class="line">     *                              c中至少有一个元素为null且列表不允许空元素存在。</span><br><span class="line">     */</span><br><span class="line">    boolean containsAll(Collection&lt;?&gt; c);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 继承父接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 批量修改操作</span><br><span class="line">     * 本方法属于破坏性方法，可选。</span><br><span class="line">     * </span><br><span class="line">     * 将c中所有元素插入列表末尾，插入顺序为c的迭代器取出的顺序。</span><br><span class="line">     * 若列表因本方法发生变化则返回true，反之返回false。</span><br><span class="line">     * </span><br><span class="line">     * 本方法未定义如下事件发生时的解决策略：在将c中的元素添加至列表的过程中c发生变化。</span><br><span class="line">     * 这也意味着如下事件的解决策略同样未定义：将一个非空列表添加至自身。</span><br><span class="line">     * </span><br><span class="line">     * 本方法与前文介绍的add(E e)方法很相似，可对比学习。</span><br><span class="line">     * 本方法与后文介绍的方法addAll(int index, Collection&lt;? extends E&gt; c)很相似，可对比学习。</span><br><span class="line">     * 本方法与后文介绍的方法add(int index, E element)很相似，可对比学习。</span><br><span class="line">     * </span><br><span class="line">     * @throws UnsupportedOperationException 列表不支持本方法。</span><br><span class="line">     * @throws ClassCastException c中任意一个元素因其类型禁止被插入列表。</span><br><span class="line">     * @throws NullPointerException c==null或</span><br><span class="line">     *                              c中至少有一个元素为null且列表不允许空元素存在。</span><br><span class="line">     * @throws IllegalArgumentException c中任意一个元素因其某些属性禁止被插入列表。</span><br><span class="line">     */</span><br><span class="line">    boolean addAll(Collection&lt;? extends E&gt; c);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 批量修改操作</span><br><span class="line">     * 本方法属于破坏性方法，可选。</span><br><span class="line">     * </span><br><span class="line">     * 将c中所有元素插入列表的指定位置(index)，插入顺序为c的迭代器取出的顺序。</span><br><span class="line">     * 原index位置及以后位置的元素顺次向后移动，空出装载c的空间。</span><br><span class="line">     * 若列表因本方法发生变化则返回true，反之返回false。</span><br><span class="line">     * </span><br><span class="line">     * 本方法未定义如下事件发生时的解决策略：在将c中的元素添加至列表的过程中c发生变化。</span><br><span class="line">     * 这也意味着如下事件的解决策略同样未定义：将一个非空列表添加至自身。</span><br><span class="line">     * </span><br><span class="line">     * list.addAll(collection);</span><br><span class="line">     * list.addAll(list.size(), collection);</span><br><span class="line">     * 二者等价。</span><br><span class="line">     * </span><br><span class="line">     * 本方法与前文介绍的add(E e)方法很相似，可对比学习。</span><br><span class="line">     * 本方法与前文介绍的方法addAll(Collection&lt;? extends E&gt; c)很相似，可对比学习。</span><br><span class="line">     * 本方法与后文介绍的方法add(int index, E element)很相似，可对比学习。</span><br><span class="line">     * </span><br><span class="line">     * @throws UnsupportedOperationException 列表不支持本方法。</span><br><span class="line">     * @throws ClassCastException c中任意一个元素因其类型禁止被插入列表。</span><br><span class="line">     * @throws NullPointerException c==null或</span><br><span class="line">     *                              c中至少有一个元素为null且列表不允许空元素存在。</span><br><span class="line">     * @throws IllegalArgumentException c中任意一个元素因其某些属性禁止被插入列表。</span><br><span class="line">     * @throws IndexOutOfBoundsException 索引越界(index &lt; 0 || index &gt; size)。</span><br><span class="line">     */</span><br><span class="line">    boolean addAll(int index, Collection&lt;? extends E&gt; c);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 继承父接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 批量修改操作</span><br><span class="line">     * 本方法属于破坏性方法，可选。</span><br><span class="line">     * </span><br><span class="line">     * 从列表中移除所有与c的交集元素(求差集)。</span><br><span class="line">     * 若列表因本方法发生变化则返回true，反之返回false。</span><br><span class="line">     * </span><br><span class="line">     * 本方法与前文介绍的remove(Object o)方法很相似，可对比学习。</span><br><span class="line">     * 本方法与后文介绍的remove(int index)方法很相似，可对比学习。</span><br><span class="line">     * 本方法与后文介绍的retainAll(Collection&lt;?&gt; c)方法正相反，可对比学习。</span><br><span class="line">     * </span><br><span class="line">     * @throws UnsupportedOperationException 列表不支持本方法。</span><br><span class="line">     * @throws ClassCastException c中至少有一个元素的类型与列表不相容。</span><br><span class="line">     * @throws NullPointerException c==null或</span><br><span class="line">     *                              列表中至少有一个元素为null且c不允许空元素存在。</span><br><span class="line">     */</span><br><span class="line">    boolean removeAll(Collection&lt;?&gt; c);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 继承父接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 批量修改操作</span><br><span class="line">     * 本方法属于破坏性方法，可选。</span><br><span class="line">     * </span><br><span class="line">     * 保留列表中与c的交集元素。</span><br><span class="line">     * 若列表因本方法发生变化则返回true，反之返回false。</span><br><span class="line">     * </span><br><span class="line">     * 本方法与前文介绍的removeAll(Collection&lt;?&gt; c)方法正相反，可对比学习。</span><br><span class="line">     * </span><br><span class="line">     * @throws UnsupportedOperationException 列表不支持本方法。</span><br><span class="line">     * @throws ClassCastException c中至少有一个元素的类型与列表不相容。</span><br><span class="line">     * @throws NullPointerException c==null或</span><br><span class="line">     *                              列表中至少有一个元素为null且c不允许空元素存在。</span><br><span class="line">     */</span><br><span class="line">    boolean retainAll(Collection&lt;?&gt; c);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 继承父接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 批量修改操作</span><br><span class="line">     * 本方法属于破坏性方法，可选。</span><br><span class="line">     * </span><br><span class="line">     * 清空列表。</span><br><span class="line">     * </span><br><span class="line">     * @throws UnsupportedOperationException 列表不支持本方法。</span><br><span class="line">     */</span><br><span class="line">    void clear();</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 继承父接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 比较及哈希操作。</span><br><span class="line">     * </span><br><span class="line">     * 比较o与列表是否相等。当且仅当满足如下所有情况时返回true：</span><br><span class="line">     * o为一个List。</span><br><span class="line">     * o与list长度相同。</span><br><span class="line">     * o与list所有对应位置上的元素相等(e1==null ? e2==null : e1.equals(e2))。</span><br><span class="line">     * </span><br><span class="line">     * 换句话说，当两个列表在相同位置上的元素均相等，则认为二者相等。</span><br><span class="line">     * </span><br><span class="line">     * 只要满足如上相等的定义，List接口的不同实现类也可被认定为相等。</span><br><span class="line">     * </span><br><span class="line">     * 本方法与后文介绍的hashCode()方法成对出现，可对比学习。</span><br><span class="line">     */</span><br><span class="line">    boolean equals(Object o);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 继承父接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 比较及哈希操作。</span><br><span class="line">     * </span><br><span class="line">     * 返回列表的hash code值。其计算方式如下：</span><br><span class="line">     * int hashCode = 1;</span><br><span class="line">     * for (E e : list)</span><br><span class="line">     *     hashCode = 31 * hashCode + (e == null ? 0 : e.hashCode());</span><br><span class="line">     *</span><br><span class="line">     * 这种计算方式可以保证任意list1.equals(list2)有list1.hashCode()==list2.hashCode()。</span><br><span class="line">     * </span><br><span class="line">     * 本方法与前文介绍的equals(Object o)方法成对出现，可对比学习。</span><br><span class="line">     */</span><br><span class="line">    int hashCode();</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 精确定位访问操作</span><br><span class="line">     * </span><br><span class="line">     * 返回列表中索引位置为index的元素。</span><br><span class="line">     * </span><br><span class="line">     * @throws IndexOutOfBoundsException 索引越界(index &lt; 0 || index &gt;= size)。</span><br><span class="line">     */</span><br><span class="line">    E get(int index);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 精确定位修改操作</span><br><span class="line">     * 本方法属于破坏性方法，可选。</span><br><span class="line">     * </span><br><span class="line">     * 用element替换列表索引值为index的元素。方法返回被替换的元素。</span><br><span class="line">     * </span><br><span class="line">     * @throws UnsupportedOperationException 列表不支持本方法。</span><br><span class="line">     * @throws ClassCastException element的类型与列表不相容。</span><br><span class="line">     * @throws NullPointerException element==null且列表禁止包含空元素。</span><br><span class="line">     * @throws IllegalArgumentException element因其某些属性禁止被插入列表。</span><br><span class="line">     * @throws IndexOutOfBoundsException 索引越界(index &lt; 0 || index &gt;= size)。</span><br><span class="line">     */</span><br><span class="line">    E set(int index, E element);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 精确定位修改操作</span><br><span class="line">     * 本方法属于破坏性方法，可选。</span><br><span class="line">     * </span><br><span class="line">     * 将element插入列表的index下标处。原来处于index下标及以后的元素均向后移动一个位置。</span><br><span class="line">     * </span><br><span class="line">     * list.add(&quot;1&quot;);</span><br><span class="line">     * list.add(list.size(), &quot;1&quot;);</span><br><span class="line">     * 等效</span><br><span class="line">     * </span><br><span class="line">     * 本方法与前文介绍的add(E e)方法很相似，可对比学习。</span><br><span class="line">     * 本方法与前文介绍的方法addAll(Collection&lt;? extends E&gt; c)很相似，可对比学习。</span><br><span class="line">     * 本方法与前文介绍的方法addAll(int index, Collection&lt;? extends E&gt; c)很相似，可对比学习。</span><br><span class="line">     * </span><br><span class="line">     * @throws UnsupportedOperationException 列表不支持本方法。</span><br><span class="line">     * @throws ClassCastException element的类型与列表不相容。</span><br><span class="line">     * @throws NullPointerException element==null且列表禁止包含空元素。</span><br><span class="line">     * @throws IllegalArgumentException element因其某些属性禁止被插入列表。</span><br><span class="line">     * @throws IndexOutOfBoundsException 索引越界(index &lt; 0 || index &gt; size)。</span><br><span class="line">     */</span><br><span class="line">    void add(int index, E element);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 精确定位修改操作</span><br><span class="line">     * 本方法属于破坏性方法，可选。</span><br><span class="line">     * </span><br><span class="line">     * 移除列表中索引值为index的元素。后续元素左移一个位置。返回被移除的元素。</span><br><span class="line">     * </span><br><span class="line">     * 本方法与前文介绍的remove(Object o)方法很相似，可对比学习。</span><br><span class="line">     * 本方法与前文介绍的removeAll(Collection&lt;?&gt; c)方法很相似，可对比学习。</span><br><span class="line">     * </span><br><span class="line">     * @throws UnsupportedOperationException 列表不支持本方法。</span><br><span class="line">     * @throws IndexOutOfBoundsException 索引越界(index &lt; 0 || index &gt;= size)。</span><br><span class="line">     */</span><br><span class="line">    E remove(int index);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 搜索操作</span><br><span class="line">     * </span><br><span class="line">     * 返回o在列表中第一次出现的索引。</span><br><span class="line">     * 若列表不包含o则返回-1。</span><br><span class="line">     * 更具体的说，返回满足如下条件索引值最小的元素的索引：</span><br><span class="line">     * (o==null ? get(i)==null : o.equals(get(i)))。</span><br><span class="line">     * 若不存在这样的元素则返回-1。</span><br><span class="line">     * </span><br><span class="line">     * 本方法与后文介绍的lastIndexOf(Object o)方法正相反，可对比学习。</span><br><span class="line">     * </span><br><span class="line">     * @throws ClassCastException o的类型与列表不相容。</span><br><span class="line">     * @throws NullPointerException o==null且列表禁止包含空元素。</span><br><span class="line">     */</span><br><span class="line">    int indexOf(Object o);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 搜索操作</span><br><span class="line">     * </span><br><span class="line">     * 返回o在列表中最后一次出现的索引。</span><br><span class="line">     * 若列表不包含o则返回-1。</span><br><span class="line">     * 更具体的说，返回满足如下条件索引值最大的元素的索引：</span><br><span class="line">     * (o==null ? get(i)==null : o.equals(get(i)))。</span><br><span class="line">     * 若不存在这样的元素则返回-1。</span><br><span class="line">     * </span><br><span class="line">     * 本方法与前文介绍的indexOf(Object o)方法正相反，可对比学习。</span><br><span class="line">     * </span><br><span class="line">     * @throws ClassCastException o的类型与列表不相容。</span><br><span class="line">     * @throws NullPointerException o==null且列表禁止包含空元素。</span><br><span class="line">     */</span><br><span class="line">    int lastIndexOf(Object o);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 列表迭代器</span><br><span class="line">     * </span><br><span class="line">     * 返回一个列表按固有顺序从头开始迭代的列表迭代器。</span><br><span class="line">     * </span><br><span class="line">     * 本方法是前文介绍的iterator()方法基于List接口的特化，可对比学习。</span><br><span class="line">     * 本方法与后文介绍的listIterator(int index)方法很相似，可对比学习。</span><br><span class="line">     */</span><br><span class="line">    ListIterator&lt;E&gt; listIterator();</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 列表迭代器</span><br><span class="line">     * </span><br><span class="line">     * 返回一个列表按固有顺序迭代的列表迭代器。</span><br><span class="line">     * 迭代开始时游标位于索引[index-1,index]之间。</span><br><span class="line">     * 即使用本方法得到列表迭代器后，若第一次调用的是listIterator.next()，返回的元素的索引是index；</span><br><span class="line">     * 同理，若第一次调用的是listIterator.previous()，返回的元素的索引为index-1。</span><br><span class="line">     * </span><br><span class="line">     * 本方法是前文介绍的iterator()方法基于List接口的特化，可对比学习。</span><br><span class="line">     * 本方法与前文介绍的listIterator()方法很相似，可对比学习。</span><br><span class="line">     * </span><br><span class="line">     * @throws IndexOutOfBoundsException 索引越界(index &lt; 0 || index &gt; size)。</span><br><span class="line">     */</span><br><span class="line">    ListIterator&lt;E&gt; listIterator(int index);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 视图</span><br><span class="line">     * </span><br><span class="line">     * 返回列表的一部分，索引值区间：[fromIndex,toIndex)。</span><br><span class="line">     * 特别的，若fromIndex==toIndex，则返回空列表(不是null)。</span><br><span class="line">     * </span><br><span class="line">     * 返回的列表是原列表的一个视图，前者是后者的一部分，并未从后者中分离出去。</span><br><span class="line">     * 因此作用在前者之上的修改会反映在后者上，反之亦然。</span><br><span class="line">     * </span><br><span class="line">     * 使用本方法的好处在于：</span><br><span class="line">     * 当我们操作列表的一部分时，可以直接在这一部分内部操作(仿佛这就是一个新的列表)，</span><br><span class="line">     * 而无需被各种索引的边界分散过多的注意。</span><br><span class="line">     * </span><br><span class="line">     * 例如，如果想批量移除列表中的一部分，可按如下操作：</span><br><span class="line">     * list.subList(fromIndex, toIndex).clear();</span><br><span class="line">     * </span><br><span class="line">     * 同理，所有本接口的方法及所有java.util.Collections类提供的静态方法</span><br><span class="line">     * 均支持本方法返回的视图作为一个独立的列表调用。例如：</span><br><span class="line">     * list2 = list.subList(1, 2);</span><br><span class="line">     * list2.get(0);</span><br><span class="line">     * 此时取得的元素即为list.get(1)。</span><br><span class="line">     * </span><br><span class="line">     * 若在生成视图后原列表发生了结构性的变化(例如长度发生了变化)</span><br><span class="line">     * 则已生成的视图将被重置为未定义的状态。</span><br><span class="line">     * </span><br><span class="line">     * @throws IndexOutOfBoundsException 索引越界(fromIndex &lt; 0 || toIndex &gt; size || fromIndex &gt; toIndex)。</span><br><span class="line">     */</span><br><span class="line">    List&lt;E&gt; subList(int fromIndex, int toIndex);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="已整理层级关系"><a href="#已整理层级关系" class="headerlink" title="已整理层级关系"></a>已整理层级关系</h1><p><strong><em>直接父接口</em></strong></p>
+<ul>
+<li><a href="/2017/05/23/Java JDK7源码-javautilCollectionE/">java.util.Collection&lt;E&gt;</a></li>
+</ul>
+<p><strong><em>直接实现本接口的类</em></strong></p>
+<ul>
+<li><a href="/2017/06/19/Java JDK7源码-javautilAbstractListE/">java.util.AbstractList&lt;E&gt;</a></li>
+<li><a href="/2017/07/06/Java JDK7源码-javautilArrayListE/">java.util.ArrayList&lt;E&gt;</a></li>
+</ul>
+<h1 id="综述"><a href="#综述" class="headerlink" title="综述"></a>综述</h1><p>本接口是Java集合框架中的一员。List(列表)又名Sequence(序列)。是一种有序的集合。</p>
+<p>使用者能精确的知道列表中每个元素的位置，能通过元素在列表中的索引访问或搜索元素。和数组一样，列表的索引从0开始。</p>
+<hr>
+<p>不同于Set，列表允许重复元素。更通俗的说，若设e1,e2为列表中的两个元素，则允许e1.equals(e2)。特别的，若列表中允许空元素，则其也允许复数个空元素。</p>
+<p>本接口不支持如下这种列表：禁止重复，且在试图插入重复元素时抛出运行时异常。</p>
+<hr>
+<p>较之父接口Collection，本接口在如下方法中规定了额外的规范：</p>
+<ul>
+<li><p>iterator()</p>
+</li>
+<li><p>add(E e)</p>
+</li>
+<li><p>remove(Object o)</p>
+</li>
+<li><p>equals(Object o)</p>
+</li>
+<li><p>hashCode()</p>
+</li>
+</ul>
+<p>为方便起见，父接口Collection中的其他方法本接口也会再写一遍。</p>
+<hr>
+<p>较之父接口Collection，本接口增加了4个可基于索引访问元素的方法:</p>
+<ul>
+<li><p>get(int index)</p>
+</li>
+<li><p>set(int index, E element)</p>
+</li>
+<li><p>add(int index, E element)</p>
+</li>
+<li><p>remove(int index)</p>
+</li>
+</ul>
+<p>对本接口的某些实现而言(例如LinkedList)，上述操作的时间复杂度与索引值正相关(链表为取到某个索引值的元素需在链式结构中逐个向后查找)。因此在不确定本接口的具体实现时，比起使用上述基于索引的访问元素的方法，更推荐使用迭代器。</p>
+<hr>
+<p>较之父接口Collection，本接口新增了一个特殊的迭代器ListIterator，它是Iterator的子接口。</p>
+<p>较之父接口Iterator，ListIterator增加了新的功能：</p>
+<ul>
+<li><p>元素插入</p>
+</li>
+<li><p>元素替换</p>
+</li>
+<li><p>双向访问</p>
+</li>
+</ul>
+<p>较之父接口Collection，本接口新增了一个方法新建从头开始迭代的ListIterator，同时还新增了另一个新建从特定索引开始的ListIterator的方法。</p>
+<hr>
+<p>较之父接口Collection，本接口新增了两个方法用于搜索特定的对象：</p>
+<ul>
+<li><p>indexOf(Object o)</p>
+</li>
+<li><p>lastIndexOf(Object o)</p>
+</li>
+</ul>
+<p>从性能的角度考虑，这两个方法应谨慎使用。在很多实现中，这两个方法采用代价昂贵的顺序查找(linear search)。</p>
+<hr>
+<p>较之父接口Collection，本接口提供了两个方法用于在任意位置高效的插入或删除复数个元素：</p>
+<ul>
+<li><p>addAll(int index, Collection&lt;? extends E&gt; c)</p>
+</li>
+<li><p>removeAll(Collection&lt;?&gt; c)</p>
+</li>
+</ul>
+<hr>
+<p>当列表允许包含自身以作为自身的元素时，这种列表中的equals(Object o)方法及hashCode()方法往往难于定义。</p>
+<hr>
+<p>本接口的某些实现会对它们所能包含的元素有所限制。</p>
+<p>例如，一些实现禁止包含空元素，一些实现对其所能包含的元素的类型有限制。</p>
+<p>试图插入一个不合规的元素会抛出一个运行时异常，例如NullPointerException，ClassCastException。</p>
+<p>依具体实现不同试图查询一个不合规的元素可能会抛出一个异常，或者仅仅只是返回false。</p>
+<h1 id="未整理层级关系"><a href="#未整理层级关系" class="headerlink" title="未整理层级关系"></a>未整理层级关系</h1><p><strong><em>直接子接口</em></strong></p>
+<ul>
+<li><a href="">com.sun.org.apache.xerces.internal.xs.datatypes.ObjectList</a></li>
+<li><a href="">com.sun.org.apache.xerces.internal.xs.datatypes.ByteList</a></li>
+<li><a href="">com.sun.org.apache.xerces.internal.xs.ShortList</a></li>
+<li><a href="">com.sun.org.apache.xerces.internal.xs.StringList</a></li>
+<li><a href="">com.sun.org.apache.xerces.internal.xs.XSObjectList</a></li>
+<li><a href="">com.sun.org.apache.xerces.internal.xs.XSNamespaceItemList</a></li>
+<li><a href="">com.sun.corba.se.spi.ior.IOR</a></li>
+<li><a href="">com.sun.corba.se.spi.ior.IORTemplate</a></li>
+<li><a href="">com.sun.corba.se.spi.ior.IORTemplateList</a></li>
+<li><a href="">com.sun.corba.se.spi.ior.TaggedProfileTemplate</a></li>
+<li><a href="">org.w3c.dom.ls.LSInput.LSInputList</a></li>
+</ul>
+<p><strong><em>直接实现本接口的类</em></strong></p>
+<ul>
+<li><a href="">java.util.LinkedList&lt;E&gt;</a></li>
+<li><a href="">java.util.Vector&lt;E&gt;</a></li>
+<li><a href="">java.util.concurrent.CopyOnWriteArrayList&lt;E&gt;</a></li>
+</ul>
+<p><strong><em>直接实现本接口的内部类</em></strong></p>
+<ul>
+<li><a href="">静态成员内部类java.util.Collections.CheckedList&lt;E&gt;</a></li>
+<li><a href="">静态成员内部类java.util.Collections.SynchronizedList&lt;E&gt;</a></li>
+<li><a href="">静态成员内部类java.util.Collections.UnmodifiableList&lt;E&gt;</a></li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechat.png" alt="王艺凯 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/ali.jpg" alt="王艺凯 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>王艺凯</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2017/05/25/Java JDK7源码-javautilListE/" title="Java JDK7源码-java.util.List&lt;E&gt;">http://yoursite.com/2017/05/25/Java JDK7源码-javautilListE/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/源码/" rel="tag"># 源码</a>
+          
+            <a href="/tags/Collection/" rel="tag"># Collection</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/25/Java JDK7源码-javautilListIteratorE/" rel="next" title="Java JDK7源码-java.util.ListIterator&lt;E&gt;">
+                <i class="fa fa-chevron-left"></i> Java JDK7源码-java.util.ListIterator&lt;E&gt;
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/13/Java JDK7源码-javautilSetE/" rel="prev" title="Java JDK7源码-java.util.Set&lt;E&gt;">
+                Java JDK7源码-java.util.Set&lt;E&gt; <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/avatar.jpg"
+                alt="王艺凯" />
+            
+              <p class="site-author-name" itemprop="name">王艺凯</p>
+              <p class="site-description motion-element" itemprop="description">Thou Shalt Comment</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">189</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">117</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/ReimuWang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:1505580759@qq.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用网站
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.bilibili.com/" title="bilibili" target="_blank">bilibili</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://acg12.com/" title="ACG调查小队" target="_blank">ACG调查小队</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.com/" title="leetcode" target="_blank">leetcode</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#源码"><span class="nav-number">1.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#已整理层级关系"><span class="nav-number">2.</span> <span class="nav-text">已整理层级关系</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#综述"><span class="nav-number">3.</span> <span class="nav-text">综述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#未整理层级关系"><span class="nav-number">4.</span> <span class="nav-text">未整理层级关系</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老滚6催更协会</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+  <div class="footer-custom"><i>明明可以靠脸吃饭，你却要靠才华，这就是你和明明的差距</i></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+
+</body>
+</html>

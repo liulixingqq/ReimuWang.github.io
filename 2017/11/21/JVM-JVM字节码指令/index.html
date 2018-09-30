@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/myLogo.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="JVM的字节码指令由一个字节长度的，代表某种特定含义的数字(Opcode,即操作码)以及跟随其后的零至多个此操作所需的参数(Operands,即操作数)构成。由于JVM采用的是面向操作数栈而非寄存器的架构，因此大多数指令都仅有操作码，不包含操作数。 若不考虑异常处理，JVM的解释器执行字节码指令流的模型可用如下伪代码表示： 123456do &amp;#123;    PC寄存器的字节码偏移量+1;">
+<meta name="keywords" content="Java,JVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM-JVM字节码指令">
+<meta property="og:url" content="http://yoursite.com/2017/11/21/JVM-JVM字节码指令/index.html">
+<meta property="og:site_name" content="ReimuWang&#39;s Blog">
+<meta property="og:description" content="JVM的字节码指令由一个字节长度的，代表某种特定含义的数字(Opcode,即操作码)以及跟随其后的零至多个此操作所需的参数(Operands,即操作数)构成。由于JVM采用的是面向操作数栈而非寄存器的架构，因此大多数指令都仅有操作码，不包含操作数。 若不考虑异常处理，JVM的解释器执行字节码指令流的模型可用如下伪代码表示： 123456do &amp;#123;    PC寄存器的字节码偏移量+1;">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/JVM/JVM字节码指令/0.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/JVM/JVM字节码指令/1.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/JVM/JVM字节码指令/2.jpg">
+<meta property="og:updated_time" content="2018-09-13T11:35:02.739Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JVM-JVM字节码指令">
+<meta name="twitter:description" content="JVM的字节码指令由一个字节长度的，代表某种特定含义的数字(Opcode,即操作码)以及跟随其后的零至多个此操作所需的参数(Operands,即操作数)构成。由于JVM采用的是面向操作数栈而非寄存器的架构，因此大多数指令都仅有操作码，不包含操作数。 若不考虑异常处理，JVM的解释器执行字节码指令流的模型可用如下伪代码表示： 123456do &amp;#123;    PC寄存器的字节码偏移量+1;">
+<meta name="twitter:image" content="http://yoursite.com/images/blog_pic/JVM/JVM字节码指令/0.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="ReimuWang's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/11/21/JVM-JVM字节码指令/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>JVM-JVM字节码指令 | ReimuWang's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ReimuWang's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">189</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">117</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类<span class="badge">24</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404.html" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />公益 404</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+    
+      
+    
+    <a href="https://github.com/ReimuWang" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#222; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg>
+    
+      </a>
+    
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/21/JVM-JVM字节码指令/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王艺凯">
+      <meta itemprop="description" content="Thou Shalt Comment">
+      <meta itemprop="image" content="/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ReimuWang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">JVM-JVM字节码指令
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-11-21 15:26:49" itemprop="dateCreated datePublished" datetime="2017-11-21T15:26:49+08:00">2017-11-21</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-13 19:35:02" itemprop="dateModified" datetime="2018-09-13T19:35:02+08:00">2018-09-13</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/JVM/" itemprop="url" rel="index"><span itemprop="name">JVM</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>JVM的字节码指令由一个字节长度的，代表某种特定含义的数字(Opcode,即操作码)以及跟随其后的零至多个此操作所需的参数(Operands,即操作数)构成。由于JVM采用的是面向操作数栈而非寄存器的架构，因此大多数指令都仅有操作码，不包含操作数。</p>
+<p>若不考虑异常处理，JVM的解释器执行字节码指令流的模型可用如下伪代码表示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">do &#123;</span><br><span class="line">    PC寄存器的字节码偏移量+1;</span><br><span class="line">    根据PC寄存器指示的位置，从字节码指令流中取出操作码;</span><br><span class="line">    if (该操作码需要操作数) 继续向后取出对应长度的操作数。PC寄存器随之后移;</span><br><span class="line">    执行该字节码指令;</span><br><span class="line">&#125; while (剩余字节码指令流长度 &gt; 0);</span><br></pre></td></tr></table></figure>
+<p>这里的+1是指加1个字节，即解释器读取字节码指令流的基本单位为1字节。若要读取一个16位的数据则需要连读两字节然后重新构建出原数据结构。例如可用byte1,byte2拼接存储short类型变量s。则解释器先读取byte1，后读取byte2。随后还原出s：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(byte1 &lt;&lt; 8) | byte2</span><br></pre></td></tr></table></figure>
+<p>全部字节码指令集详见<a href="/2017/11/16/JVM-JVM字节码指令集/">JVM-JVM字节码指令集</a>。</p>
+<a id="more"></a>
+<h1 id="字节码与数据类型"><a href="#字节码与数据类型" class="headerlink" title="字节码与数据类型"></a>字节码与数据类型</h1><p>JVM中绝大多数的字节码指令都限制了其操作的数据的数据类型(少数与数据类型无关的指令形如无条件跳转指令goto)。例如iload_0就是将局部变量表0号索引位置的int型数值压入操作数栈，而fload_0则是将局部变量表0号索引位置的float型数值压入操作数栈。这是严格的强类型检验，与解释器具体如何执行无关：即便最终解释器实际上是以同样的代码实现这两个指令，也不允许传入参数违法。</p>
+<p>大部分与数据类型相关的字节码指令都会在其助记符中加入其所操作的类型的标记。例如i代表int，l代表long，s代表short，b代表byte，c代表char，f代表float，d代表double，a代表reference。也有少数字节码指令不会在其助记符中明示其所操作的数据类型，例如得到数组长度的arraylength指令，其后续必须跟随一个数组类型的对象。</p>
+<p>与数据类型相关的字节码指令归纳如下：</p>
+<p><img src="/images/blog_pic/JVM/JVM字节码指令/0.jpg" alt="0.jpg"></p>
+<p><img src="/images/blog_pic/JVM/JVM字节码指令/1.jpg" alt="1.jpg"></p>
+<p><img src="/images/blog_pic/JVM/JVM字节码指令/2.jpg" alt="2.jpg"></p>
+<p>很显然，并非所有数据类型都有对应的字节码指令。例如有iload却没有bload。事实上大多数字节码指令都不支持byte，char，short。而对于boolean则没有任何一种字节码指令支持。原因很简单，字节码指令的操作码只有1字节，最多也只能表示256种指令，为了使数据存储更为简洁就不得不在使用时下些功夫。事实上，编译器会在编译期或由JVM在运行期将byte及short类型的数据带符号扩展(Sign-Extend)为对应的int类型数据，而将boolean及char类型的数据零位扩展(Zero-Extend)为对应的int类型的数据。从而在处理byte,short,boolean,char类型的数据时可使用处理int类型数据的字节码指令。</p>
+<p>事实上，如果我们看一下<a href="/2017/11/07/JVM-类文件结构/">JVM-类文件结构</a>就可以发现，byte,short,boolean,char类型并未出现在类文件常量池的14种cp_info中，它们都被int类型所代替了。</p>
+<p>不过，这样会导致Java在语法上不那么友好，以如下代码为例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">short s = 0;</span><br><span class="line">s = s + 1;    // 无法通过编译</span><br></pre></td></tr></table></figure>
+<p>究其根本，还是进行加法时，s被自动扩展为了int型，其运算类型(Computational Type)变为了int，得到的结果自然也是int类型，当然就不能再赋值回short的变量了。</p>
+<p>所有的字节码指令可大致分为后文中的9类。</p>
+<h1 id="加载和存储指令"><a href="#加载和存储指令" class="headerlink" title="加载和存储指令"></a>加载和存储指令</h1><p>加载和存储指令用于将数据在栈帧中的局部变量表和操作数栈之间传输。包括：</p>
+<ul>
+<li>将局部变量表中的一个局部变量压入操作数栈：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">iload,iload_&lt;n&gt;</span><br><span class="line">lload,lload_&lt;n&gt;</span><br><span class="line">fload,fload_&lt;n&gt;</span><br><span class="line">dload,dload_&lt;n&gt;</span><br><span class="line">aload,aload_&lt;n&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>将操作数栈中的一个值弹出并存入局部变量表：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">istore,istore_&lt;n&gt;</span><br><span class="line">lstore,lstore_&lt;n&gt;</span><br><span class="line">fstore,fstore_&lt;n&gt;</span><br><span class="line">dstore,dstore_&lt;n&gt;</span><br><span class="line">astore,astore_&lt;n&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>将一个常量压入操作数栈：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bipush,sipush</span><br><span class="line">ldc,ldc_w,ldc2_w</span><br><span class="line">aconst_null</span><br><span class="line">iconst_m1</span><br><span class="line">iconst_&lt;i&gt;,lconst_&lt;l&gt;,fconst_&lt;f&gt;,dconst_&lt;d&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>扩充局部变量表的访问索引：wide</li>
+</ul>
+<p>处理操作数栈及局部变量表中的数据的指令主要就是通过上述指令。此外，访问对象的字段或数组元素的指令也会向操作数栈传输数据。</p>
+<p>上述指令中有些带有&lt;n&gt;。例如iload_&lt;0&gt;等同于iload操作码后跟随int型的操作数0。之所以这么设计，是为了能让常用的数值的操作可以无需操作数而只以操作码完成，节省存储空间。当然指令是有限的(一共也就256个)，也不能无限的放宽常用值的范围。必须要取一个平衡。例如iload_&lt;n&gt;中n的取值范围为[0,3]。</p>
+<h1 id="运算指令"><a href="#运算指令" class="headerlink" title="运算指令"></a>运算指令</h1><p>运算或算术指令用于对操作数栈栈顶的一个或两个操作数进行某种特定的算术运算。其会将这一个或两个操作数弹出，运算后再将结果压入操作数栈。</p>
+<p>大体上算术指令可分为如下两类：</p>
+<ul>
+<li>对整型数据进行运算的指令</li>
+<li>对浮点型数据进行运算的指令。</li>
+</ul>
+<p>处理整数和浮点数的指令在面对溢出和除零时会有不同的解决策略。但无论是哪种算术运算，都必须使用JVM指令集支持的数据类型。正如前文提到的，由于没有直接支持byte,short,boolean,char类型的算术运算指令，因此对于这些类型的算术运算，应该使用操作int类型的指令代替。</p>
+<p>所有算术指令如下：</p>
+<ul>
+<li>加法指令：iadd,ladd,fadd,dadd</li>
+<li>减法指令：isub,lsub,fsub,dsub</li>
+<li>乘法指令：imul,lmul,fmul,dmul</li>
+<li>除法指令：idiv,ldiv,fdiv,ddiv</li>
+<li>取余(模)指令：irem,lrem,frem,drem</li>
+<li>取反指令：ineg,lneg,fneg,dneg</li>
+<li>位移指令：ishl,lshl,ishr,lshr,iushr,lushr</li>
+<li>按位或指令：ior,lor</li>
+<li>按位与指令：iand,land</li>
+<li>按位异或指令：ixor,lxor</li>
+<li>局部变量自增指令：iinc</li>
+<li>比较指令：lcmp,fcmpl,fcmpg,dcmpl,dcmpg</li>
+</ul>
+<p>JVM字节码指令集直接支持了《Java语言规范》中描述的各种对整数及浮点数操作的语义。</p>
+<p>关于整型数据，Java语法中在进行数据运算时可能会导致溢出，例如两个很大的正整数相加，结果可能是一个负数。但其实JVM规范中并没有明确规定整型数据溢出的运算规则，仅规定了在处理整型数据时，除了除法指令(idiv,ldiv)及取余(模)指令(irem,lrem)会因除数为零抛出ArithmeticException异常外，其余任何整型运算场景都不会抛出运行时异常。JVM规范的限制就这么多，只要满足了这个限制，具体的溢出规则就由具体实现自行把控。</p>
+<p>关于浮点型数据的运算，JVM规范的限制明显大了很多：运算必须严格遵循IEEE754规范所规定的行为及限制。具体来说，必须严格遵守IEEE754规范所规定的非正规浮点数值(Denormalized Floating-Point Numbers)及逐级下溢(Gradual Underflow)的运算规则。</p>
+<p>在进行浮点数运算时，所有运算结果必须舍入到适当的精度。舍入模式为IEEE754规范中默认的舍入模式。即向最接近数舍入模式：非精确的结果必须舍入为可被表示的最接近的精确值，若上下两方精确值同样接近，则优先选择最低有效位为零的。</p>
+<p>在将浮点数转换为整数时，采用IEEE754规范中的向零舍入模式：数字会被截断，所有小数部分均会被舍弃。例如55.2舍入结果为55。-55.2舍入结果为-55(注意，不是-56。舍入为粗暴的舍弃小数部分，而非找到不大于原值的最大整数)。</p>
+<p>和整型运算不同的是，JVM规范要求浮点数运算时不会抛出任何运行时异常(这里的异常是指Java层面的异常，不是IEEE754规范中的作为运算信号的浮点异常)。当浮点运算溢出时，将使用有符号的无穷大表示。若某运算结果没有明确的数学定义，将使用NaN表示。而所有NaN参与的运算结果均返回NaN。</p>
+<p>比较long型数据时(lcmp)，采用的是带符号的比较方式。而比较浮点型数据时(fcmpl,fcmpg,dcmpl,dcmpg)，采用的是IEEE754规范所定义的无信号比较(Nonsignaling Comparisons)方式。</p>
+<h1 id="类型转换指令"><a href="#类型转换指令" class="headerlink" title="类型转换指令"></a>类型转换指令</h1><p>类型转换指令可以将两种不同的数值类型进行相互转换，其用途主要有2：</p>
+<ul>
+<li>源码中显式指定的强制类型转换</li>
+<li>前文提到的针对char,boolean,byte,short这4种类型的自动扩展</li>
+</ul>
+<p>类型转换主要分为两类，一类是JVM直接支持的，转换时无需显式转换指令的，被称为宽化类型转换(Widening Numeric Conversions)，一如其名，即小范围类型向大范围类型的安全转换：</p>
+<ul>
+<li>int –&gt; long或float或double</li>
+<li>long –&gt; float或double</li>
+<li>float –&gt; double</li>
+</ul>
+<p>相对的，另一类类型转换被称为窄化类型转换(Narrowing Numeric Conversions)，一如其名，即大范围类型向小范围类型的不安全转换。必须显式的使用转换指令完成。这些转换指令包括：</p>
+<ul>
+<li>i2c,i2b,i2s</li>
+<li>l2i</li>
+<li>f2l,f2i</li>
+<li>d2f,d2l,d2i</li>
+</ul>
+<p>窄化类型转换可能会导致转换结果正负号较之原值发生变化。不同数量级的情况还可能导致精度丢失。</p>
+<p>在对long或int做窄化类型转换时，转换的过程仅仅是保留接收类型长度的最低几位。因符号位位于最高位，必然导致符号位被截取掉，从而可能使符号发生变化(之所以说是可能，是因为截断后的最高位可能仍与原值相同)。</p>
+<p>在将一个浮点数窄化为一个整数(特指long,int)时，将遵循以下规则：</p>
+<ul>
+<li>若浮点值是NaN，那转换结果就是int或long类型的0</li>
+<li>若浮点值不是无穷大的话，将采用IEEE754规范中的向零舍入模式：数字会被截断，所有小数部分均会被舍弃，获得整数值v。若v在接收类型能表示的范围之内，那转换结果就是v</li>
+<li>反之，将根据v的符号，表示为接收类型能表示的最大正数或最小负数。</li>
+</ul>
+<p>而浮点数内部的窄化，即double向float的转换，遵循IEEE754规范中的向最接近数舍入模式，得到一个float精度能表示的值。若舍入结果的绝对值过小超出了float的精度表示范围，将返回float类型的正负零。如果返回的绝对值过大超出了float的表示范围，将返回float类型的正负无穷大。double类型的NaN将转换为float类型的NaN。</p>
+<p>尽管如上文所述，数据类型窄化可能会导致下限溢出，上限溢出或精度丢失。但是JVM规范明确规定不能因数据类型窄化而抛出运行时异常。</p>
+<h1 id="对象创建与访问指令"><a href="#对象创建与访问指令" class="headerlink" title="对象创建与访问指令"></a>对象创建与访问指令</h1><p>虽然从理论层面来讲，Java中的类实例与数组实例都是对象。但是在实现上，JVM对类实例及数组实例的创建与访问使用了不同的字节码指令。</p>
+<p>具体指令如下：</p>
+<ul>
+<li>创建类实例的指令：new</li>
+<li>创建数组实例的指令：newarray,anewarray,multianewarray</li>
+<li>访问类字段(即类变量，被static修饰的字段)和实例字段(即实例变量，未被static修饰的字段)的指令：getstatic,putstatic,getfield,putfield</li>
+<li>把一个数组元素压入操作数栈的指令：caload,baload,saload,iaload,laload,faload,daload,aaload</li>
+<li>把操作数栈栈顶的值弹出作为数组元素存储入数组的指令：castore,bastore,sastore,iastore,lastore,fastore,dastore,aastore</li>
+<li>取数组长度的指令：arraylength</li>
+<li>检查类实例类型的指令：instanceof,checkcast</li>
+</ul>
+<h1 id="操作数栈管理指令"><a href="#操作数栈管理指令" class="headerlink" title="操作数栈管理指令"></a>操作数栈管理指令</h1><p>如同操作一个普通的栈型数据结构那样，JVM提供了一些指令直接操作操作数栈：</p>
+<ul>
+<li>将操作数栈栈顶的一个或两个元素出栈的指令：pop,pop2</li>
+<li>复制操作数栈栈顶一个或两个元素并将这一个或两个元素的复制值重新压入操作数栈的指令：dup,dup2,dup_x1,dup2_x1,dup_x2,dup2_x2</li>
+<li>将操作数栈最顶端的两个数值交换的指令：swap</li>
+</ul>
+<h1 id="控制转移指令"><a href="#控制转移指令" class="headerlink" title="控制转移指令"></a>控制转移指令</h1><p>控制转移指令可以让解释器有条件或无条件的从指定位置的指令而非该控制转移指令的下一条指令继续执行。从概念模型上理解，可以认为控制转移指令就是在有条件或无条件的修改PC寄存器中的值。控制转移指令包括：</p>
+<ul>
+<li>条件分支指令：ifeq,iflt,ifle,ifne,ifgt,ifge,ifnull,ifnonnull,if_icmpeq,if_icmpne,if_icmplt,if_icmpgt,if_icmple,if_icmpge,if_acmpeq,if_acmpne</li>
+<li>复合条件分支指令：tableswitch,lookupswitch</li>
+<li>无条件跳转指令：goto,goto_w,jsr,jsr_w,ret</li>
+</ul>
+<p>如上文所示，JVM中有专门的处理int及引用类型的条件分支比较指令。为了便于处理null这一特殊值，也会为其设置专门的检测指令。</p>
+<p>同前文规则一致，对于boolean,char,byte,short型数据的条件分支比较，均采用int型的比较指令完成。</p>
+<p>对于long,float,double而言，会先用运算指令中的比较指令：lcmp,fcmpl,fcmpg,dcmpl,dcmpg得到[1,0,-1]这样int型的比较结果并存入操作数栈，随后再用int型条件分支指令处理这些结果值，从而完成整个条件分支跳转。</p>
+<p>由上文描述可知，所有基本数据类型的条件分支跳转实际上最终都依托于int型的条件分支跳转，更进一步的说，是依托于int型的比较操作。因此int型的比较操作是否简便完善高效就显得尤为重要。这也是JVM字节码指令集中int型的比较指令最为丰富强大的原因。</p>
+<h1 id="方法调用和返回指令"><a href="#方法调用和返回指令" class="headerlink" title="方法调用和返回指令"></a>方法调用和返回指令</h1><p>与方法调用(即分派+执行)相关的指令列举如下：</p>
+<ul>
+<li>invokevirtual：调用实例方法。会根据对象的实际类型进行动态单分派(虚方法分派)。</li>
+<li>invokeinterface：调用接口方法。运行期解释器会搜索一个实现了该接口方法的对象，并调用对应实现的接口方法。</li>
+<li>invokespecial:以操作数栈栈顶reference类型的数据所指向的对象为方法的接收者，调用此对象的实例构造器&lt;init&gt;方法，私有方法或超类构造方法。该指令的操作码之后会紧跟一个u2的操作数说明具体调用的是哪个方法，该参数指向常量池集合中的一个CONSTANT_UTF8_info类型的索引项，也就是该方法的方法符号引用。</li>
+<li>invokestatic：调用类方法(static修饰的方法)。</li>
+<li>invokedynamic：至JDK1.7为止仍未存在于JVM字节码指令集中。用于在运行时动态解析出调用点限定符所引用的方法，并执行该方法。前面介绍的4条方法调用指令的分派逻辑都固化在JVM内部，而本指令的分派逻辑则由用户设定的引导方法决定。</li>
+</ul>
+<p>方法返回指令是根据返回值的类型区分的，包括:</p>
+<ul>
+<li>ireturn(自然，延续前文的规定，除了int之外，boolean,char,byte,short也使用该指令)</li>
+<li>lreturn</li>
+<li>freturn</li>
+<li>dreturn</li>
+<li>areturn</li>
+<li>return：供返回值为void的方法或实例初始化方法或类及接口的类初始化方法使用。</li>
+</ul>
+<h1 id="异常处理指令"><a href="#异常处理指令" class="headerlink" title="异常处理指令"></a>异常处理指令</h1><p>显式异常指令(源代码中明确用throw语句标记的异常)均由athrow指令实现。此外，其他字节码指令在检测到异常状况时也会自动抛出异常，例如前文介绍过的除法指令(idiv,ldiv)及取余(模)指令(irem,lrem)会因除数为零抛出ArithmeticException异常。</p>
+<p>而源码中显式被catch语句捕获的异常则不是由字节码指令实现的(此前是用jsr及ret指令实现的，但在JDK1.7中这两条指令已废弃了)，而是采用了class文件-&gt;方法表集合-&gt;方法表-&gt;属性集合-&gt;Code属性-&gt;异常表集合实现的。</p>
+<h1 id="同步指令"><a href="#同步指令" class="headerlink" title="同步指令"></a>同步指令</h1><p>主要为synchronized关键字服务，详见<a href="/2017/07/13/Java 并发-synchronized/">Java 并发-synchronized</a>。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechat.png" alt="王艺凯 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/ali.jpg" alt="王艺凯 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>王艺凯</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2017/11/21/JVM-JVM字节码指令/" title="JVM-JVM字节码指令">http://yoursite.com/2017/11/21/JVM-JVM字节码指令/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/16/JVM-JVM字节码指令集/" rel="next" title="JVM-JVM字节码指令集">
+                <i class="fa fa-chevron-left"></i> JVM-JVM字节码指令集
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/23/JVM-类加载机制/" rel="prev" title="JVM-类加载机制">
+                JVM-类加载机制 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/avatar.jpg"
+                alt="王艺凯" />
+            
+              <p class="site-author-name" itemprop="name">王艺凯</p>
+              <p class="site-description motion-element" itemprop="description">Thou Shalt Comment</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">189</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">117</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/ReimuWang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:1505580759@qq.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用网站
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.bilibili.com/" title="bilibili" target="_blank">bilibili</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://acg12.com/" title="ACG调查小队" target="_blank">ACG调查小队</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.com/" title="leetcode" target="_blank">leetcode</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#字节码与数据类型"><span class="nav-number">1.</span> <span class="nav-text">字节码与数据类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#加载和存储指令"><span class="nav-number">2.</span> <span class="nav-text">加载和存储指令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#运算指令"><span class="nav-number">3.</span> <span class="nav-text">运算指令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#类型转换指令"><span class="nav-number">4.</span> <span class="nav-text">类型转换指令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#对象创建与访问指令"><span class="nav-number">5.</span> <span class="nav-text">对象创建与访问指令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#操作数栈管理指令"><span class="nav-number">6.</span> <span class="nav-text">操作数栈管理指令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#控制转移指令"><span class="nav-number">7.</span> <span class="nav-text">控制转移指令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#方法调用和返回指令"><span class="nav-number">8.</span> <span class="nav-text">方法调用和返回指令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#异常处理指令"><span class="nav-number">9.</span> <span class="nav-text">异常处理指令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#同步指令"><span class="nav-number">10.</span> <span class="nav-text">同步指令</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老滚6催更协会</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+  <div class="footer-custom"><i>明明可以靠脸吃饭，你却要靠才华，这就是你和明明的差距</i></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+
+</body>
+</html>

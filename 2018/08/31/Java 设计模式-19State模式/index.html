@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/myLogo.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在《图解设计模式》一书中，State模式被归入了第8部分管理状态。在GoF原书中，State模式则被归入了行为型设计模式。">
+<meta name="keywords" content="Java,设计模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 设计模式-19.State模式">
+<meta property="og:url" content="http://yoursite.com/2018/08/31/Java 设计模式-19State模式/index.html">
+<meta property="og:site_name" content="ReimuWang&#39;s Blog">
+<meta property="og:description" content="在《图解设计模式》一书中，State模式被归入了第8部分管理状态。在GoF原书中，State模式则被归入了行为型设计模式。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/0.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/1.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/2.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/3.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/4.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/5.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/6.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/7.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/8.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/9.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/10.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/11.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/12.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/13.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/14.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/15.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/16.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/17.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/18.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/19.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/20.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/21.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/22.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/23.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/24.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/25.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/26.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/27.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/28.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/29.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/30.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/31.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/32.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/33.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/34.png">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/35.jpg">
+<meta property="og:updated_time" content="2018-09-03T10:09:20.982Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 设计模式-19.State模式">
+<meta name="twitter:description" content="在《图解设计模式》一书中，State模式被归入了第8部分管理状态。在GoF原书中，State模式则被归入了行为型设计模式。">
+<meta name="twitter:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/19State模式/0.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="ReimuWang's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/31/Java 设计模式-19State模式/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java 设计模式-19.State模式 | ReimuWang's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ReimuWang's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">189</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">117</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类<span class="badge">24</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404.html" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />公益 404</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+    
+      
+    
+    <a href="https://github.com/ReimuWang" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#222; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg>
+    
+      </a>
+    
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/31/Java 设计模式-19State模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王艺凯">
+      <meta itemprop="description" content="Thou Shalt Comment">
+      <meta itemprop="image" content="/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ReimuWang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java 设计模式-19.State模式
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-08-31 20:25:49" itemprop="dateCreated datePublished" datetime="2018-08-31T20:25:49+08:00">2018-08-31</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-03 18:09:20" itemprop="dateModified" datetime="2018-09-03T18:09:20+08:00">2018-09-03</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java-设计模式/" itemprop="url" rel="index"><span itemprop="name">Java 设计模式</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在《图解设计模式》一书中，State模式被归入了第8部分<a href="">管理状态</a>。在GoF原书中，State模式则被归入了<a href="">行为型设计模式</a>。</p>
+<a id="more"></a>
+<h1 id="综述"><a href="#综述" class="headerlink" title="综述"></a>综述</h1><p>在面向对象编程领域，有这样一句话：一切都是对象，对象就是一切。这话虽说有些绝对了，但也从一个侧面说明对象在面向对象编程领域的普遍性。在我们通常的认知中，对象指的是某个具体的事物，例如一张桌子，一把椅子。但是对象其实还可以表示一些抽象的事物，例如本文要提到的”状态”。</p>
+<p>漫画《七龙珠》的主人公是卡卡罗特(孙悟空)。将卡卡罗特看作一个对象是比较好理解的。但我们同样也可以将卡卡罗特所处于的状态视为对象。例如我们可以将普通状态视为一个类，超级赛亚人状态视为另一个类。这样再描述卡卡罗特所处于的状态时，就可以用具体状态的实例来表示。</p>
+<p>普通状态(左)与超级赛亚人状态(右)下的卡卡罗特：</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/0.jpg" alt="0.jpg"></p>
+<p>在编程领域，由此演化而来的设计模式就是State模式。以类来表示状态后，我们就能通过切换表示状态的类来方便的改变对象所处于的状态。同时，当需要增加新的状态时(例如为卡卡罗特再增加一个巨猿状态)，条理也会更为清晰。</p>
+<h1 id="示例需求描述"><a href="#示例需求描述" class="headerlink" title="示例需求描述"></a>示例需求描述</h1><p>狂野女猎手-奈德丽(Nidalee)是一位出自游戏英雄联盟(LOL)的女英雄，在描述具体的需求之前，先展示几张她的皮肤原画吧~</p>
+<p><strong>默认</strong></p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/1.jpg" alt="1.jpg"></p>
+<hr>
+<p><strong>雪装</strong></p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/2.jpg" alt="2.jpg"></p>
+<hr>
+<p><strong>丛林猎豹</strong></p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/3.jpg" alt="3.jpg"></p>
+<hr>
+<p><strong>法国女仆</strong></p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/4.jpg" alt="4.jpg"></p>
+<hr>
+<p><strong>艳后</strong></p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/5.jpg" alt="5.jpg"></p>
+<hr>
+<p><strong>魅惑女巫(2011年万圣节)</strong></p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/6.jpg" alt="6.jpg"></p>
+<hr>
+<p><strong>枭姬 孙尚香</strong></p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/7.jpg" alt="7.jpg"></p>
+<hr>
+<p><strong>勇者</strong></p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/8.jpg" alt="8.jpg"></p>
+<p>好漂亮啊有没有，尤其是枭姬，英姿勃发。不过我们之所以介绍得这么详细并不完全是因为她生得俊俏(你够了)，而是因为她是具有双形态的英雄。下面就以枭姬这个皮肤的3D模型来展示一下：</p>
+<p><strong>人形态</strong></p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/9.jpg" alt="9.jpg"></p>
+<hr>
+<p><strong>豹形态</strong></p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/10.jpg" alt="10.jpg"></p>
+<p>奈德丽的R技能为形态切换。在各自的形态下，她有着独立的两套QWE技能(传说中拥有7个主动技能的女人)。本文的示例程序将应用State模式模拟奈德丽的技能释放。</p>
+<h1 id="示例需求分析"><a href="#示例需求分析" class="headerlink" title="示例需求分析"></a>示例需求分析</h1><p>不知不觉中GoF的23种设计模式也快介绍到尾声了(19/23)，之前给出的设计模式的示例程序大多很简单，也很粗糙，其目的仅仅是为了说明某个设计模式的核心思想。本文将打破这一点(毕竟总写一些实验性质的小demo着实无聊)，会写一个相对完整的产品出来。关于奈德丽具体的英雄参数可参见<a href="http://cha.17173.com/lol/heros/details/76.html" target="_blank" rel="noopener">奈德丽数据介绍</a>。本程序会以奈德丽的满级(18级)属性为基础，再进行适当的提升(因为人物是会穿装备的)。</p>
+<p>GUI设计技术为Java AWT，程序启动后初始状态如下：</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/11.jpg" alt="11.jpg"></p>
+<p>这也是程序的主体面板界面。它的区域介绍如下：</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/12.jpg" alt="12.jpg"></p>
+<p>默认形态为人形态。此时：</p>
+<ul>
+<li><strong>区域一：</strong>人形态是有MP的，因此血条与蓝条均会展示，初始时默认血蓝全满。</li>
+<li><strong>区域二：</strong>人形态下的立绘采用我最喜欢的枭姬皮肤(啦啦啦)。</li>
+<li><strong>区域三：</strong>此时展示的是人形态下的技能图标。</li>
+</ul>
+<p>当按下键盘上的R键后，即被认为释放了一次R技能(QWE技能同理)，此时奈德丽会从人形态切换为豹形态：</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/13.jpg" alt="13.jpg"></p>
+<p>切换后：</p>
+<ul>
+<li><strong>区域一：</strong>因为奈德丽在豹形态下是没有MP的，因此不绘制蓝条。</li>
+<li><strong>区域二：</strong>立绘切换为枭姬皮肤的豹形态(没找到太合适的图，比较遗憾)。</li>
+<li><strong>区域三：</strong>技能图标切换为豹形态。</li>
+</ul>
+<p>关于技能图标，有以下几点需要说明：</p>
+<p>第一，我们可以注意到上图中豹形态下的R技能”黑了一块”。这表示R技能在冷却。只有当它冷却完成后，我们才能再次释放，以切换为人形态。因为奈德丽的7个技能都是主动技能，因此其他技能的冷却机制同理。</p>
+<p>当R技能冷却完成后：</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/14.jpg" alt="14.jpg"></p>
+<p>我们可以注意到，相较于人形态，奈德丽的R技能的图标并没有改变。这也是我们要说的第二点，QWE技能是独立的，而R技能只有一个(因此我们才说奈德丽有7个技能，而非8个)。</p>
+<p>QWE独立还意味着，QWE技能的冷却时间计算也是独立的，例如我们可以在人形态下快速释放QWE(俗称脸滚键盘)，使他们均进入冷却状态：</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/15.jpg" alt="15.jpg"></p>
+<p>此时如果我们再按下R切换为豹形态，我们会发现豹形态下的QWE又是可释放的了，不过R技能因为人豹形态共用一个，因此进入了冷却状态。此时我们可以在豹形态下再QWE脸滚键盘一波：</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/16.jpg" alt="16.jpg"></p>
+<p>当R技能冷却完成后，我们又可以切换回人形态，如果我们进行如上人-豹-人的操作的速度足够快，当我们再切回人形态时，情况可能是这样的：</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/17.jpg" alt="17.jpg"></p>
+<p>R技能又开始接着计算冷却了，这个前文已经介绍过原因，并没有什么。但是除了冷却时间较短的Q技能之外，人形态下的WE技能并没有冷却完。这个效果当我们在R技能冷却好再次切到豹形态时也是同理的(只不过豹形态下技能CD普遍较短，不太容易看出来)。之所以会这样，是因为QWE技能独立同样意味着技能CD独立。举例来说，如果人形态的Q技能的CD为6秒，那么无论如何，它都只能6秒后才能再次释放，我们切换为豹形态会让我们看不到人形态Q技能的CD情况，但也仅仅只是看不到而已，它依然在不停的倒数自身的冷却时间。</p>
+<p>由上文的技能CD介绍还能看出的是，人形态下释放QWE技能导致MP减少(蓝条变短)。而豹形态的技能则是无消耗的。R技能作为形态切换的桥梁也是无消耗的。这意味着，豹形态技能的释放只受CD的影响，而人形态在此之上，还需剩余的蓝量大于技能的消耗。</p>
+<p>蓝条可以通过技能释放来减少。为了模拟血条减少，我们规定当按下键盘上的X键后，会扣一定数值的血量：</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/18.jpg" alt="18.jpg"></p>
+<p>虽然用静态的图片无法表现，不过HP与MP均会按一定速率自动回复。</p>
+<p>按照一般游戏的设定，蓝条始终都会是蓝色的，而血条则会在减少的过程中逐渐由绿转黄，再由黄转红(所谓的满血，黄血，红血)。本程序也是如此。上文已经展示了血量比较健康时血条的颜色，下面我们来看一张半血时的：</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/19.jpg" alt="19.jpg"></p>
+<p>然后是残血时的：</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/20.jpg" alt="20.jpg"></p>
+<p>奈德丽人形态下的E技能会为指向的英雄回复一定的HP，本程序默认会对自身释放，因此人形态释放E技能后会回复一定数值的HP(按照设定，回复量在一个范围之间，HP越低回复量越多)。除此之外，除了R技能会导致形态切换，其他技能(人形态的QW，豹形态的QWE)均为对敌方造成伤害，在本程序中不会有所体现。</p>
+<p>当HP降到0时，英雄会死亡：</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/21.jpg" alt="21.jpg"></p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/22.jpg" alt="22.jpg"></p>
+<p>形态会被定格在死亡的那一刻。届时将不再接受任何键盘输入，也不会提供初始化的方法，只能关掉重来。此时：</p>
+<ul>
+<li><strong>区域一：</strong>血条当然是清空了。而人形态下的蓝条将定格在死亡的时刻，不再变动。</li>
+<li><strong>区域二：</strong>立绘将被虚化，同时添加表示阵亡的文字。</li>
+<li><strong>区域三：</strong>技能图标将被虚化，同时清除可能会存在的尚未完成的CD遮挡。</li>
+</ul>
+<p>呼~需求终于大致描述完了。累死我了。</p>
+<p>作为一名技术，我们很少会关注产品经理的工作，不过即便是这么小的一个需求，我在整理并力求没有歧义的描述清楚(而且我并不敢说真的就描述清楚了)时，也费了很大的力气。这说明产品经理确实在日常的工作中为我们屏蔽了很多技术不愿意关注的点。之所以会有矛盾冲突，我想大多是因为需求本身就充斥着更多的冲突，没有产品经理，技术将更难以工作。</p>
+<h1 id="伪代码分析"><a href="#伪代码分析" class="headerlink" title="伪代码分析"></a>伪代码分析</h1><p>需求描述完了，下面就来思考一下怎么写。</p>
+<p>假设我们只考虑Q技能的释放，那么最容易想到的写法是这样的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">类 奈德丽 &#123;</span><br><span class="line"></span><br><span class="line">    方法 释放Q &#123;</span><br><span class="line">        if (当前状态为人形态) &#123;</span><br><span class="line">	    人形态下释放Q</span><br><span class="line">	&#125; else if (当前状态为豹形态) &#123;</span><br><span class="line">	    豹形态下释放Q</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">	    异常</span><br><span class="line">	&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样做当然没什么毛病，但是问题在于每当我们要做什么操作时都需要先判断一下状态。随着状态的增多，代码逻辑的复杂，这种判断的成本将越来越高，同时也越发的不易于维护。</p>
+<p>如果使用State模式，我们就可以将形态抽象为类:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">类 人形态 &#123;</span><br><span class="line"></span><br><span class="line">    方法 释放Q &#123;</span><br><span class="line">        人形态下释放Q</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">类 豹形态 &#123;</span><br><span class="line"></span><br><span class="line">    方法 释放Q &#123;</span><br><span class="line">        豹形态下释放Q</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时奈德丽类就可以这样写了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">类 奈德丽 &#123;</span><br><span class="line"></span><br><span class="line">    字段 当前状态</span><br><span class="line"></span><br><span class="line">    方法 释放Q &#123;</span><br><span class="line">        当前状态.方法 释放Q</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>显然，代码逻辑变得清晰了许多，也更利于维护。</p>
+<h1 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h1><p>首先是类图：</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/23.jpg" alt="23.jpg"></p>
+<p>因为希望能做出一个相对完整的产品，所以添加了很多无关State模式的代码。因此较之真实的程序，类图将只描述与State模式相关的那一部分。</p>
+<p>本程序中的所有代码将被统一置于design19包下，结构如下：</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/24.jpg" alt="24.jpg"></p>
+<p>下面将逐个贴出每个类的源码。</p>
+<p>首先要说明的是，既然较之此前的设计模式(我想此后的其实也一样)，我费了更大的力气写需求分析。那么我在介绍示例代码时，也打算说得详细一些：并不仅仅是说State模式本身，而是把用到的其他的模式与想法也都详细介绍一下，算是我个人这段时间学习的总结。</p>
+<p>程序是以简化版的MVC模式设计的(即只有M与V，没有C)。下面先来介绍M。</p>
+<p><strong>Hero类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line">package design19.model;</span><br><span class="line"></span><br><span class="line">public abstract class Hero &#123;</span><br><span class="line"></span><br><span class="line">    protected boolean ifDeath;</span><br><span class="line"></span><br><span class="line">    protected int maxHealth = 2 * (370 + 90 * 17);</span><br><span class="line"></span><br><span class="line">    protected int healthRegen = (int)(3 * (1 + 0.12 * 17));</span><br><span class="line"></span><br><span class="line">    protected int health = maxHealth;</span><br><span class="line"></span><br><span class="line">    protected int ap;</span><br><span class="line"></span><br><span class="line">    public abstract void useQ();</span><br><span class="line"></span><br><span class="line">    public abstract void useW();</span><br><span class="line"></span><br><span class="line">    public abstract void useE();</span><br><span class="line"></span><br><span class="line">    public abstract void useR();</span><br><span class="line"></span><br><span class="line">    public abstract boolean ifHaveMana();</span><br><span class="line"></span><br><span class="line">    protected abstract double manaRate();</span><br><span class="line"></span><br><span class="line">    public abstract String getImgKeyWord();</span><br><span class="line"></span><br><span class="line">    public abstract double remainQ();</span><br><span class="line"></span><br><span class="line">    public abstract double remainW();</span><br><span class="line"></span><br><span class="line">    public abstract double remainE();</span><br><span class="line"></span><br><span class="line">    public abstract double remainR();</span><br><span class="line"></span><br><span class="line">    Hero() &#123;</span><br><span class="line">        // 回血</span><br><span class="line">        new Thread() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                while (true) &#123;</span><br><span class="line">                    if (Hero.this.ifDeath) &#123;</span><br><span class="line">                        Hero.this.health = 0;</span><br><span class="line">                        break;</span><br><span class="line">                    &#125;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        int tempHealth = Hero.this.health + Hero.this.healthRegen;</span><br><span class="line">                        Hero.this.health = tempHealth &gt; Hero.this.maxHealth ? Hero.this.maxHealth : tempHealth;</span><br><span class="line">                        Thread.sleep(1000);</span><br><span class="line">                    &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public boolean isDeath() &#123;</span><br><span class="line">        return ifDeath;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void damage(int value) &#123;</span><br><span class="line">        int tempHealth = this.health - value;</span><br><span class="line">        if (tempHealth &lt;= 0) &#123;</span><br><span class="line">            this.ifDeath = true;</span><br><span class="line">            this.health = 0;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        this.health = tempHealth;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public double getHealthRate() &#123;</span><br><span class="line">        return 1.0 * this.health / this.maxHealth;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public double getManaRate() &#123;</span><br><span class="line">        if (!this.ifHaveMana()) throw new UnsupportedOperationException();</span><br><span class="line">        return this.manaRate();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    long remainTime(Skill skill) &#123;</span><br><span class="line">        long pass = System.currentTimeMillis() - skill.last;</span><br><span class="line">        return (pass - skill.cd) &gt;= 0 ? 0 : (skill.cd - pass);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    boolean check(String mark) &#123;</span><br><span class="line">        if (this.ifDeath) return false;</span><br><span class="line">        if (&quot;Q&quot;.equals(mark))</span><br><span class="line">            if (this.remainQ() &gt; 0) return false;</span><br><span class="line">        if (&quot;W&quot;.equals(mark))</span><br><span class="line">            if (this.remainW() &gt; 0) return false;</span><br><span class="line">        if (&quot;E&quot;.equals(mark))</span><br><span class="line">            if (this.remainE() &gt; 0) return false;</span><br><span class="line">        if (&quot;R&quot;.equals(mark))</span><br><span class="line">            if (this.remainR() &gt; 0) return false;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从逻辑上来说，Hero类与后文要介绍的Skill类是model模块中外部(本程序中是View)能感知到的仅有的两个类。因为英雄联盟有很多位英雄，对于外部调用者而言，针对不同英雄写不同的代码是很不现实的，相反，正如其他MVC中的V那样，V需要的是M能提供一套通用的API。具体到本示例，就是”英雄释放技能，造成影响”。这都是很抽象的东西，换句话说，如果我们将奈德丽换为另一位英雄，例如寒冰射手艾希，View层不应做任何或只应做极少的修改。</p>
+<p>因为本示例的逻辑相对简单，因此对外暴露的API仅仅只有Hero类一个。Skill类依逻辑可以暴露API，只是没必要。而model中的其他类则是不准暴露。这点务必要理解透彻才可以。</p>
+<p>为了不使得程序看着过于臃肿，除非是需要对外提供的API，model内部各个类之间互相使用字段时尽量都没有写get-set方法，而仅仅只是通过访问权限来屏蔽外界，这在比较严谨的场合(例如实际工作时的代码)往往是不可以的。</p>
+<p>之所以将Hero声明为抽象类而非接口，比较直观的解释自然就是我们希望在其中添加一些属于实例的字段及方法，以及我们确信在本程序中继承Hero的Nidalee类不会有其他父类。不过更本质的原因在于，这种继承关系遵循合成聚合复用原则(奈德丽是一位英雄，即ISA)及里氏替换原则，这才是原因所在，最开始说的那个所谓的”直观的解释”，比起原因，更像是由原因导致的现象。</p>
+<p>作为LOL这种竞技游戏通常都会有的属性，HP与MP。我只将HP及HP相关的属性作为字段加入到了Hero类中。其原因就在于所有的英雄都有HP，但并不是所有的英雄都会有MP。比如就会有德玛西亚之力盖伦，不祥之刃卡特琳娜这种完全没有MP的英雄，或是盲僧李青，蛮族之王泰达米尔这种拥有能量或是怒气等与MP性质类似的东西的英雄。再或者是甚至像本文介绍的拥有双形态的奈德丽，某个形态下像大多英雄那样拥有MP，某个形态下又像盖伦那样无消耗。基于这个考虑，我将MP沉到了再下一个层级：如果这个英雄有MP，那么就在自己内部添加。而Hero这一层尽量只添加所有英雄都会有的字段。这也是抽象的本质思路所在：抽取相同的部分以形成更高的层级。因为相同的原因，就很容易理解Hero类中剩下的两个字段了：表示是否死亡的ifDeath，以及表示魔法能力的ap值。作为一个英雄，其实还会有更多复杂的属性，例如ad，护甲，魔抗，移速等等。本示例只使用了少量需要的部分。</p>
+<p>除了字段之外，我们还将其他对HP的操作都尽量提到了Hero这一层，因为这是所有英雄通用的。我在Hero的构造函数中起了一个线程模拟回血。还提供了damage()方法供外部调用模拟扣血。</p>
+<p>use Q/w/E/R方法表示外界按下了一次QWER键。而remain Q/w/E/R方法则返回QWER技能技能CD恢复的百分比。很显然，该值的取值范围为[0,1]。当该值等于0时说明技能没有进入冷却，可以释放(当然仅仅只是冷却好了，人形态下还要蓝够才可以)；而等于1则说明技能刚进入冷却。</p>
+<p>ifHaveMana()这个方法会判断英雄是否有蓝条(本程序在设计时就不考虑怒气能量等奇怪的东西了)。依上文所说的MP下沉的思路，这个方法放在Hero类里虽然有点不太美观，但终归是还能接受。而getManaRate()方法就有些诡异了，它返回的是当前MP值占MP最大值的比例，是为了显示蓝条长度用的。由代码不难看出，当外部调用该方法后，会先再判断一次ifHaveMana()，如果返回false，即英雄没有MP，则抛出异常。反之才会调用子类本身计算比例的manaRate()方法，这里运用了Template Method模式。不过这不是重点。我想说的是，对于没有MP的英雄而言，这个方法是根本不该被调用的，这种提供了功能却在内部抛出异常的做法相当于甩锅给调用方，显然是很不优雅的。更有问题的是，明明将MP下沉到了更下一层，却还是在Hero这一层出现了这么具体的计算MP相关值的方法，看着着实扎眼。说了这么多，之所以千不该万不是还是把代码写成了这样，是因为我们在写代码时，比起面面俱到，更多时候是在两害相权取其轻。因为我们要向外界暴露一个通用的Hero而非具体的英雄，那么在外界需要蓝条时，只能做一个这样折中的方案。或是将程序写得更复杂：例如抽象出一个能统合MP，怒气，能量，甚至是无的东西，代表释放技能的代价。不过本程序显然没必要那么复杂就是了。</p>
+<p><strong>Skill类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package design19.model;</span><br><span class="line"></span><br><span class="line">public class Skill &#123;</span><br><span class="line"></span><br><span class="line">    long cd;</span><br><span class="line"></span><br><span class="line">    long last;</span><br><span class="line"></span><br><span class="line">    int cost;</span><br><span class="line"></span><br><span class="line">    Skill(long cd, int cost) &#123;</span><br><span class="line">        this.cd = cd;</span><br><span class="line">        this.cost = cost;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>相对而言，Skill类就要简单得多了。也没有提供对外的API。</p>
+<p><strong>Nidalee类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line">package design19.model;</span><br><span class="line"></span><br><span class="line">public class Nidalee extends Hero &#123;</span><br><span class="line"></span><br><span class="line">    Skill skillR = new Skill(4000L, 0);</span><br><span class="line"></span><br><span class="line">    NidaleeState state;</span><br><span class="line"></span><br><span class="line">    public Nidalee() &#123;</span><br><span class="line">        NidaleeState humanState = new HumanState(this);</span><br><span class="line">        NidaleeState leopardState = new LeopardState(this);</span><br><span class="line">        humanState.otherState = leopardState;</span><br><span class="line">        leopardState.otherState = humanState;</span><br><span class="line">        this.state = humanState;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void useQ() &#123;</span><br><span class="line">        this.state.useQ();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void useW() &#123;</span><br><span class="line">        this.state.useW();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void useE() &#123;</span><br><span class="line">        this.state.useE();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void useR() &#123;</span><br><span class="line">        this.state.useR();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean ifHaveMana() &#123;</span><br><span class="line">        return this.state.maxMana &gt; 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public double manaRate() &#123;</span><br><span class="line">        return 1.0 * this.state.mana / this.state.maxMana;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String getImgKeyWord() &#123;</span><br><span class="line">        return this.state.type;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public double remainQ() &#123;</span><br><span class="line">        if (this.ifDeath) return 0.0;</span><br><span class="line">        return 1.0 * this.remainTime(this.state.skillQ) / this.state.skillQ.cd;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public double remainW() &#123;</span><br><span class="line">        if (this.ifDeath) return 0.0;</span><br><span class="line">        return 1.0 * this.remainTime(this.state.skillW) / this.state.skillW.cd;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public double remainE() &#123;</span><br><span class="line">        if (this.ifDeath) return 0.0;</span><br><span class="line">        return 1.0 * this.remainTime(this.state.skillE) / this.state.skillE.cd;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public double remainR() &#123;</span><br><span class="line">        if (this.ifDeath) return 0.0;</span><br><span class="line">        return 1.0 * this.remainTime(this.skillR) / this.skillR.cd;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>state字段表示奈德丽当前处于的状态。在构造函数中，我们将默认的状态设置为人形态。然后我们又声明了一个豹形态的对象。将人形态与豹形态互相绑定。这意味着，在按下R技能，需要进行形态切换时，Nidalee类是不需要做任何操作的，切换操作将由表示形态的类完成：人形态时变为豹形态，豹形态时变为人形态。进而，Nidalee类在使用state时(我们可以看到，Nidalee类中绝大多数的操作最终实际都是由state完成的)，并不关心当前到底处于什么形态，它都会当做只有一个形态那样去使用。</p>
+<p>本程序中，Nidalee类中只会存储一个表示形态的字段。形态的切换由形态本身完成。它并不能统计出当前一共有多少种形态 – 这当然是State模式的设计方式之一。这样的好处在于既然Nidalee类将状态相关的处理都委托给各State类去做，那么”状态切换”显然也是相关处理之一。那么在它被触发的地方直接完成显然是最简洁干脆的做法 – 正如本文所做的那样。不过，这样做的问题在于，State之间需要彼此感知，因为唯有这样，一个State才能知道要切换为谁。这其实并不是十分符合逻辑：因为各State类之间其实是兄弟关系，并没有义务互相感知。从这个思路来想，负责切换的工作应该交给再上一层，也就是这些State类的宿主Nidalee类。此时，Nidalee类就需要记录自己保管的所有State类，以及它们之间的切换逻辑。</p>
+<p>奈德丽共有7个不同的技能。我们将人形态的QWE与豹形态的QWE均放在了对应形态的类中，因为我们认为这些技能是属于那个形态特有的。而将人豹共用的R技能提到了Nidalee类中。同理，我们依然没有将MP放到Nidalee类中，而是将它继续下放：因为只有人形态下才有MP，豹形态下没有。</p>
+<p><strong>NidaleeState类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">package design19.model;</span><br><span class="line"></span><br><span class="line">public abstract class NidaleeState &#123;</span><br><span class="line"></span><br><span class="line">    protected Nidalee nidalee;</span><br><span class="line"></span><br><span class="line">    protected String type;</span><br><span class="line"></span><br><span class="line">    protected NidaleeState otherState;</span><br><span class="line"></span><br><span class="line">    protected int maxMana;</span><br><span class="line"></span><br><span class="line">    protected int manaRegen;</span><br><span class="line"></span><br><span class="line">    protected int mana;</span><br><span class="line"></span><br><span class="line">    protected Skill skillQ;</span><br><span class="line"></span><br><span class="line">    protected Skill skillW;</span><br><span class="line"></span><br><span class="line">    protected Skill skillE;</span><br><span class="line"></span><br><span class="line">    protected abstract void handleQ();</span><br><span class="line"></span><br><span class="line">    protected abstract void handleW();</span><br><span class="line"></span><br><span class="line">    protected abstract void handleE();</span><br><span class="line"></span><br><span class="line">    NidaleeState(Nidalee nidalee) &#123;</span><br><span class="line">        this.nidalee = nidalee;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    void useQ() &#123;</span><br><span class="line">        if (!this.nidalee.check(&quot;Q&quot;)) return;</span><br><span class="line">        if (this.mana &lt; this.skillQ.cost) return;</span><br><span class="line">        this.skillQ.last = System.currentTimeMillis();</span><br><span class="line">        this.handleQ();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    void useW() &#123;</span><br><span class="line">        if (!this.nidalee.check(&quot;W&quot;)) return;</span><br><span class="line">        if (this.mana &lt; this.skillW.cost) return;</span><br><span class="line">        this.skillW.last = System.currentTimeMillis();</span><br><span class="line">        this.handleW();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    void useE() &#123;</span><br><span class="line">        if (!this.nidalee.check(&quot;E&quot;)) return;</span><br><span class="line">        if (this.mana &lt; this.skillE.cost) return;</span><br><span class="line">        this.skillE.last = System.currentTimeMillis();</span><br><span class="line">        this.handleE();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    void useR() &#123;</span><br><span class="line">        if (!this.nidalee.check(&quot;R&quot;)) return;</span><br><span class="line">        this.nidalee.skillR.last = System.currentTimeMillis();</span><br><span class="line">        this.nidalee.state = this.otherState;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>NidaleeState类是奈德丽这个英雄特有的，由其双状态提取共性后抽象出的类。正如V需要一个相对通用的Hero那样。Nidalee类也需要一个通用的表示状态的类。对于更上面的层级而言(Hero，View)，奈德丽拥有双形态是其自身内部的事，它们并不会，也不需要感知得到。</p>
+<p>另外一个有趣的点是，Hero作为直接暴露在外的类，会提供很多与外部逻辑紧密相关的功能。例如Hero中的ifHaveMana()，而Nidalee作为它的子类也必须实现。但是作为最终工作者的NidaleeState中却没有这个方法 – Nidalee的ifHaveMana()实际是通过判断当前状态的maxMana来实现的。关于这一点我想说的是，外部需求是在不停扩充的，需求也将千变万化。而不论Hero也好，Nidalee也罢，其实都是model模块内部的类。这会导致model与外部需求耦合得过于紧密，不利于代码的维护。而通常的做法是，我们会在M与V之间再加入一个DAO，也就是数据传输层。因为本质上来说，MVC其实就是”V向M要数据”以及”V触发M修改自身的数据”(很少会出现”M主动向V推送数据”的情况，因为下层一般无需对上层负责，毕竟M都是被动的，笑)。而DAO则是M与V之间的桥梁。当引入DAO后，这部分与V耦合得过于紧密的代码就可以自M转移到DAO中了。从更大的视角来看，这个所谓的DAO，实际上是MVC中C所承载的功能的一部分。所以说，出来混终归是要还的。本示例程序节省了C这一层，终究还是给程序引入了风险(话是这么说没错啦，小程序其实问题不大。还是要具体问题具体分析)。</p>
+<p><strong>HumanState类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">package design19.model;</span><br><span class="line"></span><br><span class="line">public class HumanState extends NidaleeState &#123;</span><br><span class="line"></span><br><span class="line">    HumanState(Nidalee nidalee) &#123;</span><br><span class="line">        super(nidalee);</span><br><span class="line">        this.type = &quot;human&quot;;</span><br><span class="line">        this.maxMana = 4 * (220 + 45 * 17);</span><br><span class="line">        this.manaRegen = (int)(5 * (0.9 + 0.06 * 17));</span><br><span class="line">        this.mana = maxMana;</span><br><span class="line">        this.skillQ = new Skill(6000L, 90);</span><br><span class="line">        this.skillW = new Skill(18000L, 60);</span><br><span class="line">        this.skillE = new Skill(10000L, 120);</span><br><span class="line">        // 回蓝</span><br><span class="line">        new Thread() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                while (true) &#123;</span><br><span class="line">                    if (HumanState.this.nidalee.ifDeath) break;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        int tempMana = HumanState.this.mana + HumanState.this.manaRegen;</span><br><span class="line">                        HumanState.this.mana = tempMana &gt; HumanState.this.maxMana ? HumanState.this.maxMana : tempMana;</span><br><span class="line">                        Thread.sleep(1000);</span><br><span class="line">                    &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void handleQ() &#123;</span><br><span class="line">        this.modMana(this.skillQ.cost);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void handleW() &#123;</span><br><span class="line">        this.modMana(this.skillW.cost);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void handleE() &#123;</span><br><span class="line">        this.modMana(this.skillE.cost);</span><br><span class="line">        double loseHealthRate = 1.0 - this.nidalee.getHealthRate();</span><br><span class="line">        double addHealthBase = 115 + (230 - 115) * loseHealthRate;</span><br><span class="line">        double addHealthAP = this.nidalee.ap * (0.325 + (0.65 - 0.325) * loseHealthRate);</span><br><span class="line">        int tempHealth = this.nidalee.health + (int)(addHealthBase + addHealthAP);</span><br><span class="line">        this.nidalee.health = tempHealth &gt;= this.nidalee.maxHealth ? this.nidalee.maxHealth : tempHealth;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void modMana(int cost) &#123;</span><br><span class="line">        if (this.mana &lt; cost) return;</span><br><span class="line">        int tempMana = this.mana - cost;</span><br><span class="line">        this.mana = tempMana &gt; 0 ? tempMana : 0;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>奈德丽的人形态。我们可以看到，MP相关的操作都在这个类中。</p>
+<p><strong>LeopardState类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">package design19.model;</span><br><span class="line"></span><br><span class="line">public class LeopardState extends NidaleeState &#123;</span><br><span class="line"></span><br><span class="line">    LeopardState(Nidalee nidalee) &#123;</span><br><span class="line">        super(nidalee);</span><br><span class="line">        this.type = &quot;leopard&quot;;</span><br><span class="line">        this.skillQ = new Skill(5000L, 0);</span><br><span class="line">        this.skillW = new Skill(3500L, 0);</span><br><span class="line">        this.skillE = new Skill(6000L, 0);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void handleQ() &#123;&#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void handleW() &#123;&#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void handleE() &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>handle Q/W/E方法都是空的，这意味着这些技能不会产生什么效果。实际中当然不会这样，因此这样写程序其实并没有问题。</p>
+<p>介绍完了HumanState与LeopardState，我想说的是，很多时候，表征状态的类通常都是单例的，因为状态本就是一个相对抽象的东西。只不过，在本程序中，状态还和很多特有的属性(例如MP，技能恢复CD)挂钩，因此不能声明为单例。</p>
+<p><strong>View类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br></pre></td><td class="code"><pre><span class="line">package design19.view;</span><br><span class="line"></span><br><span class="line">import java.awt.Color;</span><br><span class="line">import java.awt.Frame;</span><br><span class="line">import java.awt.Graphics;</span><br><span class="line">import java.awt.Image;</span><br><span class="line">import java.awt.event.KeyAdapter;</span><br><span class="line">import java.awt.event.KeyEvent;</span><br><span class="line">import java.awt.event.WindowAdapter;</span><br><span class="line">import java.awt.event.WindowEvent;</span><br><span class="line">import java.awt.image.BufferedImage;</span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">import javax.imageio.ImageIO;</span><br><span class="line"></span><br><span class="line">import design19.model.Hero;</span><br><span class="line">import design19.model.Nidalee;</span><br><span class="line"></span><br><span class="line">public class View extends Frame &#123;</span><br><span class="line"></span><br><span class="line">    private static final long serialVersionUID = 1L;</span><br><span class="line"></span><br><span class="line">    private Hero nidalee = new Nidalee();</span><br><span class="line"></span><br><span class="line">    public void launchFrame() &#123;</span><br><span class="line">        super.setLocation(500, 200);</span><br><span class="line">        super.setSize(330, 713);</span><br><span class="line">        new Thread(this.new RepaintRunnable()).start();</span><br><span class="line">        super.addWindowListener(</span><br><span class="line">            new WindowAdapter() &#123;</span><br><span class="line">                @Override</span><br><span class="line">                public void windowClosing(WindowEvent e) &#123;</span><br><span class="line">                    System.exit(0);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        );</span><br><span class="line">        super.addKeyListener(</span><br><span class="line">            new KeyAdapter() &#123;</span><br><span class="line">                @Override</span><br><span class="line">                public void keyReleased(KeyEvent e) &#123;</span><br><span class="line">                    switch(e.getKeyCode()) &#123;</span><br><span class="line">                    case KeyEvent.VK_Q:</span><br><span class="line">                        View.this.nidalee.useQ();</span><br><span class="line">                        break;</span><br><span class="line">                    case KeyEvent.VK_W:</span><br><span class="line">                        View.this.nidalee.useW();</span><br><span class="line">                        break;</span><br><span class="line">                    case KeyEvent.VK_E:</span><br><span class="line">                        View.this.nidalee.useE();</span><br><span class="line">                        break;</span><br><span class="line">                    case KeyEvent.VK_R:</span><br><span class="line">                        View.this.nidalee.useR();</span><br><span class="line">                        break;</span><br><span class="line">                    case KeyEvent.VK_X:</span><br><span class="line">                        View.this.nidalee.damage(1000);</span><br><span class="line">                        break;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        );</span><br><span class="line">        super.setVisible(true);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void paint(Graphics g) &#123;</span><br><span class="line">        // 基本参数</span><br><span class="line">        int leftBar = 11;</span><br><span class="line">        int aboveBar = 45;</span><br><span class="line">        int imgWidth = 308;</span><br><span class="line">        int imgHeight = 560;</span><br><span class="line">        int skillWidth = 308 / 4;</span><br><span class="line">        // 血条蓝条</span><br><span class="line">        int slotHeight = 10;</span><br><span class="line">        g.setColor(this.getHealthColor());</span><br><span class="line">        g.fillRect(leftBar, aboveBar, (int)(imgWidth * this.nidalee.getHealthRate()), slotHeight);</span><br><span class="line">        if (this.nidalee.ifHaveMana()) &#123;</span><br><span class="line">            g.setColor(Color.BLUE);</span><br><span class="line">            g.fillRect(leftBar, aboveBar + slotHeight, (int)(imgWidth * this.nidalee.getManaRate()), slotHeight);</span><br><span class="line">        &#125;</span><br><span class="line">        // 图片</span><br><span class="line">        g.drawImage(this.loadImgWeaken(this.nidalee.getImgKeyWord() + &quot;.jpg&quot;), leftBar, aboveBar + 2 * slotHeight, null);</span><br><span class="line">        // 技能图标</span><br><span class="line">        int skillH = aboveBar + 2 * slotHeight + imgHeight;</span><br><span class="line">        g.drawImage(this.loadImgWeaken(this.nidalee.getImgKeyWord() + &quot;Q.jpg&quot;), leftBar, skillH, null);</span><br><span class="line">        g.drawImage(this.loadImgWeaken(this.nidalee.getImgKeyWord() + &quot;W.jpg&quot;), leftBar + skillWidth, skillH, null);</span><br><span class="line">        g.drawImage(this.loadImgWeaken(this.nidalee.getImgKeyWord() + &quot;E.jpg&quot;), leftBar + skillWidth * 2, skillH, null);</span><br><span class="line">        g.drawImage(this.loadImgWeaken(&quot;R.jpg&quot;), leftBar + skillWidth * 3, skillH, null);</span><br><span class="line">        // 技能冷却</span><br><span class="line">        g.setColor(Color.BLACK);</span><br><span class="line">        int qCDHeight = (int)(this.nidalee.remainQ() * skillWidth);</span><br><span class="line">        g.fillRect(leftBar, skillH + skillWidth - qCDHeight, skillWidth, qCDHeight);</span><br><span class="line">        int wCDHeight = (int)(this.nidalee.remainW() * skillWidth);</span><br><span class="line">        g.fillRect(leftBar + skillWidth, skillH + skillWidth - wCDHeight, skillWidth, wCDHeight);</span><br><span class="line">        int eCDHeight = (int)(this.nidalee.remainE() * skillWidth);</span><br><span class="line">        g.fillRect(leftBar + skillWidth * 2, skillH + skillWidth - eCDHeight, skillWidth, eCDHeight);</span><br><span class="line">        int rCDHeight = (int)(this.nidalee.remainR() * skillWidth);</span><br><span class="line">        g.fillRect(leftBar + skillWidth * 3, skillH + skillWidth - rCDHeight, skillWidth, rCDHeight);</span><br><span class="line">        // 阵亡文字</span><br><span class="line">        if (this.nidalee.isDeath()) g.drawImage(this.loadImg(&quot;death.png&quot;), leftBar + 35, aboveBar + 250, null);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private class RepaintRunnable implements Runnable &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            while (true) &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    View.this.repaint();</span><br><span class="line">                    Thread.sleep(40);</span><br><span class="line">                &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void update(Graphics g) &#123;</span><br><span class="line">        Image bImage = super.createImage(this.getWidth(), this.getHeight());</span><br><span class="line">        Graphics bg = bImage.getGraphics();</span><br><span class="line">        this.paint(bg);</span><br><span class="line">        bg.dispose();</span><br><span class="line">        g.drawImage(bImage, 0, 0, this);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private BufferedImage loadImg(String name) &#123;</span><br><span class="line">        BufferedImage bImage = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            bImage = ImageIO.read(View.class.getClassLoader().getResource(&quot;design19/img/&quot; + name));</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        return bImage;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private BufferedImage loadImgWeaken(String name) &#123;</span><br><span class="line">        BufferedImage bufferedImage = this.loadImg(name);</span><br><span class="line">        if (!this.nidalee.isDeath()) return bufferedImage;</span><br><span class="line">        final int width = 1;</span><br><span class="line">        boolean ifShowY = true;</span><br><span class="line">        int nowY = 0;</span><br><span class="line">        for (int y = 0; y &lt; bufferedImage.getHeight(); y++) &#123;</span><br><span class="line">            if (!ifShowY) &#123;</span><br><span class="line">                for (int x = 0; x &lt; bufferedImage.getWidth(); x++)</span><br><span class="line">                    bufferedImage.setRGB(x, y, 0);</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                boolean ifShowX = true;</span><br><span class="line">                int nowX = 0;</span><br><span class="line">                for (int x = 0; x &lt; bufferedImage.getWidth(); x++) &#123;</span><br><span class="line">                    if(!ifShowX) bufferedImage.setRGB(x, y, 0);</span><br><span class="line">                    nowX++;</span><br><span class="line">                    if (nowX == width) &#123;</span><br><span class="line">                        nowX = 0;</span><br><span class="line">                        ifShowX = !ifShowX;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            nowY++;</span><br><span class="line">            if (nowY == width) &#123;</span><br><span class="line">                nowY = 0;</span><br><span class="line">                ifShowY = !ifShowY;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return bufferedImage;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private Color getHealthColor() &#123;</span><br><span class="line">        int red;</span><br><span class="line">        int green;</span><br><span class="line">        if (this.nidalee.getHealthRate() &gt;= 0.5) &#123;</span><br><span class="line">            green = 255;</span><br><span class="line">            red = (int)(255 * (1.0 - this.nidalee.getHealthRate()) * 2);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            red = 255;</span><br><span class="line">            green = (int)(255 * this.nidalee.getHealthRate() * 2);</span><br><span class="line">        &#125;</span><br><span class="line">        return new Color(red, green, 0);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码很长，不过其中大多是Java AWT套路话的东西，需要说的只有以下几点。</p>
+<p>首先，为了代码书写简单，我写了很多硬编码。通常这种涉及面板参数的操作，都会写得更灵活，例如支持面板整体的缩放等。其次，在加载图片时，我其实是每刷新一次面板就重新加载了一次，这显然是很浪费CPU的，通常来说都会在一个地方将需要用的图片加载入内存，形成静态字段。</p>
+<p>其次，就是两个小算法啦。先来说第一个：血条绿-黄-红的渐变。这个功能主要写在getHealthColor()方法中。本质上来说，这个算法就是通过控制RGB中RED-GREEN-BLUE三个分量的值来调制出需要的颜色。对于RGB颜色而言：</p>
+<ul>
+<li>绿：(0,255,0)</li>
+<li>黄：(255,255,0)</li>
+<li>红：(255,0,0)</li>
+</ul>
+<p>假如我们将HP的变化趋势考虑为递减(递增其实也同理，相当于是逆过程)：</p>
+<p>首先，无论如何，蓝色分量均为0。</p>
+<p>在HP由100%-50%的过程中，绿色分量始终为255，而红色分量由0逐渐增加至255。</p>
+<p>当血量达到50%时，RGB颜色为(255,255,0)，即标准的黄色。</p>
+<p>随后，在HP由50%-0的过程中，红色分量始终为255，而绿色分量则由255逐渐减少为0。</p>
+<p>然后再来说第二个：也就是图片虚化效果的实现。功能代码在loadImgWeaken()方法中，实现的效果就是行与列均是每隔一个像素点输出一个，形成网格效果。同时，由于输出的像素点变少，图片整体也会变暗。具体的算法逻辑可参见<a href="/2018/05/20/Java AWT-以像素为单位操纵图片/">Java AWT-以像素为单位操纵图片</a>。</p>
+<p><strong>Main类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">package design19;</span><br><span class="line"></span><br><span class="line">import design19.view.View;</span><br><span class="line"></span><br><span class="line">public class Main &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        new View().launchFrame();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行后，即可按需求输出结果。</p>
+<p><strong>用到的图片</strong></p>
+<p>最后，贴一下本程序用到的图片。</p>
+<p>人形态立绘human.jpg</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/25.jpg" alt="25.jpg"></p>
+<hr>
+<p>豹形态立绘leopard.jpg</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/26.jpg" alt="26.jpg"></p>
+<hr>
+<p>人形态Q技能humanQ.jpg</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/27.jpg" alt="27.jpg"></p>
+<hr>
+<p>人形态W技能humanW.jpg</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/28.jpg" alt="28.jpg"></p>
+<hr>
+<p>人形态E技能humanE.jpg</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/29.jpg" alt="29.jpg"></p>
+<hr>
+<p>豹形态Q技能leopardQ.jpg</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/30.jpg" alt="30.jpg"></p>
+<hr>
+<p>豹形态W技能leopardW.jpg</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/31.jpg" alt="31.jpg"></p>
+<hr>
+<p>豹形态E技能leopardE.jpg</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/32.jpg" alt="32.jpg"></p>
+<hr>
+<p>R技能R.jpg</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/33.jpg" alt="33.jpg"></p>
+<hr>
+<p>死亡文字提示death.png</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/34.png" alt="34.png"></p>
+<h1 id="登场角色"><a href="#登场角色" class="headerlink" title="登场角色"></a>登场角色</h1><p>上面的示例程序介绍了State模式的Java实现，下面咱们试着跳出语言层面，抽象出State模式中登场的角色。</p>
+<p><strong>State(状态)</strong></p>
+<p>在示例程序中，由NidaleeState类扮演这个角色。</p>
+<p><strong>ConcreteState(具体的状态)</strong></p>
+<p>在示例程序中，由HumanState及LeopardState联袂扮演这个角色。</p>
+<p><strong>Context(上下文)</strong></p>
+<p>实际就是拥有State的宿主，在示例程序中，由Nidalee类扮演这个角色。</p>
+<p>下面是抽象后，无关语言的类图：</p>
+<p><img src="/images/blog_pic/Java 设计模式/19State模式/35.jpg" alt="35.jpg"></p>
+<p>较之示例程序，本类图少了不少类。其原因就在于，从本质上来说。State模式就是在将State角色自Context角色中分离出去。因此核心角色其实就只有这两个。</p>
+<p>此外，示例程序中的NidaleeState是一个抽象类，而本类图中的State是一个接口。之所以会产生这种不同，是因为State只要表示的含义是一个抽象的状态即可，具体的形式应依具体使用场景而定。</p>
+<h1 id="易于增加xx，难以xx"><a href="#易于增加xx，难以xx" class="headerlink" title="易于增加xx，难以xx"></a>易于增加xx，难以xx</h1><p>在State模式中，增加一个新的State相对容易，我们只需要让它实现上层的抽象类或接口，然后按约束编写代码即可。而在上层的抽象类或接口中增加一个新的方法则相对费事：这需要每一个State都增加这个新的方法。因为代码相对分散，每个State的编码思路可能大不相同，所以写起来会麻烦得多。</p>
+<p>仔细回忆此前写过的设计模式相关的博客，这种”易于xx，难以xx”其实已经出现过很多次了。例如，在<a href="">8.Abstract Factory模式</a>中我们就曾说过，Abstract Factory模式”易于扩展具体的工厂，难以增加新的零件”。</p>
+<p>其实这种特性源于继承或是实现。按照抽象的上层的约束写成新的下层相对容易，因为这遵循开闭原则。此时只需增加新代码，而无需对原有代码做出修改。而在抽象的上层中添加新功能则相对困难，因为这相当于所有已有的下层类都需要修改，违背了开闭原则。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechat.png" alt="王艺凯 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/ali.jpg" alt="王艺凯 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>王艺凯</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2018/08/31/Java 设计模式-19State模式/" title="Java 设计模式-19.State模式">http://yoursite.com/2018/08/31/Java 设计模式-19State模式/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/30/Java 设计模式-18Memento模式/" rel="next" title="Java 设计模式-18.Memento模式">
+                <i class="fa fa-chevron-left"></i> Java 设计模式-18.Memento模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/04/Java 设计模式-20Flyweight模式/" rel="prev" title="Java 设计模式-20.Flyweight模式">
+                Java 设计模式-20.Flyweight模式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/avatar.jpg"
+                alt="王艺凯" />
+            
+              <p class="site-author-name" itemprop="name">王艺凯</p>
+              <p class="site-description motion-element" itemprop="description">Thou Shalt Comment</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">189</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">117</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/ReimuWang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:1505580759@qq.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用网站
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.bilibili.com/" title="bilibili" target="_blank">bilibili</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://acg12.com/" title="ACG调查小队" target="_blank">ACG调查小队</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.com/" title="leetcode" target="_blank">leetcode</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#综述"><span class="nav-number">1.</span> <span class="nav-text">综述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#示例需求描述"><span class="nav-number">2.</span> <span class="nav-text">示例需求描述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#示例需求分析"><span class="nav-number">3.</span> <span class="nav-text">示例需求分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#伪代码分析"><span class="nav-number">4.</span> <span class="nav-text">伪代码分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#示例代码"><span class="nav-number">5.</span> <span class="nav-text">示例代码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#登场角色"><span class="nav-number">6.</span> <span class="nav-text">登场角色</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#易于增加xx，难以xx"><span class="nav-number">7.</span> <span class="nav-text">易于增加xx，难以xx</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老滚6催更协会</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+  <div class="footer-custom"><i>明明可以靠脸吃饭，你却要靠才华，这就是你和明明的差距</i></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+
+</body>
+</html>

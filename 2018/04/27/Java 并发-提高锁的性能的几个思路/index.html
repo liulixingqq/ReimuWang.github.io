@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/myLogo.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="“锁”是最常用的同步策略之一。在高并发的环境下，激烈的锁竞争会导致程序的性能下降。所以锁的性能的优化是一个很值得探讨的话题，例如：避免死锁，减小锁粒度，锁分离等。">
+<meta name="keywords" content="Java,并发,锁">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 并发-提高锁的性能的几个思路">
+<meta property="og:url" content="http://yoursite.com/2018/04/27/Java 并发-提高锁的性能的几个思路/index.html">
+<meta property="og:site_name" content="ReimuWang&#39;s Blog">
+<meta property="og:description" content="“锁”是最常用的同步策略之一。在高并发的环境下，激烈的锁竞争会导致程序的性能下降。所以锁的性能的优化是一个很值得探讨的话题，例如：避免死锁，减小锁粒度，锁分离等。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-04-27T12:48:45.004Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 并发-提高锁的性能的几个思路">
+<meta name="twitter:description" content="“锁”是最常用的同步策略之一。在高并发的环境下，激烈的锁竞争会导致程序的性能下降。所以锁的性能的优化是一个很值得探讨的话题，例如：避免死锁，减小锁粒度，锁分离等。">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="ReimuWang's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/27/Java 并发-提高锁的性能的几个思路/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java 并发-提高锁的性能的几个思路 | ReimuWang's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ReimuWang's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">189</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">117</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类<span class="badge">24</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404.html" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />公益 404</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+    
+      
+    
+    <a href="https://github.com/ReimuWang" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#222; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg>
+    
+      </a>
+    
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/27/Java 并发-提高锁的性能的几个思路/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王艺凯">
+      <meta itemprop="description" content="Thou Shalt Comment">
+      <meta itemprop="image" content="/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ReimuWang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java 并发-提高锁的性能的几个思路
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-04-27 14:59:36 / 修改时间：20:48:45" itemprop="dateCreated datePublished" datetime="2018-04-27T14:59:36+08:00">2018-04-27</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java-并发/" itemprop="url" rel="index"><span itemprop="name">Java 并发</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>“锁”是最常用的同步策略之一。在高并发的环境下，激烈的锁竞争会导致程序的性能下降。所以锁的性能的优化是一个很值得探讨的话题，例如：避免死锁，减小锁粒度，锁分离等。</p>
+<a id="more"></a>
+<p>在多核机器中，较之单线程串行执行，使用多线程可以显著提高系统的性能，却也会增加额外的系统开销。对于单任务或者单线程的应用而言，其资源消耗基本都花费在任务本身上：它既不需要维护并行数据结构间的一致性状态，也不需要为线程的切换及调度花费时间。但对多线程的应用而言，除了需要满足任务本身的需求，还需要额外维护多线程环境的特有信息，例如：线程本身的元数据，线程的调度，线程上下文的切换等。正因为如此，在单核CPU上，采用并行算法的效率通常要低于对应的串行算法。</p>
+<p>而对同步策略(也就是本文要探讨的锁)的优化，最重要的目标也就是优化这一部分因引入多线程而增加的”额外操作”，例如进行更合理的任务调度，更充分的压榨每个CPU的性能等等。本文将从比较高的维度介绍几个常用的优化思路。</p>
+<p><strong>注意：</strong>本文提到的”锁”是广义上的，即同时包含了Lock及synchronized。</p>
+<h1 id="减少锁的持有时间"><a href="#减少锁的持有时间" class="headerlink" title="减少锁的持有时间"></a>减少锁的持有时间</h1><p>无论如何优化加锁操作本身，只要进行加锁就会产生”额外”的系统消耗，那么尽可能的缩小需要加锁的区域，减少每个线程的持锁时间，就是最自然，也是最容易想到的优化思路。</p>
+<p>具体来说，我们可以看如下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public synchronized void syncMethod() &#123;</span><br><span class="line">    m1();    // 无需同步控制</span><br><span class="line">    syncM();    // 需同步控制</span><br><span class="line">    m2();    // 无需同步控制</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>很显然，线程在执行m1()及m2()时是无需加锁的。很自然的，我们就可以想到如下优化策略：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public void syncMethod() &#123;</span><br><span class="line">    m1();    // 无需同步控制</span><br><span class="line">    synchronized(this) &#123;</span><br><span class="line">        syncM();    // 需同步控制   </span><br><span class="line">    &#125;</span><br><span class="line">    m2();    // 无需同步控制</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>JDK的源码中有很多地方都应用了这种优化策略，例如处理正则表达式的java.util.regex.Pattern中就有如下方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public Matcher matcher(CharSequence input) &#123;</span><br><span class="line">    if (!compiled) &#123;    // 只有在表达式未编译时，才会进行局部的加锁</span><br><span class="line">        synchronized(this) &#123;</span><br><span class="line">            if (!compiled)</span><br><span class="line">                compile();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    Matcher m = new Matcher(this, input);</span><br><span class="line">    return m;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>关于这个方法，有一个很有趣的点:if (!compiled)被连续判断了两次。做第一次判断时并未进行并发控制，无额外的开销。而只要进入了同步代码块，就是线程安全的了。但是我们无法保证在第一次判断至进入同步代码块期间(当然，仅从代码来看，二者是紧邻着的)不会发生同步问题：例如恰好有另一个线程利用这段时间完成了一次完成的编译操作。因此，我们有必要在进入同步代码块后再进行一次判断。</p>
+<p>那么为什么不在第一次判断外面就包一层同步代码块呢？这样不就只需要一次判断了吗？这就是本小节优化思路的应用了：若if (!compiled) == false，也就是已经编译完了，无需再编译了，那么此时是不需要进行同步控制的，而很显然，在字符串匹配的整个周期中，编译只需要1次，绝大多数时候，当我们调用matcher(CharSequence input)方法时，字符串都是编译好的，因此我们需要缩小需要加锁的范围：只有当确实没编译时才执行加锁操作。这是本思路下比较高级的优化了：加锁范围缩窄的不是具体的代码，而是不同的条件分支。</p>
+<h1 id="减小锁粒度"><a href="#减小锁粒度" class="headerlink" title="减小锁粒度"></a>减小锁粒度</h1><p>在JDK中，本思路的典型应用是java.util.concurrent.ConcurrentHashMap，其类定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class ConcurrentHashMap&lt;K, V&gt; extends AbstractMap&lt;K, V&gt; implements ConcurrentMap&lt;K, V&gt;, Serializable</span><br></pre></td></tr></table></figure>
+<p>作为一个Map，最重要也是最常用的两个方法自然就是get()与put()了。而ConcurrentHashMap作为一个线程安全的容器，这种修改操作自然是要进行并发控制的。而最容易想到的并发策略自然就是对整个容器加锁。但这样做，我们就认为加锁的粒度太大了：因此ConcurrentHashMap在内部进一步的又被分为若干个小的Map，称之为段(Segment)，默认情况下，一个ConcurrentHashMap会被分为16段(额外多说一句，这种分段加锁的思想的应用还有<a href="/2018/02/07/Java 并发-ConcurrentSkipListMap/">Java 并发-ConcurrentSkipListMap</a>)。</p>
+<p>如果要在ConcurrentHashMap中增加一个新的元素，并不需要对整个容器加锁，而是首先根据元素的hashcode值计算出该元素应该被存放在哪个段中，然后只对该段加锁，随后完成put()操作。这样，在并发环境中，如果有多个线程同时进行put()操作，只要被加入的元素不在同一个段中，就无需进行并发控制。由于默认有16个段，那么ConcurrentHashMap最多可供16个线程同时插入。</p>
+<p>下面我们贴出put()方法的具体代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public V put(K key, V value) &#123;</span><br><span class="line">    Segment&lt;K,V&gt; s;</span><br><span class="line">    if (value == null)</span><br><span class="line">        throw new NullPointerException();</span><br><span class="line">    int hash = hash(key);</span><br><span class="line">    int j = (hash &gt;&gt;&gt; segmentShift) &amp; segmentMask;</span><br><span class="line">    if ((s = (Segment&lt;K,V&gt;)UNSAFE.getObject</span><br><span class="line">         (segments, (j &lt;&lt; SSHIFT) + SBASE)) == null)</span><br><span class="line">        s = ensureSegment(j);</span><br><span class="line">    return s.put(key, hash, value, false);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是，减小锁粒度会引入一个新的问题：当系统需要取得容器的全局锁时，反而会变得麻烦。具体来说，如果要将整个容器都锁住，那么就需要将所有段的锁都拿在手里才行。比如说size()方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">public int size() &#123;</span><br><span class="line">    final Segment&lt;K,V&gt;[] segments = this.segments;</span><br><span class="line">    int size;</span><br><span class="line">    boolean overflow;</span><br><span class="line">    long sum;</span><br><span class="line">    long last = 0L;</span><br><span class="line">    int retries = -1;</span><br><span class="line">    try &#123;</span><br><span class="line">        for (;;) &#123;</span><br><span class="line">            if (retries++ == RETRIES_BEFORE_LOCK) &#123;    // 为所有段加锁</span><br><span class="line">                for (int j = 0; j &lt; segments.length; ++j)</span><br><span class="line">                    ensureSegment(j).lock();</span><br><span class="line">            &#125;</span><br><span class="line">            sum = 0L;</span><br><span class="line">            size = 0;</span><br><span class="line">            overflow = false;</span><br><span class="line">            for (int j = 0; j &lt; segments.length; ++j) &#123;</span><br><span class="line">                Segment&lt;K,V&gt; seg = segmentAt(segments, j);</span><br><span class="line">                if (seg != null) &#123;</span><br><span class="line">                    sum += seg.modCount;</span><br><span class="line">                    int c = seg.count;</span><br><span class="line">                    if (c &lt; 0 || (size += c) &lt; 0)</span><br><span class="line">                        overflow = true;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            if (sum == last)</span><br><span class="line">                break;</span><br><span class="line">            last = sum;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        if (retries &gt; RETRIES_BEFORE_LOCK) &#123;    // 为所有段解锁</span><br><span class="line">            for (int j = 0; j &lt; segments.length; ++j)</span><br><span class="line">                segmentAt(segments, j).unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return overflow ? Integer.MAX_VALUE : size;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通常我们看到的JDK源码中的容器的size()方法，往往只有几句代码，逻辑也很清晰。然而ConcurrentHashMap的size()显然就很复杂了。要获得所有段的锁后才能实际开始求值。单就size()方法而言，ConcurrentHashMap在并发环境下的性能甚至是还不如由java.util.Collections.synchronizedMap()方法得到的线程安全的Map的。</p>
+<p>这给了我们一个启示：对于ConcurrentHashMap这种分段加锁的容器而言，其调用需要全局锁的方法时的性能往往不如全局加锁控制线程安全的容器。因此选择并发容器时还应该看场景才行。</p>
+<h1 id="使用读写分离锁"><a href="#使用读写分离锁" class="headerlink" title="使用读写分离锁"></a>使用读写分离锁</h1><p>在JDK中，本思路的典型应用是<a href="/2018/01/08/Java 并发-读写锁ReadWriteLock/">Java 并发-读写锁ReadWriteLock</a></p>
+<p>事实上，读写分离锁这种优化思路可以看作是减小锁粒度这一优化思路的特例：上文中提到的ConcurrentHashMap是从数据的角度减小锁粒度，而使用读写分离锁则是从功能的角度上减小锁粒度。</p>
+<h1 id="锁分离"><a href="#锁分离" class="headerlink" title="锁分离"></a>锁分离</h1><p>锁分离是读写分离锁的扩展，因此也可看作是减小锁粒度的特例。读写分离锁划分功能的依据是”读与写”，那么我们同样可以依据其他功能来划分。比较典型的例子就是java.util.concurrent.LinkedBlockingQueue，其类定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class LinkedBlockingQueue&lt;E&gt; extends AbstractQueue&lt;E&gt; implements BlockingQueue&lt;E&gt;, java.io.Serializable</span><br></pre></td></tr></table></figure>
+<p>它是<a href="/2018/02/07/Java 并发-BlockingQueue/">Java 并发-BlockingQueue</a>的具体实现，在这篇文章中，我们讨论了LinkedBlockingQueue的近亲ArrayBlockingQueue，现在我们再来看看LinkedBlockingQueue。</p>
+<p>作为BlockingQueue，最重要也是最常用的两个方法自然是take()及put()，它们分别代表阻塞式的读及写。因为LinkedBlockingQueue底层是以链表实现的，那么take()为弹出队首，put()则为向队尾追加新值。若使用独占锁，那么这两个操作是无法同时进行的。但事实上，这两个操作可以并行进行，彼此间并不会产生冲突。</p>
+<p>具体来说，LinkedBlockingQueue将独占锁一分为二，分别用于take()及put()。LinkedBlockingQueue中有如下实例成员：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">private final ReentrantLock takeLock = new ReentrantLock();</span><br><span class="line"></span><br><span class="line">private final Condition notEmpty = takeLock.newCondition();</span><br><span class="line"></span><br><span class="line">private final ReentrantLock putLock = new ReentrantLock();</span><br><span class="line"></span><br><span class="line">private final Condition notFull = putLock.newCondition();</span><br></pre></td></tr></table></figure>
+<p>自然，相应的Condition会绑在对应的锁上：take()时需等待notEmpty，put()时则需等待notFull。</p>
+<p>然后我们具体来看下take()的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">public E take() throws InterruptedException &#123;</span><br><span class="line">    E x;</span><br><span class="line">    int c = -1;</span><br><span class="line">    final AtomicInteger count = this.count;</span><br><span class="line">    final ReentrantLock takeLock = this.takeLock;</span><br><span class="line">    takeLock.lockInterruptibly();</span><br><span class="line">    try &#123;</span><br><span class="line">        while (count.get() == 0) &#123;</span><br><span class="line">            notEmpty.await();</span><br><span class="line">        &#125;</span><br><span class="line">        x = dequeue();</span><br><span class="line">        c = count.getAndDecrement();</span><br><span class="line">        if (c &gt; 1)</span><br><span class="line">            notEmpty.signal();</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        takeLock.unlock();</span><br><span class="line">    &#125;</span><br><span class="line">    if (c == capacity)</span><br><span class="line">        signalNotFull();</span><br><span class="line">    return x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private void signalNotFull() &#123;</span><br><span class="line">    final ReentrantLock putLock = this.putLock;</span><br><span class="line">    putLock.lock();</span><br><span class="line">    try &#123;</span><br><span class="line">        notFull.signal();</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        putLock.unlock();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再来看下put()：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">public void put(E e) throws InterruptedException &#123;</span><br><span class="line">    if (e == null) throw new NullPointerException();</span><br><span class="line">    int c = -1;</span><br><span class="line">    Node&lt;E&gt; node = new Node(e);</span><br><span class="line">    final ReentrantLock putLock = this.putLock;</span><br><span class="line">    final AtomicInteger count = this.count;</span><br><span class="line">    putLock.lockInterruptibly();</span><br><span class="line">    try &#123;</span><br><span class="line">        while (count.get() == capacity) &#123;</span><br><span class="line">            notFull.await();</span><br><span class="line">        &#125;</span><br><span class="line">        enqueue(node);</span><br><span class="line">        c = count.getAndIncrement();</span><br><span class="line">        if (c + 1 &lt; capacity)</span><br><span class="line">            notFull.signal();</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        putLock.unlock();</span><br><span class="line">    &#125;</span><br><span class="line">    if (c == 0)</span><br><span class="line">        signalNotEmpty();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private void signalNotEmpty() &#123;</span><br><span class="line">    final ReentrantLock takeLock = this.takeLock;</span><br><span class="line">    takeLock.lock();</span><br><span class="line">    try &#123;</span><br><span class="line">        notEmpty.signal();</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        takeLock.unlock();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>基本思路与ArrayBlockingQueue一致。不过由于LinkedBlockingQueue有两把不同的锁，两个Condition条件则是分别绑在对应的锁上，导致要发另一个锁的Condition条件时不大方便：需要再加锁解锁一次(也就是上例中的signalNotFull()及signalNotEmpty())。因此，在take()方法中，若在本次拿取后依然还有元素，则会发送一个notEmpty，供其他take()使用。同理，在put()方法中，若在本次添加后仍未到达最大容量，则会发送一个notFull，供其他put()使用。</p>
+<h1 id="锁粗化"><a href="#锁粗化" class="headerlink" title="锁粗化"></a>锁粗化</h1><p>我们提出的第一个锁优化策略为”减少锁的持有时间”，其目的旨在尽可能的压缩每个线程占有锁的时间。然而有趣的是，我们本小节意欲介绍的优化策略正好站在它的反面：即适当延长线程对锁的占有时间。其缘由就在于加锁解锁是需要消耗系统资源的，如果加锁解锁的操作较为频繁，而实际的加锁后的业务时间又不是很长，这就导致系统用于加锁解锁调度切换的时间比重较之实际运行业务代码的时间增大，若该值大到一定程度，还不如不要释放锁，一直持有到阶段性任务完结得好。</p>
+<p>其实，JVM会依据一定的算法，隐式的帮助我们完成部分的锁粗化操作：例如，在JVM遇到一连串的对同一个锁的加锁解锁操作时，便可能会将所有的锁操作整合为对锁的一次请求，例如如下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public void m() &#123;</span><br><span class="line">    synchronized (this) &#123;</span><br><span class="line">        // do sth1</span><br><span class="line">    &#125;</span><br><span class="line">    // 不需要并发控制的代码，很快能完成</span><br><span class="line">    synchronized (this) &#123;</span><br><span class="line">        // do sth2</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>则其可能会被整合为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public void m() &#123;</span><br><span class="line">    synchronized (this) &#123;</span><br><span class="line">        // do sth1</span><br><span class="line">        // 不需要并发控制的代码，很快能完成</span><br><span class="line">        // do sth2</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>写代码时，我们也应有意识的判断是否应进行锁的粗化。例如如下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for (int i = 0; i &lt; 1000; i++) &#123;</span><br><span class="line">    synchronized (this) &#123;</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码会在每次for循环内部进行一次加锁解锁，而每次循环实际的业务仅仅是简单的i++，显然这是很不合理的，因此改为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">synchronized (this) &#123;</span><br><span class="line">    for (int i = 0; i &lt; 1000; i++) i++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样就会合理得多。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechat.png" alt="王艺凯 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/ali.jpg" alt="王艺凯 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>王艺凯</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2018/04/27/Java 并发-提高锁的性能的几个思路/" title="Java 并发-提高锁的性能的几个思路">http://yoursite.com/2018/04/27/Java 并发-提高锁的性能的几个思路/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/并发/" rel="tag"># 并发</a>
+          
+            <a href="/tags/锁/" rel="tag"># 锁</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/08/Python-Centos6.x中Python2.6升级至2.7/" rel="next" title="Python-Centos6.x中Python2.6升级至2.7">
+                <i class="fa fa-chevron-left"></i> Python-Centos6.x中Python2.6升级至2.7
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/27/Java 并发-JVM所做的锁优化/" rel="prev" title="Java 并发-JVM所做的锁优化">
+                Java 并发-JVM所做的锁优化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/avatar.jpg"
+                alt="王艺凯" />
+            
+              <p class="site-author-name" itemprop="name">王艺凯</p>
+              <p class="site-description motion-element" itemprop="description">Thou Shalt Comment</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">189</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">117</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/ReimuWang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:1505580759@qq.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用网站
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.bilibili.com/" title="bilibili" target="_blank">bilibili</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://acg12.com/" title="ACG调查小队" target="_blank">ACG调查小队</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.com/" title="leetcode" target="_blank">leetcode</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#减少锁的持有时间"><span class="nav-number">1.</span> <span class="nav-text">减少锁的持有时间</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#减小锁粒度"><span class="nav-number">2.</span> <span class="nav-text">减小锁粒度</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用读写分离锁"><span class="nav-number">3.</span> <span class="nav-text">使用读写分离锁</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#锁分离"><span class="nav-number">4.</span> <span class="nav-text">锁分离</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#锁粗化"><span class="nav-number">5.</span> <span class="nav-text">锁粗化</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老滚6催更协会</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+  <div class="footer-custom"><i>明明可以靠脸吃饭，你却要靠才华，这就是你和明明的差距</i></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+
+</body>
+</html>

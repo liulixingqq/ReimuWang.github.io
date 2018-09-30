@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/myLogo.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在《图解设计模式》一书中，Observer模式被归入了第8部分管理状态。在GoF原书中，Observer模式则被归入了行为型设计模式。">
+<meta name="keywords" content="Java,设计模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 设计模式-18.Memento模式">
+<meta property="og:url" content="http://yoursite.com/2018/08/30/Java 设计模式-18Memento模式/index.html">
+<meta property="og:site_name" content="ReimuWang&#39;s Blog">
+<meta property="og:description" content="在《图解设计模式》一书中，Observer模式被归入了第8部分管理状态。在GoF原书中，Observer模式则被归入了行为型设计模式。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/18Memento模式/0.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/18Memento模式/1.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/18Memento模式/2.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/18Memento模式/3.jpg">
+<meta property="og:updated_time" content="2018-08-30T08:25:32.618Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 设计模式-18.Memento模式">
+<meta name="twitter:description" content="在《图解设计模式》一书中，Observer模式被归入了第8部分管理状态。在GoF原书中，Observer模式则被归入了行为型设计模式。">
+<meta name="twitter:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/18Memento模式/0.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="ReimuWang's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/30/Java 设计模式-18Memento模式/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java 设计模式-18.Memento模式 | ReimuWang's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ReimuWang's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">189</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">117</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类<span class="badge">24</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404.html" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />公益 404</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+    
+      
+    
+    <a href="https://github.com/ReimuWang" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#222; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg>
+    
+      </a>
+    
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/30/Java 设计模式-18Memento模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王艺凯">
+      <meta itemprop="description" content="Thou Shalt Comment">
+      <meta itemprop="image" content="/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ReimuWang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java 设计模式-18.Memento模式
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-08-30 10:30:49 / 修改时间：16:25:32" itemprop="dateCreated datePublished" datetime="2018-08-30T10:30:49+08:00">2018-08-30</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java-设计模式/" itemprop="url" rel="index"><span itemprop="name">Java 设计模式</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在《图解设计模式》一书中，Observer模式被归入了第8部分<a href="">管理状态</a>。在GoF原书中，Observer模式则被归入了<a href="">行为型设计模式</a>。</p>
+<a id="more"></a>
+<h1 id="综述"><a href="#综述" class="headerlink" title="综述"></a>综述</h1><p>大多数的文本编辑软件，都会支持撤销操作：我们可以通过该操作将文本恢复为之前的版本。而且这种撤销通常可以进行不止一次，即我们能够通过反复撤销将文本恢复为很久以前的版本。</p>
+<p>如果打算使用面向对象的语言实现这个功能的话，该怎么做呢？</p>
+<p>首先，既然要恢复，就必须将此前的状态保存下来。那么到底该如何进行这个保存操作呢？比较容易想到的方案就是在哪里变更，就在变更之前进行保存。但是既然要保存对象，就必须能够访问对象内部的数据结构才行，如果需要保存的地方有多处，就会使得访问内部数据结构的逻辑散落在代码的多个位置，不利于程序的维护。在编程领域，这被称为”破坏了封装性”。</p>
+<p>因此我们引入了Memento模式。Memento有”遗物，纪念品”的含义。顾名思义，它会将对象某个时间点需保存的属性记录下来，形成快照。然后在需要时再拿来使用。这样对对象状态的封装就被封装进了一个个Memento实例中。当外界需要快照时，就调用对象相关的方法生成Memento实例。而当需要恢复为某个Memento实例的状态时，就将该Memento实例传递给对象，让对象自行恢复到以前的状态(颇有些游戏存档-读档的意思)。这样，对于外部而言，对象内部的数据结构依然是黑盒的。</p>
+<p>在这里要明确的是，Memento实例和它所记录的对象实例是不同的。这种不同一方面当然来自时间性上，对象本身是有时间维度的，它可能会随着时间的推进变更内部存储的值，而Memento实例则是记录某个时间点上对象的状态，仿佛就是一张定格的照片，是静态的。另一方面，Memento实例也并非是某个时间点上对对象属性的完全复制(拍照片还有失真呢)，当然我们也可以做到完全复制，不过这通常是没有意义的。我们往往只会将我们关心的，又会随时间变化的属性记录下来，用于恢复。</p>
+<p>说到这里，大家有没有想到些什么呢？对啦！就是Java的序列化(java.io.Serializable接口)功能。实现了该接口的类就有能力保存自身在某个时间点上的状态，以供后续的恢复。其基本思路和Memento模式还是很像的。只不过，二者的应用目标还是不同的，Java的序列化主要是为了空间上的便利性：即在A地生成的对象，可以通过序列化存储至磁盘上，然后经由网络等通路传递至B地，再恢复为原对象。这是一个完整的对象打包再解包的过程，因此序列化通常会保存对象的所有核心属性(不管是否随时间变化的都会保存)。</p>
+<h1 id="示例程序"><a href="#示例程序" class="headerlink" title="示例程序"></a>示例程序</h1><p>下面我们来看一个应用了Memento模式的小例子。作为一个demo小程序，我们当然不会实现一个记事本。在此我们用Java AWT实现了一个小窗体。小窗体上只有一个数字，表示得分：</p>
+<p><img src="/images/blog_pic/Java 设计模式/18Memento模式/0.jpg" alt="0.jpg"></p>
+<p>该程序会监听键盘事件：</p>
+<ul>
+<li>上箭头：加1分</li>
+<li>下箭头：减1分</li>
+<li>左箭头：撤销一次之前的加/减操作</li>
+<li>右箭头：显示当前存储的快照</li>
+<li>其他按键：无</li>
+</ul>
+<p>下面就赶快来看代码吧~首先是类图：</p>
+<p><img src="/images/blog_pic/Java 设计模式/18Memento模式/1.jpg" alt="1.jpg"></p>
+<p>本程序中的所有代码将被统一置于design18包下，结构如下：</p>
+<p><img src="/images/blog_pic/Java 设计模式/18Memento模式/2.jpg" alt="2.jpg"></p>
+<p>其中Main.java是测试代码，并没有出现在类图中。</p>
+<p>下面将逐个贴出每个类的源码。</p>
+<p><strong>Subject类</strong></p>
+<p>首先是待保存状态的对象：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">package design18;</span><br><span class="line"></span><br><span class="line">public class Subject &#123;</span><br><span class="line"></span><br><span class="line">    private int score;</span><br><span class="line"></span><br><span class="line">    private String name;</span><br><span class="line"></span><br><span class="line">    public Subject(String name) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getScore() &#123;</span><br><span class="line">        return score;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setScore(int score) &#123;</span><br><span class="line">        this.score = score;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getName() &#123;</span><br><span class="line">        return name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Memento createSnapshot() &#123;</span><br><span class="line">        return new Memento(this.score);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void recovery(Memento memento) &#123;</span><br><span class="line">        this.score = memento.getScore();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Memento类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">package design18;</span><br><span class="line"></span><br><span class="line">public class Memento &#123;</span><br><span class="line"></span><br><span class="line">    private int score;</span><br><span class="line"></span><br><span class="line">    Memento(int score) &#123;</span><br><span class="line">        this.score = score;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    int getScore() &#123;</span><br><span class="line">        return score;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;Memento [score=&quot; + score + &quot;]&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>虽然代码比较短，但毫无疑问，从名字上也能看出，Memento类就是Memento模式最重要的一个类了。在本示例中，它记录了Subject对象的状态。关于这个类，有如下几点需要说明：</p>
+<ul>
+<li>单从本文的代码来看，Memento与Subject似乎毫无关联。但实际上，Memento完全附属于Subject。因此实际情况下我们通常会将Memento写为Subject的内部类，或是非public类。本文将Memento单独提取出一个文件，主要是为了能使类图更清晰，便于理解。</li>
+<li>Subject中有name和score两个属性，但是name是不会随时间变化的，因此Memento中就只记录了score。</li>
+<li>除了toString()之外，Memento中的所有字段和方法的最高访问权限都只到无修饰符，也就是同包下可访问。说实话这个权限还是给大了，因为我们其实希望只有Subject类能访问到这些字段和方法，这也算是没有将Memento写为Subject的内部类的另一个后遗症吧，使得权限控制变得有些混乱了。</li>
+</ul>
+<p>接最后一小点。其实我们可以再扩展一下。在面向对象编程中，我们可以按访问权限将方法分为两类，需要注意的是，下文中说的接口指得其实是广义上的方法API，而非狭义上Java中的接口：</p>
+<ul>
+<li>wide interface(宽接口)：暴露大量内部信息的接口，通常只供比较”亲密”的内部人员调用。</li>
+<li>narrow interface(窄接口)：只保留少量非核心的信息，供外部调用。</li>
+</ul>
+<p>这样做可以很好的划定模块间的界限，防止对象的封装性被破坏。显然，对于Memento而言，构造函数以及getScore()均是窄接口，而toString()则是宽接口。</p>
+<p><strong>View类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><span class="line">package design18;</span><br><span class="line"></span><br><span class="line">import java.awt.Font;</span><br><span class="line">import java.awt.Frame;</span><br><span class="line">import java.awt.Graphics;</span><br><span class="line">import java.awt.Image;</span><br><span class="line">import java.awt.event.KeyAdapter;</span><br><span class="line">import java.awt.event.KeyEvent;</span><br><span class="line">import java.awt.event.WindowAdapter;</span><br><span class="line">import java.awt.event.WindowEvent;</span><br><span class="line">import java.util.ArrayList;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">public class View extends Frame &#123;</span><br><span class="line"></span><br><span class="line">    private static final long serialVersionUID = 1L;</span><br><span class="line"></span><br><span class="line">    private Subject subject;</span><br><span class="line"></span><br><span class="line">    private List&lt;Memento&gt; snapshotList = new ArrayList&lt;Memento&gt;();</span><br><span class="line"></span><br><span class="line">    public View(Subject subject) &#123;</span><br><span class="line">        this.subject = subject;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void launchFrame() &#123;</span><br><span class="line">        super.setLocation(700, 300);</span><br><span class="line">        super.setSize(200, 150);</span><br><span class="line">        super.setTitle(this.subject.getName());</span><br><span class="line">        new Thread(this.new RepaintRunnable()).start();</span><br><span class="line">        super.addWindowListener(</span><br><span class="line">            new WindowAdapter() &#123;</span><br><span class="line">                @Override</span><br><span class="line">                public void windowClosing(WindowEvent e) &#123;</span><br><span class="line">                    System.exit(0);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        );</span><br><span class="line">        super.addKeyListener(</span><br><span class="line">            new KeyAdapter() &#123;</span><br><span class="line">                @Override</span><br><span class="line">                public void keyReleased(KeyEvent e) &#123;</span><br><span class="line">                    switch(e.getKeyCode()) &#123;</span><br><span class="line">                    case KeyEvent.VK_UP:</span><br><span class="line">                        System.out.println(&quot;上箭头被按下，加分。&quot;);</span><br><span class="line">                        View.this.snapshotList.add(View.this.subject.createSnapshot());</span><br><span class="line">                        View.this.subject.setScore(View.this.subject.getScore() + 1);</span><br><span class="line">                        break;</span><br><span class="line">                    case KeyEvent.VK_DOWN:</span><br><span class="line">                        System.out.println(&quot;下箭头被按下，减分。&quot;);</span><br><span class="line">                        View.this.snapshotList.add(View.this.subject.createSnapshot());</span><br><span class="line">                        View.this.subject.setScore(View.this.subject.getScore() - 1);</span><br><span class="line">                        break;</span><br><span class="line">                    case KeyEvent.VK_LEFT:</span><br><span class="line">                        System.out.println(&quot;左箭头被按下，撤销上一次操作。&quot;);</span><br><span class="line">                        if (View.this.snapshotList.size() &gt; 0) &#123;</span><br><span class="line">                            Memento lastMemento = View.this.snapshotList.get(View.this.snapshotList.size() - 1);</span><br><span class="line">                            View.this.snapshotList.remove(View.this.snapshotList.size() - 1);</span><br><span class="line">                            View.this.subject.recovery(lastMemento);</span><br><span class="line">                        &#125;</span><br><span class="line">                        break;</span><br><span class="line">                    case KeyEvent.VK_RIGHT:</span><br><span class="line">                        System.out.println(&quot;右箭头被按下，在控制台中打印当前存储的快照。&quot;);</span><br><span class="line">                        System.out.println(&quot;============================&quot;);</span><br><span class="line">                        for (int i = 0; i &lt; View.this.snapshotList.size(); i++)</span><br><span class="line">                            System.out.println(i + &quot;---&quot; + View.this.snapshotList.get(i));</span><br><span class="line">                        System.out.println(&quot;============================&quot;);</span><br><span class="line">                        break;</span><br><span class="line">                    default:</span><br><span class="line">                        System.out.println(&quot;非法按键，键值=&quot; + e.getKeyCode());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        );</span><br><span class="line">        super.setVisible(true);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void paint(Graphics g) &#123;</span><br><span class="line">        g.setFont(new Font(null, Font.BOLD, 30));</span><br><span class="line">        g.drawString(&quot;&quot; + View.this.subject.getScore(), 50, 100);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private class RepaintRunnable implements Runnable &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            while (true) &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    View.this.repaint();</span><br><span class="line">                    Thread.sleep(40);</span><br><span class="line">                &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void update(Graphics g) &#123;</span><br><span class="line">        Image bImage = super.createImage(this.getWidth(), this.getHeight());</span><br><span class="line">        Graphics bg = bImage.getGraphics();</span><br><span class="line">        this.paint(bg);</span><br><span class="line">        bg.dispose();</span><br><span class="line">        g.drawImage(bImage, 0, 0, this);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码看起来比较长，不过大部分都是Java AWT中模板化的东西。和本文最相关的那部分逻辑被封装在了launchFrame()方法的super.addKeyListener()中。从代码中我们可以看到，View对快照的生成过程是完全黑盒的，它只是调用了Subject的createSnapshot()方法，然后将其存储到自身管理的快照列表snapshotList中。而后在需要显示和恢复时，直接使用即可。不过即便是恢复，View也仅仅是将需要恢复为的那份Memento通过Subject的recovery()方法传递给Subject而已，这个过程依然是黑盒的。</p>
+<p><strong>Main类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">package design18;</span><br><span class="line"></span><br><span class="line">public class Main &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        new View(new Subject(&quot;博丽灵梦&quot;)).launchFrame();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行该类后，程序即可按照规定的由键盘控制分数的加减。在此输出部分最初的在控制台中打印的文字：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">上箭头被按下，加分。</span><br><span class="line">右箭头被按下，在控制台中打印当前存储的快照。</span><br><span class="line">============================</span><br><span class="line">0---Memento [score=0]</span><br><span class="line">============================</span><br><span class="line">上箭头被按下，加分。</span><br><span class="line">上箭头被按下，加分。</span><br><span class="line">上箭头被按下，加分。</span><br><span class="line">上箭头被按下，加分。</span><br><span class="line">下箭头被按下，减分。</span><br><span class="line">右箭头被按下，在控制台中打印当前存储的快照。</span><br><span class="line">============================</span><br><span class="line">0---Memento [score=0]</span><br><span class="line">1---Memento [score=1]</span><br><span class="line">2---Memento [score=2]</span><br><span class="line">3---Memento [score=3]</span><br><span class="line">4---Memento [score=4]</span><br><span class="line">5---Memento [score=5]</span><br><span class="line">============================</span><br><span class="line">左箭头被按下，撤销上一次操作。</span><br><span class="line">左箭头被按下，撤销上一次操作。</span><br><span class="line">右箭头被按下，在控制台中打印当前存储的快照。</span><br><span class="line">============================</span><br><span class="line">0---Memento [score=0]</span><br><span class="line">1---Memento [score=1]</span><br><span class="line">2---Memento [score=2]</span><br><span class="line">3---Memento [score=3]</span><br><span class="line">============================</span><br><span class="line">左箭头被按下，撤销上一次操作。</span><br><span class="line">左箭头被按下，撤销上一次操作。</span><br><span class="line">右箭头被按下，在控制台中打印当前存储的快照。</span><br><span class="line">============================</span><br><span class="line">0---Memento [score=0]</span><br><span class="line">1---Memento [score=1]</span><br><span class="line">============================</span><br></pre></td></tr></table></figure>
+<h1 id="登场角色"><a href="#登场角色" class="headerlink" title="登场角色"></a>登场角色</h1><p>上面的示例程序介绍了Observer模式的Java实现，下面咱们试着跳出语言层面，抽象出Observer模式中登场的角色。</p>
+<p><strong>Originator(生成者)</strong></p>
+<p>Originator能够生成某时刻表示自身当前状态的Memento角色。也能根据传入的Memento恢复到此前的状态。在示例程序中，由Subject类扮演这个角色。</p>
+<p><strong>Memento(纪念品)</strong></p>
+<p>在示例程序中，由Memento类扮演这个角色。</p>
+<p><strong>Caretaker(负责人)</strong></p>
+<p>Caretaker相当于外部调用人。在需要时它会要求Originator生成Memento，并存储该Memento。不过Caretaker只能调用Memento提供的窄接口，更直白的说，相当于Originator及Memento对Caretaker而言依然还是黑盒的。在合适的时机，Caretaker会将此前的某个Memento传递给Originator，以让Originator恢复为当时的状态。在示例程序中，由View类扮演这个角色。</p>
+<p>下面是抽象后，无关语言的类图：</p>
+<p><img src="/images/blog_pic/Java 设计模式/18Memento模式/3.jpg" alt="3.jpg"></p>
+<h1 id="Memento的过期"><a href="#Memento的过期" class="headerlink" title="Memento的过期"></a>Memento的过期</h1><p>在前文的分析中，我们说Java提供的序列化在空间上提供备份，Memento模式在时间上提供备份。这样说其实并不完善。从本质上来说，Memento模式就是保存对象某个时间点的快照，以供以后操作。事实上，Memento模式照下的快照也不总是在内存中的。最常见的就是游戏的存档，当游戏退出时，存档通常是会作为存档文件被保存在磁盘上的，下次启动或是需要的时候再读取某个档(SL大法万岁！)。</p>
+<p>将快照保存为静态文件提高了程序的灵活性，却也增加了新的风险：我们要注意快照的过期。即随着程序的升级，如果对象的数据结构发生了较大的变化，新程序中的对象可能会无法读取之前版本的快照，此时就会导致快照”过期”。</p>
+<h1 id="Memento的存储技巧"><a href="#Memento的存储技巧" class="headerlink" title="Memento的存储技巧"></a>Memento的存储技巧</h1><p>本文示例程序中每个Memento对象需要存储的信息很少。但是很多时候，比如前文提到的游戏存档，每个Memento可能都会占用大量的内存和磁盘空间。最基本的解决办法自然是使用各种压缩技术。不过在此之上，我们还有什么其他的好办法吗？</p>
+<p>我们可以参考一下git管理代码的技术。git可以很方便的将代码恢复为之前的版本，从本质上来说实现的基本功能和Memento对象是类似的。只不过，假设我们在git上提交了一次代码，导致代码库由版本1升至了版本2。此时git并不是将版本1全部拍为快照，而是只记录快照间的变化情况。这样在恢复时只需要反向的追溯这种变化即可。在编程领域，这是少有的用时间换空间的例子。</p>
+<p>类似的，虽然普通场景下两个连续的快照间的关联没有那么强，但是如果两次变动间绝大多数的数据都没有变化，那么我们也可以只记录发生变化的值，进而构建变化链，达到类似的节省空间的效果。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechat.png" alt="王艺凯 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/ali.jpg" alt="王艺凯 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>王艺凯</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2018/08/30/Java 设计模式-18Memento模式/" title="Java 设计模式-18.Memento模式">http://yoursite.com/2018/08/30/Java 设计模式-18Memento模式/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/28/Java 设计模式-17Observer模式/" rel="next" title="Java 设计模式-17.Observer模式">
+                <i class="fa fa-chevron-left"></i> Java 设计模式-17.Observer模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/31/Java 设计模式-19State模式/" rel="prev" title="Java 设计模式-19.State模式">
+                Java 设计模式-19.State模式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/avatar.jpg"
+                alt="王艺凯" />
+            
+              <p class="site-author-name" itemprop="name">王艺凯</p>
+              <p class="site-description motion-element" itemprop="description">Thou Shalt Comment</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">189</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">117</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/ReimuWang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:1505580759@qq.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用网站
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.bilibili.com/" title="bilibili" target="_blank">bilibili</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://acg12.com/" title="ACG调查小队" target="_blank">ACG调查小队</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.com/" title="leetcode" target="_blank">leetcode</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#综述"><span class="nav-number">1.</span> <span class="nav-text">综述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#示例程序"><span class="nav-number">2.</span> <span class="nav-text">示例程序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#登场角色"><span class="nav-number">3.</span> <span class="nav-text">登场角色</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Memento的过期"><span class="nav-number">4.</span> <span class="nav-text">Memento的过期</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Memento的存储技巧"><span class="nav-number">5.</span> <span class="nav-text">Memento的存储技巧</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老滚6催更协会</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+  <div class="footer-custom"><i>明明可以靠脸吃饭，你却要靠才华，这就是你和明明的差距</i></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+
+</body>
+</html>

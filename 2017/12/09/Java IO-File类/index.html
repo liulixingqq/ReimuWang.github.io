@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/myLogo.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="java.io.File类以文件的全路径名为核心要素，操作文件的各项属性。换句话说，一个File类的实例就代表一个文件。这里需要注意的是在File类眼中我们通常意义上的文件和目录并没有本质上的区别，在大的类别上都会被其视为文件。">
+<meta name="keywords" content="Java,IO,流,File">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java IO-File类">
+<meta property="og:url" content="http://yoursite.com/2017/12/09/Java IO-File类/index.html">
+<meta property="og:site_name" content="ReimuWang&#39;s Blog">
+<meta property="og:description" content="java.io.File类以文件的全路径名为核心要素，操作文件的各项属性。换句话说，一个File类的实例就代表一个文件。这里需要注意的是在File类眼中我们通常意义上的文件和目录并没有本质上的区别，在大的类别上都会被其视为文件。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20IO/File类/0.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20IO/File类/1.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20IO/File类/2.jpg">
+<meta property="og:updated_time" content="2018-03-06T05:07:26.990Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java IO-File类">
+<meta name="twitter:description" content="java.io.File类以文件的全路径名为核心要素，操作文件的各项属性。换句话说，一个File类的实例就代表一个文件。这里需要注意的是在File类眼中我们通常意义上的文件和目录并没有本质上的区别，在大的类别上都会被其视为文件。">
+<meta name="twitter:image" content="http://yoursite.com/images/blog_pic/Java%20IO/File类/0.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="ReimuWang's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/12/09/Java IO-File类/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java IO-File类 | ReimuWang's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ReimuWang's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">189</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">117</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类<span class="badge">24</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404.html" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />公益 404</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+    
+      
+    
+    <a href="https://github.com/ReimuWang" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#222; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg>
+    
+      </a>
+    
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/09/Java IO-File类/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王艺凯">
+      <meta itemprop="description" content="Thou Shalt Comment">
+      <meta itemprop="image" content="/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ReimuWang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java IO-File类
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-12-09 12:02:49" itemprop="dateCreated datePublished" datetime="2017-12-09T12:02:49+08:00">2017-12-09</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-03-06 13:07:26" itemprop="dateModified" datetime="2018-03-06T13:07:26+08:00">2018-03-06</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java-IO/" itemprop="url" rel="index"><span itemprop="name">Java IO</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>java.io.File类以文件的全路径名为核心要素，操作文件的各项属性。换句话说，一个File类的实例就代表一个文件。这里需要注意的是在File类眼中我们通常意义上的文件和目录并没有本质上的区别，在大的类别上都会被其视为文件。</p>
+<a id="more"></a>
+<h1 id="统一的分隔符"><a href="#统一的分隔符" class="headerlink" title="统一的分隔符"></a>统一的分隔符</h1><p>以Windows系统为例，E盘下的a目录下的b.txt文件的全路径名可表示为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">E:\a\b.txt</span><br></pre></td></tr></table></figure>
+<p>但是我们却无法直接在Java中定义这样的字符串：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String filePath = &quot;E:\a\b.txt&quot;;</span><br></pre></td></tr></table></figure>
+<p>会无法通过编译，Eclipse中的提示为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Invalid escape sequence (valid ones are \b \t \n \f \r \&quot; \&apos; \\ )</span><br></pre></td></tr></table></figure>
+<p>很显然，’\’这个字符是转义字符的前置标记，像上例那么写会引起编译器的迷惑，它不知道我们是真的想输出’\’还是想将’\’后的字符转义。因此，如果我们真的想输出’\’，只能这样写：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String filePath = &quot;E:\\a\\b.txt&quot;;</span><br></pre></td></tr></table></figure>
+<p>从书写的角度上来讲，这是不符合人类的认知习惯的。</p>
+<p>不仅如此，以上仅仅只是Windows系统的路径规范，到了其他操作系统中一般都会有所不同。例如Linux系统中类似文件的全路径为:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">e/a/b.txt</span><br></pre></td></tr></table></figure>
+<p>此时就不涉及转义问题而可直接在Java中声明：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String filePath = &quot;e/a/b.txt&quot;;</span><br></pre></td></tr></table></figure>
+<p>这其实是相悖于Java的平台无关性口号的，因为我们此时已经需要根据底层操作系统的不同编写不同的代码了。同时还牵扯到让人难以理解的转义问题。</p>
+<p>为了最大限度的解决这个问题，File类中提供了读取系统目录连接字符的类变量：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public static final char separatorChar = fs.getSeparator();</span><br></pre></td></tr></table></figure>
+<p>这个字段读出来的就是当前系统的连接符了。例如Windows下是’\’，而Linux下是’/‘。并且也不会涉及到转义的问题。</p>
+<p>考虑到比起char，大家应该更习惯使用String，因此File类中还贴心的提供了String版本的连接符：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public static final String separator = &quot;&quot; + separatorChar;</span><br></pre></td></tr></table></figure>
+<p>这样在我的Windows系统中的下述代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line"></span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        StringBuilder sb = new StringBuilder(&quot;E:&quot;).append(File.separator)</span><br><span class="line">                                                  .append(&quot;a&quot;)</span><br><span class="line">                                                  .append(File.separator)</span><br><span class="line">                                                  .append(&quot;b.txt&quot;);</span><br><span class="line">        System.out.println(sb.toString());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">E:\a\b.txt</span><br></pre></td></tr></table></figure>
+<p>最后需要说明的是，虽然Windows系统下默认的连接符是’\’，然而Java却也没那么死板。写成’/‘在Windows系统中其实也能识别：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line"></span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        File file = new File(&quot;E:/a/b.txt&quot;);</span><br><span class="line">        System.out.println(file.getPath());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">E:\a\b.txt</span><br></pre></td></tr></table></figure>
+<p>很显然，输出结果又变回了Windows系统默认的’\’，显然是其内部有所转换。当然这个灵活性也要有个限度，例如Windows系统下如果写成这个样子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">File file = new File(&quot;E/a/b.txt&quot;);</span><br></pre></td></tr></table></figure>
+<p>再或者：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">File file = new File(&quot;/E/a/b.txt&quot;);</span><br></pre></td></tr></table></figure>
+<p>再或者：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">File file = new File(&quot;E\\a\\b.txt&quot;);</span><br></pre></td></tr></table></figure>
+<p>再或者：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">File file = new File(&quot;\\E\\a\\b.txt&quot;);</span><br></pre></td></tr></table></figure>
+<p>总之，要是连盘符划分都去掉，即不写”:”，那只靠Java API核心类库是肯定读不出文件的。</p>
+<p>因此个人建议干脆放弃这个其实不那么灵活的灵活性，既然File类中已经给出了类变量，那么就尽量不要写硬编码。退一步讲，即便写了硬编码，也最好用系统默认的连接符。例如如果要使用Windows系统的文件系统，那么连接符就用’\’，而不是’/‘。</p>
+<h1 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line"></span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String path = new StringBuilder(&quot;D:&quot;).append(File.separator)</span><br><span class="line">                                             .append(&quot;a&quot;)</span><br><span class="line">                                             .toString();</span><br><span class="line">        File file = new File(path);</span><br><span class="line">        System.out.println(file.getPath());</span><br><span class="line">        System.out.println(file.exists());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">D:\a</span><br><span class="line">false</span><br></pre></td></tr></table></figure>
+<p>直接以全路径名构建File对象。这是最直接也是最常用的构造方式。注意构建File对象并不需要被构建的文件一定真实存在，例如本例中就是这样。</p>
+<hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line"></span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String path0 = new StringBuilder(&quot;D:&quot;).append(File.separator)</span><br><span class="line">                                              .append(&quot;a&quot;)</span><br><span class="line">                                              .toString();</span><br><span class="line">        File file0 = new File(path0);</span><br><span class="line">        File file1 = new File(file0, &quot;b.txt&quot;);</span><br><span class="line">        System.out.println(file1.getParent());</span><br><span class="line">        System.out.println(file1.getPath());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">D:\a</span><br><span class="line">D:\a\b.txt</span><br></pre></td></tr></table></figure>
+<p>因为目录结构总是有所属关系的，因此在已有File对象内部(此时该File对象必定是个目录)创建新File对象也是常见的需求。这比直接使用全路径名创建File对象更符合层级关系，某些情况下更易于被开发人员所理解。例如上例中，我们就以file0为父目录，创建了新文件file1。</p>
+<p>当然，上文所说的”该File对象必定是个目录”在构造File对象时依然没有检查(连是否存在都不检查又怎么会检查到底是文件还是目录呢？)。由此可见，File类的检查限制是相对宽松的：磁盘中实际存在的文件是一回事，内存中声明的File对象又是另一回事。为什么这么做的原因也是很好理解的：Java怎么会知道你新建一个File对象的目的是什么呢？也许你就是想在磁盘上新创建一个本不存在的文件呢？此时没有才是正常的。因此除非具体操作产生矛盾(例如明明磁盘上没有这个文件却当是有那样读里面的内容，再或者明明实际是个文件却当是目录那样在内部创建新文件等等)，否则不会在创建File对象时就进行严格的检查。</p>
+<p>如果父目录还没来得及生成File对象，也可按如下方式来做：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line"></span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String path0 = new StringBuilder(&quot;D:&quot;).append(File.separator)</span><br><span class="line">                                              .append(&quot;a&quot;)</span><br><span class="line">                                              .toString();</span><br><span class="line">        File file1 = new File(path0, &quot;b.txt&quot;);</span><br><span class="line">        System.out.println(file1.getParent());</span><br><span class="line">        System.out.println(file1.getPath());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">D:\a</span><br><span class="line">D:\a\b.txt</span><br></pre></td></tr></table></figure>
+<p>显然，效果是一样的。</p>
+<hr>
+<p>我们还可以以URI对象为核心构造File类对象：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line">import java.net.URI;</span><br><span class="line">import java.net.URISyntaxException;</span><br><span class="line"></span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) throws URISyntaxException &#123;</span><br><span class="line">        URI uri = new URI(&quot;file:/D:/a&quot;);</span><br><span class="line">        File file = new File(uri);</span><br><span class="line">        System.out.println(file.getPath());</span><br><span class="line">	System.out.println(file.exists());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">D:\a</span><br><span class="line">false</span><br></pre></td></tr></table></figure>
+<p>URI(Uniform Resource Identifier)，即统一资源标识符，一如其名，即试图用一个统一的格式描述来源不同的资源文件。正如上例中提到的，存储于文件系统中的URI字符串为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file:/D:/a</span><br></pre></td></tr></table></figure>
+<p>依据URI，我们同样可以构建出对应的File类对象。显然构建URI类对象时仍然不会检查资源是否存在。</p>
+<p>关于URI，还需注意的一点是，它已经是超脱于实际操作系统之上的抽象概念了。因此其资源路径的表示方法是固定的，和具体的操作系统无关。上例中，不管使用什么文件系统，都是(当然，Linux下D:中的盘符:要去掉)：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">URI uri = new URI(&quot;file:/D:/a&quot;);</span><br></pre></td></tr></table></figure>
+<p>即便在Windows系统中，使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">URI uri = new URI(&quot;file:\\D:\\a&quot;);</span><br></pre></td></tr></table></figure>
+<p>也是错误的。</p>
+<h1 id="File对象是否真的存在"><a href="#File对象是否真的存在" class="headerlink" title="File对象是否真的存在"></a>File对象是否真的存在</h1><p>假设：D盘下有目录a，a中有文件b.txt。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line"></span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String path0 = new StringBuilder(&quot;D:&quot;).append(File.separator)</span><br><span class="line">                                              .append(&quot;a&quot;)</span><br><span class="line">                                              .toString();</span><br><span class="line">        File file0 = new File(path0);</span><br><span class="line">        File file1 = new File(file0, &quot;b.txt&quot;);</span><br><span class="line">        System.out.println(file0.exists());</span><br><span class="line">        System.out.println(file1.exists());</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">true</span><br><span class="line">true</span><br></pre></td></tr></table></figure>
+<h1 id="实际是目录还是文件"><a href="#实际是目录还是文件" class="headerlink" title="实际是目录还是文件"></a>实际是目录还是文件</h1><p>假设：D盘下有目录a，a中有文件b.txt。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line"></span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String path0 = new StringBuilder(&quot;D:&quot;).append(File.separator)</span><br><span class="line">                                              .append(&quot;a&quot;)</span><br><span class="line">                                              .toString();</span><br><span class="line">        File file0 = new File(path0);</span><br><span class="line">        File file1 = new File(file0, &quot;b.txt&quot;);</span><br><span class="line">        System.out.println(file0.isDirectory());</span><br><span class="line">        System.out.println(file0.isFile());</span><br><span class="line">        System.out.println(file1.isDirectory());</span><br><span class="line">        System.out.println(file1.isFile());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">true</span><br><span class="line">false</span><br><span class="line">false</span><br><span class="line">true</span><br></pre></td></tr></table></figure>
+<h1 id="访问权限"><a href="#访问权限" class="headerlink" title="访问权限"></a>访问权限</h1><p>假设：D盘下有目录a，a中有文件b.txt。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line"></span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String path0 = new StringBuilder(&quot;D:&quot;).append(File.separator)</span><br><span class="line">                                              .append(&quot;a&quot;)</span><br><span class="line">                                              .toString();</span><br><span class="line">        File file0 = new File(path0);</span><br><span class="line">        File file1 = new File(file0, &quot;b.txt&quot;);</span><br><span class="line">        System.out.println(file0.isHidden());</span><br><span class="line">        System.out.println(file0.canRead());</span><br><span class="line">        System.out.println(file0.canWrite());</span><br><span class="line">        System.out.println(file0.canExecute());</span><br><span class="line">        System.out.println(file1.isHidden());</span><br><span class="line">        System.out.println(file1.canRead());</span><br><span class="line">        System.out.println(file1.canWrite());</span><br><span class="line">        System.out.println(file1.canExecute());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">false</span><br><span class="line">true</span><br><span class="line">true</span><br><span class="line">true</span><br><span class="line">false</span><br><span class="line">true</span><br><span class="line">true</span><br><span class="line">true</span><br></pre></td></tr></table></figure>
+<p>需要注意的是，a作为一个目录也被判为可执行了。显然这些权限判断方法仅仅关心是否有权限，至于被操作的对象能不能做到则不在乎。这又是和整个File类一脉相承的设计思路一致。</p>
+<h1 id="最后修改时间"><a href="#最后修改时间" class="headerlink" title="最后修改时间"></a>最后修改时间</h1><p>假设：D盘下有目录a</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line">import java.util.Date;</span><br><span class="line"></span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String path = new StringBuilder(&quot;D:&quot;).append(File.separator)</span><br><span class="line">                                              .append(&quot;a&quot;)</span><br><span class="line">                                              .toString();</span><br><span class="line">        File file = new File(path);</span><br><span class="line">        long time = file.lastModified();</span><br><span class="line">        System.out.println(new Date(time));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Sun Dec 10 21:30:33 CST 2017</span><br></pre></td></tr></table></figure>
+<h1 id="基本信息"><a href="#基本信息" class="headerlink" title="基本信息"></a>基本信息</h1><p>假设：D盘下有目录a，a中有文件b.txt。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line"></span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String path0 = new StringBuilder(&quot;D:&quot;).append(File.separator)</span><br><span class="line">                                              .append(&quot;a&quot;)</span><br><span class="line">                                              .toString();</span><br><span class="line">        File file0 = new File(path0);</span><br><span class="line">        File file1 = new File(file0, &quot;b.txt&quot;);</span><br><span class="line">        System.out.println(file0.getName());    // 简单文件名</span><br><span class="line">        System.out.println(file0.getPath());    // 全路径名</span><br><span class="line">        System.out.println(file0.length());    // 长度，单位为byte(目录的长度默认为0)</span><br><span class="line">        System.out.println(&quot;=======================&quot;);</span><br><span class="line">        System.out.println(file1.getName());    // 简单文件名</span><br><span class="line">        System.out.println(file1.getPath());    // 全路径名</span><br><span class="line">        System.out.println(file1.length());    // 长度，单位为byte</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">a</span><br><span class="line">D:\a</span><br><span class="line">0</span><br><span class="line">=======================</span><br><span class="line">b.txt</span><br><span class="line">D:\a\b.txt</span><br><span class="line">11405</span><br></pre></td></tr></table></figure>
+<h1 id="父文件"><a href="#父文件" class="headerlink" title="父文件"></a>父文件</h1><p>所谓父文件，若某文件在某目录下，那么该目录就相当于该文件的父文件。假设：D盘下有目录a，a中有文件b.txt。此时a是b.txt的父文件。D:是a的父文件。显然只有目录才有资格做父文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line"></span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String path0 = new StringBuilder(&quot;D:&quot;).append(File.separator)</span><br><span class="line">                                              .append(&quot;a&quot;)</span><br><span class="line">                                              .toString();</span><br><span class="line">        File file0 = new File(path0);</span><br><span class="line">        File file1 = new File(file0, &quot;b.txt&quot;);</span><br><span class="line">        System.out.println(file0.getParent());    // 获得父文件全路径名</span><br><span class="line">        File file0p = file0.getParentFile();    // 获得父文件实例</span><br><span class="line">        System.out.println(file0p.getPath());</span><br><span class="line">        System.out.println(&quot;=======================&quot;);</span><br><span class="line">        System.out.println(file1.getParent());</span><br><span class="line">        File file1p = file1.getParentFile();</span><br><span class="line">        System.out.println(file1p.getPath());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">D:\</span><br><span class="line">D:\</span><br><span class="line">=======================</span><br><span class="line">D:\a</span><br><span class="line">D:\a</span><br></pre></td></tr></table></figure>
+<p>那么我们不禁好奇，作为顶层目录的D盘的父文件会是什么呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line"></span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String path = new StringBuilder(&quot;D:&quot;).append(File.separator)</span><br><span class="line">                                              .toString();</span><br><span class="line">        File file = new File(path);</span><br><span class="line">        System.out.println(file.getParent());</span><br><span class="line">        System.out.println(file.getParentFile());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">null</span><br><span class="line">null</span><br></pre></td></tr></table></figure>
+<p>输出都是null，合情合理。</p>
+<h1 id="获得目录下所有内容"><a href="#获得目录下所有内容" class="headerlink" title="获得目录下所有内容"></a>获得目录下所有内容</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line"></span><br><span class="line">public class Test &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String path = new StringBuilder(&quot;D:&quot;).append(File.separator)</span><br><span class="line">                                             .toString();</span><br><span class="line">        File root = new File(path);</span><br><span class="line">        for(File file : root.listFiles()) &#123;</span><br><span class="line">            String type = file.isFile() ? &quot;文件&quot; : &quot;文件夹&quot;;</span><br><span class="line">            String hiden = file.isHidden() ? &quot;(隐藏)&quot; : &quot;(可见)&quot;;</span><br><span class="line">            System.out.println(type + hiden + &quot;\t&quot; + file.getName());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">文件夹(隐藏)	$RECYCLE.BIN</span><br><span class="line">文件夹(隐藏)	15055</span><br><span class="line">文件夹(隐藏)	360Downloads</span><br><span class="line">文件夹(隐藏)	360Rec</span><br><span class="line">文件夹(隐藏)	Driver</span><br><span class="line">文件夹(可见)	game</span><br><span class="line">文件夹(隐藏)	MSOCache</span><br><span class="line">文件夹(可见)	program</span><br><span class="line">文件夹(隐藏)	SoftwareDistribution</span><br><span class="line">文件夹(隐藏)	System Volume Information</span><br><span class="line">文件夹(可见)	temp</span><br><span class="line">文件(可见)	test.txt</span><br><span class="line">文件夹(隐藏)	WindowsApps</span><br><span class="line">文件夹(可见)	work</span><br><span class="line">文件夹(隐藏)	WpSystem</span><br><span class="line">文件夹(隐藏)	WUDownloadCache</span><br></pre></td></tr></table></figure>
+<h1 id="实际创建文件"><a href="#实际创建文件" class="headerlink" title="实际创建文件"></a>实际创建文件</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class Test &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws IOException &#123;</span><br><span class="line">        String path = new StringBuilder(&quot;D:&quot;).append(File.separator)</span><br><span class="line">                                             .append(&quot;Reimu.txt&quot;)</span><br><span class="line">                                             .toString();</span><br><span class="line">        File file = new File(path);</span><br><span class="line">        System.out.println(file.createNewFile());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在没有D:\Reimu.txt的前提下，上述代码执行后，D:\Reimu.txt会被创建。程序输出true。</p>
+<p>记录下此时的文件属性：</p>
+<p><img src="/images/blog_pic/Java IO/File类/0.jpg" alt="0.jpg"></p>
+<p>那么我们不禁会想：如果创建前文件已存在会怎么样呢？于是再次执行代码。程序输出false。再看D:\Reimu.txt，发现没有任何变化。</p>
+<p>难道说，如果待创建文件已存在，便输出一个false，然后什么都不做吗？</p>
+<p>为了验证上述猜想，我们不妨手动修改D:\Reimu.txt的内容，比如在其中添加文本：魔理沙么么哒。然后此时我们再看文件属性：</p>
+<p><img src="/images/blog_pic/Java IO/File类/1.jpg" alt="1.jpg"></p>
+<p>理所当然的，文件大小及修改时间发生了相应的变化。此时我们再执行上述代码，依然输出false。随后我们再观察D:\Reimu.txt的属性，发现没有任何变化，内容也依然是魔理沙么么哒(若代码生效了内容应被替换为空文件)。说明猜想成立。</p>
+<h1 id="实际创建目录"><a href="#实际创建目录" class="headerlink" title="实际创建目录"></a>实际创建目录</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class Test &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws IOException &#123;</span><br><span class="line">        String path = new StringBuilder(&quot;D:&quot;).append(File.separator)</span><br><span class="line">                                             .append(&quot;Reimu.txt&quot;)</span><br><span class="line">                                             .toString();</span><br><span class="line">        File file = new File(path);</span><br><span class="line">        System.out.println(file.mkdir());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在没有D:\Reimu.txt存在的情况下，上述代码输出true。并成功创建了目录D:\Reimu.txt。注意这里创建的Reimu.txt看似是txt文件，然而实则是目录。我之所以起这么诡异的名字，就是为了说明Java之所以统一使用File类描述文件和目录，在底层没有对二者做本质上的区分是有道理的：因为确实也没那么大的差别，起码无法从名字上就能确认到底是文件还是目录。</p>
+<p>同理，我们再执行一次上述代码，输出false。说明创建失败，什么都不做。</p>
+<p>需要注意的是，若D盘下存在文件Reimu.txt(注意，这次真的是文件了，不是目录)，此时执行上述代码依然输出false。说明即便一个是目录，一个是文件，依然不允许重名。事实上，如果在Windows系统下通过图形化界面直接这么做，依然不会通过：</p>
+<p><img src="/images/blog_pic/Java IO/File类/2.jpg" alt="2.jpg"></p>
+<p>看来不仅是Java，Windows系统也没有对文件和目录做本质上的区分。</p>
+<p>然后我们再看以下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class Test &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws IOException &#123;</span><br><span class="line">        String path = new StringBuilder(&quot;D:&quot;).append(File.separator)</span><br><span class="line">                                             .append(&quot;dir1&quot;)</span><br><span class="line">                                             .append(File.separator)</span><br><span class="line">                                             .append(&quot;dir2&quot;)</span><br><span class="line">                                             .toString();</span><br><span class="line">        File file = new File(path);</span><br><span class="line">        System.out.println(file.mkdir());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>目录dir1及目录dir2均不存在，此时执行上述代码输出false。D盘下也未创建任何目录。这也很合理：dir1都不存在，自然无法创建其里层的dir2。但同时这又是一个很常见的需求，就是要直接连续创建目录，难道此时只能将创建过程断成很多截，一层目录一层目录的创建吗？</p>
+<p>为了解决这个问题，File类提供了如下解决方案：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class Test &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws IOException &#123;</span><br><span class="line">        String path = new StringBuilder(&quot;D:&quot;).append(File.separator)</span><br><span class="line">                                             .append(&quot;dir1&quot;)</span><br><span class="line">                                             .append(File.separator)</span><br><span class="line">                                             .append(&quot;dir2&quot;)</span><br><span class="line">                                             .toString();</span><br><span class="line">        File file = new File(path);</span><br><span class="line">        System.out.println(file.mkdirs());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>目录dir1及目录dir2均不存在，此时执行上述代码输出true。同时按目录层级D:\dir1\dir2创建了目录dir1及目录dir2。</p>
+<h1 id="实际删除文件-目录"><a href="#实际删除文件-目录" class="headerlink" title="实际删除文件/目录"></a>实际删除文件/目录</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class Test &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws IOException &#123;</span><br><span class="line">        String path = new StringBuilder(&quot;D:&quot;).append(File.separator)</span><br><span class="line">                                             .append(&quot;1.txt&quot;)</span><br><span class="line">                                             .toString();</span><br><span class="line">        File file = new File(path);</span><br><span class="line">        System.out.println(file.delete());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>已有文件D:\1.txt的前提下，上述代码执行后输出true。同时磁盘中的文件被删除。需要注意的是，这种删除方式非常霸道：被删除的文件是彻底被删除了，并非被放到回收站等缓冲地带中。</p>
+<p>当然，若待删除文件实际不存在，则输出false，并什么都不做。</p>
+<p>关于目录的删除方式大同小异：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class Test &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws IOException &#123;</span><br><span class="line">        String path = new StringBuilder(&quot;D:&quot;).append(File.separator)</span><br><span class="line">                                             .append(&quot;dir1&quot;)</span><br><span class="line">                                             .toString();</span><br><span class="line">        File file = new File(path);</span><br><span class="line">        System.out.println(file.delete());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>D盘下存在目录dir1，dir1中为空。上述代码执行后返回true。同时D盘下的dir1被删除，且依然是彻底删除。</p>
+<p>不过若dir1下不为空，比如说有目录dir2或文件1.txt，那么上述代码执行后返回false，并且什么都不会做，即只要目录下有内容就不会删除目录。这样设计是很有必要的，因为正如我们前文所述，Java的这种删除方法实在是过于霸道且毫无容错机制，那么如果我们一个手抖不小心将删除的目录写成了D:\，如果自动递归删除目录下的所有内容的话，那相当于直接把D盘给格式化了。当然说格式化其实有些过了，因为毕竟有些文件Java是没有操作权限的，不过即便如此，也依然是够糟糕的了。</p>
+<h1 id="小例子：递归打印目录层级"><a href="#小例子：递归打印目录层级" class="headerlink" title="小例子：递归打印目录层级"></a>小例子：递归打印目录层级</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line"></span><br><span class="line">public class Test &#123;</span><br><span class="line"></span><br><span class="line">    private static void printFileSystemRecursion(File file, int depth) &#123;</span><br><span class="line">        boolean isDirectory = file.isDirectory();</span><br><span class="line">        StringBuilder sb = new StringBuilder(&quot;[&quot;);</span><br><span class="line">        sb = isDirectory ? sb.append(&quot;d&quot;) : sb.append(&quot;-&quot;);</span><br><span class="line">        sb = file.canRead() ? sb.append(&quot;r&quot;) : sb.append(&quot;-&quot;);</span><br><span class="line">        sb = file.canWrite() ? sb.append(&quot;w&quot;) : sb.append(&quot;-&quot;);</span><br><span class="line">        sb = file.canExecute() ? sb.append(&quot;x&quot;) : sb.append(&quot;-&quot;);</span><br><span class="line">        sb = file.isHidden() ? sb.append(&quot;.&quot;) : sb.append(&quot;-&quot;);</span><br><span class="line">        sb.append(&quot;]&quot;).append(file.getName());</span><br><span class="line">        for (int i = 0; i &lt; depth; i++) System.out.print(&quot;       &quot;);</span><br><span class="line">        System.out.println(sb.toString());</span><br><span class="line">        if (!isDirectory) return;</span><br><span class="line">        for(File temp : file.listFiles()) Test.printFileSystemRecursion(temp, depth + 1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static void printFileSystem(File file) &#123;</span><br><span class="line">        if (!file.exists()) &#123;</span><br><span class="line">            System.out.println(file.getPath() + &quot;不存在&quot;);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        Test.printFileSystemRecursion(file, 0);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String path = new StringBuilder(&quot;D:&quot;).append(File.separator)</span><br><span class="line">                                             .append(&quot;work&quot;)</span><br><span class="line">                                             .append(File.separator)</span><br><span class="line">                                             .append(&quot;java&quot;)</span><br><span class="line">                                             .append(File.separator)</span><br><span class="line">                                             .append(&quot;javaSoft&quot;)</span><br><span class="line">                                             .append(File.separator)</span><br><span class="line">                                             .append(&quot;jdk&quot;)</span><br><span class="line">                                             .append(File.separator)</span><br><span class="line">                                             .append(&quot;include&quot;)</span><br><span class="line">                                             .toString();</span><br><span class="line">        File file = new File(path);</span><br><span class="line">        Test.printFileSystem(file);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[drwx-]include</span><br><span class="line">       [-rwx-]classfile_constants.h</span><br><span class="line">       [-rwx-]jawt.h</span><br><span class="line">       [-rwx-]jdwpTransport.h</span><br><span class="line">       [-rwx-]jni.h</span><br><span class="line">       [-rwx-]jvmti.h</span><br><span class="line">       [-rwx-]jvmticmlr.h</span><br><span class="line">       [drwx-]win32</span><br><span class="line">              [drwx-]bridge</span><br><span class="line">                     [-rwx-]AccessBridgeCallbacks.h</span><br><span class="line">                     [-rwx-]AccessBridgeCalls.c</span><br><span class="line">                     [-rwx-]AccessBridgeCalls.h</span><br><span class="line">                     [-rwx-]AccessBridgePackages.h</span><br><span class="line">              [-rwx-]jawt_md.h</span><br><span class="line">              [-rwx-]jni_md.h</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechat.png" alt="王艺凯 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/ali.jpg" alt="王艺凯 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>王艺凯</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2017/12/09/Java IO-File类/" title="Java IO-File类">http://yoursite.com/2017/12/09/Java IO-File类/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/IO/" rel="tag"># IO</a>
+          
+            <a href="/tags/流/" rel="tag"># 流</a>
+          
+            <a href="/tags/File/" rel="tag"># File</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/08/JVM-动态类型语言支持/" rel="next" title="JVM-动态类型语言支持">
+                <i class="fa fa-chevron-left"></i> JVM-动态类型语言支持
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/11/JVM-字节码解释执行引擎/" rel="prev" title="JVM-字节码解释执行引擎">
+                JVM-字节码解释执行引擎 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/avatar.jpg"
+                alt="王艺凯" />
+            
+              <p class="site-author-name" itemprop="name">王艺凯</p>
+              <p class="site-description motion-element" itemprop="description">Thou Shalt Comment</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">189</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">117</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/ReimuWang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:1505580759@qq.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用网站
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.bilibili.com/" title="bilibili" target="_blank">bilibili</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://acg12.com/" title="ACG调查小队" target="_blank">ACG调查小队</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.com/" title="leetcode" target="_blank">leetcode</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#统一的分隔符"><span class="nav-number">1.</span> <span class="nav-text">统一的分隔符</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#构造函数"><span class="nav-number">2.</span> <span class="nav-text">构造函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#File对象是否真的存在"><span class="nav-number">3.</span> <span class="nav-text">File对象是否真的存在</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实际是目录还是文件"><span class="nav-number">4.</span> <span class="nav-text">实际是目录还是文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#访问权限"><span class="nav-number">5.</span> <span class="nav-text">访问权限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最后修改时间"><span class="nav-number">6.</span> <span class="nav-text">最后修改时间</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本信息"><span class="nav-number">7.</span> <span class="nav-text">基本信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#父文件"><span class="nav-number">8.</span> <span class="nav-text">父文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#获得目录下所有内容"><span class="nav-number">9.</span> <span class="nav-text">获得目录下所有内容</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实际创建文件"><span class="nav-number">10.</span> <span class="nav-text">实际创建文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实际创建目录"><span class="nav-number">11.</span> <span class="nav-text">实际创建目录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实际删除文件-目录"><span class="nav-number">12.</span> <span class="nav-text">实际删除文件/目录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小例子：递归打印目录层级"><span class="nav-number">13.</span> <span class="nav-text">小例子：递归打印目录层级</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老滚6催更协会</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+  <div class="footer-custom"><i>明明可以靠脸吃饭，你却要靠才华，这就是你和明明的差距</i></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+
+</body>
+</html>

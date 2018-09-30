@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/myLogo.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="临界区被多线程并发请求时可能导致糟糕结果的资源被称为临界区。最稳妥的做法是，同一时间点仅有一个线程能请求到临界区。 从狭义的角度上讲，临界区并不等同于被多线程并发请求的资源。临界区是其的子集。若被多线程并发请求的资源不可能因为并发访问产生不可预期的结果，那么程序员完全可以不将其设置为临界区。从这个角度而言，一个资源是否是被多线程并发请求的资源是客观事实，不因人的意志而转移；但是其是否是临界区则主要">
+<meta name="keywords" content="Java,并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 并发-并发级别">
+<meta property="og:url" content="http://yoursite.com/2017/10/04/Java 并发-并发级别/index.html">
+<meta property="og:site_name" content="ReimuWang&#39;s Blog">
+<meta property="og:description" content="临界区被多线程并发请求时可能导致糟糕结果的资源被称为临界区。最稳妥的做法是，同一时间点仅有一个线程能请求到临界区。 从狭义的角度上讲，临界区并不等同于被多线程并发请求的资源。临界区是其的子集。若被多线程并发请求的资源不可能因为并发访问产生不可预期的结果，那么程序员完全可以不将其设置为临界区。从这个角度而言，一个资源是否是被多线程并发请求的资源是客观事实，不因人的意志而转移；但是其是否是临界区则主要">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-03-29T10:02:48.953Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 并发-并发级别">
+<meta name="twitter:description" content="临界区被多线程并发请求时可能导致糟糕结果的资源被称为临界区。最稳妥的做法是，同一时间点仅有一个线程能请求到临界区。 从狭义的角度上讲，临界区并不等同于被多线程并发请求的资源。临界区是其的子集。若被多线程并发请求的资源不可能因为并发访问产生不可预期的结果，那么程序员完全可以不将其设置为临界区。从这个角度而言，一个资源是否是被多线程并发请求的资源是客观事实，不因人的意志而转移；但是其是否是临界区则主要">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="ReimuWang's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/04/Java 并发-并发级别/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java 并发-并发级别 | ReimuWang's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ReimuWang's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">189</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">117</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类<span class="badge">24</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404.html" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />公益 404</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+    
+      
+    
+    <a href="https://github.com/ReimuWang" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#222; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg>
+    
+      </a>
+    
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/04/Java 并发-并发级别/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王艺凯">
+      <meta itemprop="description" content="Thou Shalt Comment">
+      <meta itemprop="image" content="/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ReimuWang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java 并发-并发级别
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-10-04 13:07:36" itemprop="dateCreated datePublished" datetime="2017-10-04T13:07:36+08:00">2017-10-04</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-03-29 18:02:48" itemprop="dateModified" datetime="2018-03-29T18:02:48+08:00">2018-03-29</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java-并发/" itemprop="url" rel="index"><span itemprop="name">Java 并发</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="临界区"><a href="#临界区" class="headerlink" title="临界区"></a>临界区</h1><p>被多线程并发请求时可能导致糟糕结果的资源被称为临界区。最稳妥的做法是，同一时间点仅有一个线程能请求到临界区。</p>
+<p>从狭义的角度上讲，临界区并不等同于被多线程并发请求的资源。临界区是其的子集。若被多线程并发请求的资源不可能因为并发访问产生不可预期的结果，那么程序员完全可以不将其设置为临界区。从这个角度而言，一个资源是否是被多线程并发请求的资源是客观事实，不因人的意志而转移；但是其是否是临界区则主要依托于人的判断：对于我而言，这个共享资源是否会因并发访问而产生不可预期的结果？</p>
+<a id="more"></a>
+<h1 id="多线程的活跃性问题"><a href="#多线程的活跃性问题" class="headerlink" title="多线程的活跃性问题"></a>多线程的活跃性问题</h1><p>下面我们就重点说下这个”糟糕”，从糟糕程度由重到轻，依次为：死锁(Deadlock) –&gt; 饥饿(Starvation) –&gt; 活锁(Livelock)。</p>
+<p><strong>死锁</strong></p>
+<p>简单的小例子：线程A持有资源x而欲请求资源y。线程B持有资源y而欲请求资源x。不巧的是x，y均为临界区。如果现状得不到改善(AB均不愿意放弃已到手的资源)，那么死锁将一直进行下去，永远看不到解决的希望。因此死锁是活跃性问题中最糟糕的情况：它会直接导致被锁住的线程卡死。</p>
+<p><strong>饥饿</strong></p>
+<p>分为两种情况：</p>
+<ul>
+<li><p>线程优先级不够高，导致其始终无法获得临界区。在自然界中，母鸟给小鸟喂食时，强壮的小鸟总会更容易的抢到食物，而瘦弱的小鸟则不得不忍受饥饿。这也是并发中”饥饿”这个概念的出处。</p>
+</li>
+<li><p>已占有临界区的线程迟迟不肯让出临界区，导致其他线程无法获得该临界区。</p>
+</li>
+</ul>
+<p>与死锁不同，饥饿总还是有希望解除的，起码不能像断言死锁那样断定饥饿的话这个程序就没救了。但是饥饿仍然是有着残酷的竞争的：列举的两种情况说明该资源确实足够抢手，也就是所谓的”狼多肉少”。往乐观了想，强壮的小鸟吃饱了，不乐意抢了，瘦弱的小鸟就有机会吃上饭了；但是往悲观了想，若母鸟带来的食物并没有那么充足，或者那些强壮的小鸟是吃撑了也要继续下去的吃货，此时瘦弱的小鸟就有被饿死的可能。</p>
+<p><strong>活锁</strong></p>
+<p>举一个生活中的小例子：一个狭窄的过道，仅容两人通过。此时有两人相对而行又恰好走在同一边。于是二人均产生了给对方让路的行为。于是两人同时的让向另一边。于是二人又把刚才的剧情重演了一遍：又撞上了。通常情况下，如果这两个人情商正常的话，往往会进行简单的眼神或言语沟通，然后两人就能很好的通行了。</p>
+<p>然而计算机并不具备这种在人类看来最简单的”情商”。如果程序设计不得当，两个线程会无休止的这样谦让下去。</p>
+<p>之所以说”活锁”没有”饥饿”那么糟，是因为本质上来说，”活锁”中并不存在资源竞争：资源是足够的，仅仅只是程序的设计不当而已。</p>
+<h1 id="并发级别"><a href="#并发级别" class="headerlink" title="并发级别"></a>并发级别</h1><p>并发级别描述的是面对上文中并发的缺陷，我们”该怎么办”，或者说”有何对策”。因此并发级别表达的是”请求方请求资源”时”请求方”的意愿。换成具体的情境，表达的就是”线程请求临界区”时线程的意愿及策略，属于主观愿望，也就是想不想的问题；而临界区中定义的”同一时间点仅有一个线程能请求到临界区”是临界区的客观情况，是能不能做得到的问题。线程在设定并发级别时如果足够”乐观”，那么便可能会任性的无视临界区的客观定义。</p>
+<p>在应对并发问题的态度上，我们可以画一条数轴。负无穷大代表绝对的悲观：并发程序又复杂问题又多，咱们别并发了吧，如果实在要搞咱们就必须事无巨细把所有(注意是所有)可能的情况都catch住；正无穷大代表绝对的乐观：不要怂，就是干！问题，不存在的！</p>
+<p>这种绝对的二元论的说法显然很极端，但是它们却为我们提供了标杆，我们在设计并发程序时总会偏向其中一方一点。简单来说，越是悲观对并发的检查就越严格；越是乐观对并发的检查就越宽松。从悲观到乐观排序的话并发级别大致有如下几类：阻塞(Blocking) –&gt; 无饥饿(Starvation-Free) –&gt; 无障碍(Obstruction-Free) –&gt; 无锁(Lock-Free) –&gt; 无等待(Wait-Free)。</p>
+<p><strong>阻塞(Blocking)</strong></p>
+<p>临界区同一时刻仅有一个线程能进入。其他请求该临界区的线程全部等着。简单粗暴，使得对临界区的访问又变回了串行的状态。</p>
+<p><strong>无饥饿(Starvation-Free)</strong></p>
+<p>在简单粗暴的阻塞的基础上，增加了对多线程的活跃性问题中的饥饿情况的处理(换句话说，无饥饿依然是阻塞的，其仅仅只是对饥饿的情况做出了改善)。假设当前正在使用Java的锁机制实现并发(synchronized是监视机制，并非锁。其也无法做到后文提到的公平锁)，如果说普通的阻塞级别的锁是非公平锁(判断线程执行与否仅看其优先级)的话，那么无饥饿实现的就是所谓的公平锁。最简单的公平锁是完全无视线程的优先级，而完全只按时间上的先后顺序执行，此时相当于用时间上的先后顺序作为新的优先级替换了线程原有的优先级。较为复杂的实现会把时间作为优先级的一个分量和线程原有的优先级进行融合：也就是综合考虑线程优先级和其已等待的时间。</p>
+<p>我们常说的公平锁是由重入锁(ReentrantLock)所实现的，该锁属于最简单的那类公平锁。</p>
+<p><strong>无障碍(Obstruction-Free)</strong></p>
+<p>无障碍是检查最为严格的非阻塞调度。</p>
+<p>先来说阻塞与非阻塞的区别。模拟一个场景，两个线程并发请求临界区。阻塞级别的并发(阻塞及无饥饿)会切实遵守临界区的客观规定，老老实实的等着。而非阻塞则是两个线程都进入临界区，没出问题最好，出了问题再想办法解决。而”解决策略”的不同就在非阻塞这个大的概念下又分化出了不同的并发级别。</p>
+<p>如果真实情况是并发冲突的频率并不高，也即临界区中所描述的”被多线程并发请求，且有可能因此导致糟糕结果的资源”中的”可能”并不常出现，那么非阻塞是优于阻塞的；但是如果这个”可能”的出现概率很高，那么非阻塞时的”解决策略”相应的登场就更为频繁。无论设计得多为巧妙。这个”解决策略”也是决计比不上一开始便谨慎的进行悲观处理的阻塞调度的。此时非阻塞调度便劣于阻塞调度了。</p>
+<p>相对于阻塞而言，非阻塞已经足够乐观了。但是在非阻塞内部却仍可细分。无障碍便是非阻塞中最为悲观的那一个。其”解决策略”多种多样，一种可行的方案是依赖于”一致性标记”。假如当前临界区的一致性标记值为0。当线程1进入临界区后，会先更新这个值，例如改为1，代表线程1已进入，而后线程在临界区中操作(无论是读操作还是写操作)，当其完事决定退出时会再看一眼这个标记，若仍为1，说明在此期间没有别的线程进入临界区，也就是满足”乐观”的预期，可以自然的退出；但是如果在此期间线程2也进入了临界区，那么它会在进入后将标记值更新为2。此时线程1在完事后回看时就会发现值对不上了，此时它便会采用fail-fast原则(不管新来的那个线程做了什么，也许人家只是读，也许人家写的东西和你没关系。总之只要检测到有其他线程进来了就算失败)，回滚此前已做的操作，然后从头再来。</p>
+<p>无障碍在冲突激烈时会导致临界区中的所有线程都不停的在回滚，极大的影响了程序的性能。严重时，没有一个线程能走出这个回滚的泥潭，形成一种伪死锁的状态。</p>
+<p><strong>无锁(Lock-Free)</strong></p>
+<p>无锁是一种特殊的无障碍。其诞生的目的就是为了解决无障碍”没有一个线程能走出这个回滚的泥潭”的问题。也就是说在任意时刻，无锁都能保证临界区中的线程中至少有一个可以在有限的步骤内离开临界区。因为仅能保证1个，因此排在后面的线程可能会面临饥饿的问题。</p>
+<p><strong>无等待(Wait-Free)</strong></p>
+<p>无等待在无锁的基础上又做了进一步的优化，其解决了无锁中的”饥饿”问题。无锁仅保证同一时刻内只有一个线程能在有限步骤内退出临界区，而无等待更进一步，要求临界区中的所有线程都能在有限的步骤内退出临界区。</p>
+<p>无等待所采取的一种典型的”解决策略”就是RCU(Read-Copy-Update)：想要修改临界区的数据时，不能直接在临界区上修改，而是copy出一份当前的副本，而后在这个副本上修改，随后再在合适的时机写回。这样保证临界区不是”脏”的，也不会是写线程写到一半的中间态。因此读线程在进入临界区时就不需要任何并发控制了。这个做法与Git等代码版本控制库的做法很类似，大家可以对比着理解。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechat.png" alt="王艺凯 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/ali.jpg" alt="王艺凯 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>王艺凯</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2017/10/04/Java 并发-并发级别/" title="Java 并发-并发级别">http://yoursite.com/2017/10/04/Java 并发-并发级别/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/并发/" rel="tag"># 并发</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/03/Java 并发-同步异步阻塞非阻塞/" rel="next" title="Java 并发-同步异步阻塞非阻塞">
+                <i class="fa fa-chevron-left"></i> Java 并发-同步异步阻塞非阻塞
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/04/EditPlus-配置/" rel="prev" title="EditPlus-配置">
+                EditPlus-配置 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/avatar.jpg"
+                alt="王艺凯" />
+            
+              <p class="site-author-name" itemprop="name">王艺凯</p>
+              <p class="site-description motion-element" itemprop="description">Thou Shalt Comment</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">189</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">117</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/ReimuWang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:1505580759@qq.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用网站
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.bilibili.com/" title="bilibili" target="_blank">bilibili</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://acg12.com/" title="ACG调查小队" target="_blank">ACG调查小队</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.com/" title="leetcode" target="_blank">leetcode</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#临界区"><span class="nav-number">1.</span> <span class="nav-text">临界区</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#多线程的活跃性问题"><span class="nav-number">2.</span> <span class="nav-text">多线程的活跃性问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#并发级别"><span class="nav-number">3.</span> <span class="nav-text">并发级别</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老滚6催更协会</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+  <div class="footer-custom"><i>明明可以靠脸吃饭，你却要靠才华，这就是你和明明的差距</i></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+
+</body>
+</html>

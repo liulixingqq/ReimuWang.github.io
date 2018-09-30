@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/myLogo.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在《图解设计模式》一书中，Iterator模式被归入了第1部分适应设计模式。在GoF原书中，Iterator模式则被归入了行为型设计模式。简单来说，Iterator模式可以被描述为：从含有多个元素的集合中将各个元素逐一取出来。也就是所谓的”一个一个遍历”。">
+<meta name="keywords" content="Java,设计模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 设计模式-1.Iterator模式">
+<meta property="og:url" content="http://yoursite.com/2018/06/05/Java 设计模式-1Iterator模式/index.html">
+<meta property="og:site_name" content="ReimuWang&#39;s Blog">
+<meta property="og:description" content="在《图解设计模式》一书中，Iterator模式被归入了第1部分适应设计模式。在GoF原书中，Iterator模式则被归入了行为型设计模式。简单来说，Iterator模式可以被描述为：从含有多个元素的集合中将各个元素逐一取出来。也就是所谓的”一个一个遍历”。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/1Iterator模式/0.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/1Iterator模式/1.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/1Iterator模式/2.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/1Iterator模式/3.jpg">
+<meta property="og:updated_time" content="2018-08-10T03:27:59.452Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 设计模式-1.Iterator模式">
+<meta name="twitter:description" content="在《图解设计模式》一书中，Iterator模式被归入了第1部分适应设计模式。在GoF原书中，Iterator模式则被归入了行为型设计模式。简单来说，Iterator模式可以被描述为：从含有多个元素的集合中将各个元素逐一取出来。也就是所谓的”一个一个遍历”。">
+<meta name="twitter:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/1Iterator模式/0.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="ReimuWang's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/05/Java 设计模式-1Iterator模式/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java 设计模式-1.Iterator模式 | ReimuWang's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ReimuWang's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">189</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">117</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类<span class="badge">24</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404.html" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />公益 404</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+    
+      
+    
+    <a href="https://github.com/ReimuWang" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#222; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg>
+    
+      </a>
+    
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/05/Java 设计模式-1Iterator模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王艺凯">
+      <meta itemprop="description" content="Thou Shalt Comment">
+      <meta itemprop="image" content="/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ReimuWang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java 设计模式-1.Iterator模式
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-06-05 17:37:49" itemprop="dateCreated datePublished" datetime="2018-06-05T17:37:49+08:00">2018-06-05</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-08-10 11:27:59" itemprop="dateModified" datetime="2018-08-10T11:27:59+08:00">2018-08-10</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java-设计模式/" itemprop="url" rel="index"><span itemprop="name">Java 设计模式</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在《图解设计模式》一书中，Iterator模式被归入了第1部分<a href="">适应设计模式</a>。在GoF原书中，Iterator模式则被归入了<a href="">行为型设计模式</a>。简单来说，Iterator模式可以被描述为：从含有多个元素的集合中将各个元素逐一取出来。也就是所谓的”一个一个遍历”。</p>
+<a id="more"></a>
+<h1 id="综述"><a href="#综述" class="headerlink" title="综述"></a>综述</h1><p>迭代输出数组中的元素是很常见的需求，在Java中，我们通常会这样做：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">for (int i = 0; i &lt; arr.length; i++)</span><br><span class="line">    System.out.println(arr[i]);</span><br></pre></td></tr></table></figure>
+<p>如果我们将循环变量i的作用抽象化通用化，再将数组扩展为任意其他的集合性质的容器，就可以形成一种模式，GoF书将其称为Iterator模式。该模式的目的就是按照要求的顺序在集合中遍历元素。</p>
+<p>iterate这个单词的含义是”反复做某件事”。在计算机领域，它的含义是”迭代”。自然而言的，iterator被称作”迭代器”。</p>
+<h1 id="示例程序"><a href="#示例程序" class="headerlink" title="示例程序"></a>示例程序</h1><p>本示例程序会模拟一个书架(BookShelf)，书本(Book)会被放置到书架上。</p>
+<p>首先，我们来总览一下本程序的类图：</p>
+<p><img src="/images/blog_pic/Java 设计模式/1Iterator模式/0.jpg" alt="0.jpg"></p>
+<p>本程序中的所有代码将被统一置于design1包下，结构如下：</p>
+<p><img src="/images/blog_pic/Java 设计模式/1Iterator模式/1.jpg" alt="1.jpg"></p>
+<p>其中，Main.java是用来测试的类，并未出现在类图中。</p>
+<p>BookShelfIterator作为非public类存在于BookShelf.java文件中。</p>
+<p>下面将逐个贴出每个类的源码。</p>
+<p><strong>Aggregate接口</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">package design1;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Aggregate有&quot;使聚合，集合&quot;的意思</span><br><span class="line"> * 顾名思义，实现了该接口的类将成为一个可以保存多个元素的集合</span><br><span class="line"> */</span><br><span class="line">public interface Aggregate&lt;E&gt; &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 生成并返回一个用于遍历集合的迭代器</span><br><span class="line">     * @return Iterator&lt;E&gt;</span><br><span class="line">     */</span><br><span class="line">    Iterator&lt;E&gt; iterator();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Iterator接口</strong></p>
+<p>Iterator接口用于遍历集合中的元素，其作用相当于本文开篇中介绍的for循环中的那个i：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">package design1;</span><br><span class="line"></span><br><span class="line">public interface Iterator&lt;T&gt; &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 若iterator游标当前所指向的位置还有元素则返回true，反之返回false</span><br><span class="line">     * 若在本方法返回false时继续调用next()方法，则next()方法会抛出异常</span><br><span class="line">     * @return boolean, true - 存在下一个元素</span><br><span class="line">     *                  false - 不存在下一个元素</span><br><span class="line">     */</span><br><span class="line">    boolean hasNext();</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 返回iterator游标当前所指向的元素，随后游标后移一位</span><br><span class="line">     * </span><br><span class="line">     * @throws NoSuchElementException iterator游标当前所指向的位置已无元素</span><br><span class="line">     */</span><br><span class="line">    T next();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Book类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">package design1;</span><br><span class="line"></span><br><span class="line">public class Book &#123;</span><br><span class="line"></span><br><span class="line">    private String name;</span><br><span class="line"></span><br><span class="line">    public Book(String name) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getName() &#123;</span><br><span class="line">        return name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>BookShelf类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">package design1;</span><br><span class="line"></span><br><span class="line">import java.util.NoSuchElementException;</span><br><span class="line"></span><br><span class="line">public class BookShelf&lt;E&gt; implements Aggregate&lt;E&gt; &#123;</span><br><span class="line"></span><br><span class="line">    private Book[] books;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * int, 书架上已有书数</span><br><span class="line">     */</span><br><span class="line">    private int last;</span><br><span class="line"></span><br><span class="line">    public BookShelf(int maxsize) &#123;</span><br><span class="line">        if (maxsize &lt; 0)</span><br><span class="line">            throw new IllegalArgumentException(&quot;bookShelf &apos;s maxsize &lt; 0&quot;);</span><br><span class="line">        this.books = new Book[maxsize];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void appendBook(Book book) &#123;</span><br><span class="line">        if (null == book)</span><br><span class="line">            throw new NullPointerException(&quot;book is null&quot;);</span><br><span class="line">        if (this.last == this.books.length)</span><br><span class="line">            throw new IllegalStateException(&quot;bookShelf is full&quot;);</span><br><span class="line">        this.books[last++] = book;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Iterator&lt;E&gt; iterator() &#123;</span><br><span class="line">        return new BookShelfIterator&lt;E&gt;(this);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    int getLength() &#123;</span><br><span class="line">        return this.last;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Book getBookAt(int index) &#123;</span><br><span class="line">        if (index &lt; 0 || index &gt;= books.length)</span><br><span class="line">            throw new IllegalArgumentException(&quot;index &lt; 0 || index &gt;= bookShelf &apos;s length&quot;);</span><br><span class="line">        return this.books[index];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>BookShelfIterator类</strong></p>
+<p>BookShelfIterator作为非public类存在于BookShelf.java文件中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">class BookShelfIterator&lt;E&gt; implements Iterator&lt;E&gt; &#123;</span><br><span class="line"></span><br><span class="line">    private BookShelf&lt;E&gt; bookShelf;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * int, 迭代器当前游标指向的位置，即下一次调用next()方法时返回的元素的索引</span><br><span class="line">     */</span><br><span class="line">    private int index;</span><br><span class="line"></span><br><span class="line">    BookShelfIterator(BookShelf&lt;E&gt; bookShelf) &#123;</span><br><span class="line">        this.bookShelf = bookShelf;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean hasNext() &#123;</span><br><span class="line">        return this.bookShelf.getLength() &gt; this.index;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @SuppressWarnings(&quot;unchecked&quot;)</span><br><span class="line">    @Override</span><br><span class="line">    public E next() &#123;</span><br><span class="line">        if (!this.hasNext())</span><br><span class="line">            throw new NoSuchElementException(&quot;no more element for bookShelf&quot;);</span><br><span class="line">        return (E)this.bookShelf.getBookAt(index++);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Main类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">package design1;</span><br><span class="line"></span><br><span class="line">public class Main &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        BookShelf&lt;Book&gt; bookShelf = new BookShelf&lt;Book&gt;(5);</span><br><span class="line">        bookShelf.appendBook(new Book(&quot;秀逗魔导士&quot;));</span><br><span class="line">        bookShelf.appendBook(new Book(&quot;9S&quot;));</span><br><span class="line">        bookShelf.appendBook(new Book(&quot;为美好的世界献上祝福&quot;));</span><br><span class="line">        bookShelf.appendBook(new Book(&quot;犬神&quot;));</span><br><span class="line">        bookShelf.appendBook(new Book(&quot;钢铁白兔骑士团&quot;));</span><br><span class="line">        Iterator&lt;Book&gt; iterator = bookShelf.iterator();</span><br><span class="line">        while (iterator.hasNext())</span><br><span class="line">            System.out.println(iterator.next().getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行Main.java，输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">秀逗魔导士</span><br><span class="line">9S</span><br><span class="line">为美好的世界献上祝福</span><br><span class="line">犬神</span><br><span class="line">钢铁白兔骑士团</span><br></pre></td></tr></table></figure>
+<h1 id="登场角色"><a href="#登场角色" class="headerlink" title="登场角色"></a>登场角色</h1><p>上面的示例程序介绍了Iterator模式的Java实现，下面咱们试着跳出语言层面，抽象出Iterator模式中登场的角色。</p>
+<p><strong>Iterator(迭代器)</strong></p>
+<p>该角色负责制定按特定顺序逐个遍历集合中的元素的功能的约束，不针对特定的集合，也不提供具体的实现。在示例程序中，由Iterator接口扮演这个角色，并提供了出演这个角色须达到的最低标准：即对外提供hasNext()与next()这两个方法。其中hasNext()方法负责判断是否仍有下一个元素(即控制迭代何时结束)，next()负责切实的取到当前迭代出的元素。</p>
+<p><strong>ConcreteIterator(具体的迭代器)</strong></p>
+<p>该角色负责针对特定的集合，提供定制化的Iterator的实现。在示例程序中，由BookShelfIterator类扮演这个角色。它是专门为了迭代BookShelf这个集合而定制的Iterator，因为它只用于迭代BookShelf，因此也可被称为”BookShelf的专属迭代器”，可以被视为BookShelf的附属。因此在编写代码时，并没有为BookShelfIterator类专门创建一个文件，而是将其作为非public类放到了BookShelf.java中。</p>
+<p>一个BookShelf实例可以创建多个BookShelfIterator实例，而对于每个BookShelfIterator实例而言，终其一生将只为一个BookShelf实例服务。因此在BookShelfIterator类的构造函数中，我们会传入BookShelf实例。并且当BookShelf类的代码发生变化时，BookShelfIterator也要做出相应的调整。</p>
+<p>BookShelfIterator在实现了Iterator后，并未增加新的方法。也就是说只提供向后迭代(具体来说，是沿着数组索引增大的方向迭代)。事实上，对于特定的迭代器实现而言，可以根据具体的待迭代的集合的实现，设计不同的迭代方式。例如我们还可以提供向前迭代方法previous()，此时迭代将顺着索引减小的方式进行，相应的我们还要提供判断向前迭代结束条件的方法hasPrevious()。</p>
+<p><strong>Aggregate(集合)</strong></p>
+<p>该角色负责制定作为一个集合该有的基本约束，并不提供具体的实现。换句话说，某个具体的类只要实现了该角色，我们就可以将该类称为集合了。在示例程序中，由Aggregate接口扮演这个角色，并提供了出演这个角色须达到的最低标准：即提供iterator()方法。该方法返回一个从属于本集合的迭代器，我们可以通过它对集合完成迭代。</p>
+<p><strong>ConcreteAggregate(具体的集合)</strong></p>
+<p>该角色负责根据Aggregate这个角色的约束条件，结合具体的需求，生成一个特定的集合类。因为它满足了Aggregate这个角色的约束，因此它会实现iterator()方法，该方法返回的迭代器自然就是ConcreteIterator。在示例程序中，由BookShelf类负责扮演这个角色，它的iterator()方法返回的迭代器是BookShelfIterator。</p>
+<p>下面是抽象后，无关语言的类图：</p>
+<p><img src="/images/blog_pic/Java 设计模式/1Iterator模式/2.jpg" alt="2.jpg"></p>
+<h1 id="为什么要使用Iterator模式"><a href="#为什么要使用Iterator模式" class="headerlink" title="为什么要使用Iterator模式"></a>为什么要使用Iterator模式</h1><p>在示例程序中，具体的集合类BookShelf底层是以数组存储元素的，那么为何不像开篇介绍的那样，直接使用for循环遍历呢？</p>
+<p>一个重要的原因就是，引入了Iterator模式后，我们便可以将遍历与实现分离开来。</p>
+<p>举个例子，假如我们将BookShelf中的books字段的权限放开，那么此时可以这样遍历：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">for (int i = 0; i &lt; books.length; i++)</span><br><span class="line">    System.out.println(books[i].getName());</span><br></pre></td></tr></table></figure>
+<p>这样确实代码量更少，BookShelf也不用费心设计什么属于自己的迭代器了。但是这样做的问题在于，一旦我们改变了BookShelf底层的存储方式，比如我们改用链表作为数据的存储结构，那么调用者就必须要了解BookShelf内部的数据结构，然后做出相应的改动。</p>
+<p>反观我们在示例程序中的迭代方式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Iterator&lt;Book&gt; iterator = bookShelf.iterator();</span><br><span class="line">while (iterator.hasNext())</span><br><span class="line">    System.out.println(iterator.next().getName());</span><br></pre></td></tr></table></figure>
+<p>对于这种迭代方式而言，不论BookShelf底层的存储结构如何修改，只要它还实现Aggregate接口，即提供符合Iterator接口约束条件的迭代器，那么对于迭代操作而言，调用者的代码就无需做任何修改，也不需要关注BookShelf到底做了什么样的改动。</p>
+<p>举一个实际的例子，books作为一个数组，一旦设定了maxsize就不可扩展了。假如我们现在需要书架是可扩展的了，那么我们就可以考虑使用ArrayList来作为底层存储结构。修改后的BookShelf类为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">package design1;</span><br><span class="line"></span><br><span class="line">import java.util.ArrayList;</span><br><span class="line">import java.util.List;</span><br><span class="line">import java.util.NoSuchElementException;</span><br><span class="line"></span><br><span class="line">public class BookShelf&lt;E&gt; implements Aggregate&lt;E&gt; &#123;</span><br><span class="line"></span><br><span class="line">    private List&lt;Book&gt; books;</span><br><span class="line"></span><br><span class="line">    public BookShelf(int initsize) &#123;</span><br><span class="line">        if (initsize &lt; 0)</span><br><span class="line">            throw new IllegalArgumentException(&quot;bookShelf &apos;s initsize &lt; 0&quot;);</span><br><span class="line">        this.books = new ArrayList&lt;Book&gt;(initsize);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void appendBook(Book book) &#123;</span><br><span class="line">        if (null == book)</span><br><span class="line">            throw new NullPointerException(&quot;book is null&quot;);</span><br><span class="line">        this.books.add(book);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Iterator&lt;E&gt; iterator() &#123;</span><br><span class="line">        return new BookShelfIterator&lt;E&gt;(this);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    int getLength() &#123;</span><br><span class="line">        return this.books.size();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Book getBookAt(int index) &#123;</span><br><span class="line">        if (index &lt; 0 || index &gt;= books.size())</span><br><span class="line">            throw new IllegalArgumentException(&quot;index &lt; 0 || index &gt;= bookShelf &apos;s size&quot;);</span><br><span class="line">        return this.books.get(index);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样书架就变成可扩展的了。Main.java的输出保持不变，此时即便添加了超出初始容量的书籍，代码也不会报错了。值得注意的是，因为此前books就没有暴露给BookShelfIterator，因此BookShelfIterator虽然是BookShelf的附属迭代器，但是我们同样无需修改它，只需要修改BookShelf就可以啦。</p>
+<p>更进一步的来讲，即便我们将BookShelf整体的换掉，例如，我们不使用书架来存放书了，而改用书包，即Schoolbag类来存放书本，那么对于这段迭代调用的代码而言，依然无需做任何改动，调用者也无需了解Schoolbag到底是个什么东西，只要Schoolbag依然还实现着Aggregate接口，即还是一个符合约束的集合就行。这也是为什么我们在迭代时使用Iterator作为引用，而非BookShelfIterator的原因。其实，并不仅仅是Iterator模式，对于所有设计模式而言，使用抽象的抽象类和接口，而不是具体的实现类作为组件间沟通的桥梁是至关重要的(六原则中的<a href="">依赖倒转原则</a>)。</p>
+<p>这在设计模式领域有着非凡的意义。因为设计模式的一个非常重要的目标就是编写”可复用”的”高内聚低耦合”的组件。这样一旦某一个组件发生变化，那么被它影响的组件将尽可能少，且即便是被它影响的组件，需要改动的地方也会尽可能的少(六原则中的<a href="">单一职责原则</a>)。</p>
+<h1 id="Java集合框架对Iterator模式的应用"><a href="#Java集合框架对Iterator模式的应用" class="headerlink" title="Java集合框架对Iterator模式的应用"></a>Java集合框架对Iterator模式的应用</h1><p>Java的集合框架使用Iterator模式完成对集合中的元素的迭代。下面我们以具体的实现类ArrayList为例，来看看它到底是怎么做的。</p>
+<p>下面给出类图。类图中只记述与迭代操作相关的字段及方法：</p>
+<p><img src="/images/blog_pic/Java 设计模式/1Iterator模式/3.jpg" alt="3.jpg"></p>
+<h1 id="相关设计模式"><a href="#相关设计模式" class="headerlink" title="相关设计模式"></a>相关设计模式</h1><p><strong><a href="">13.Visitor模式</a></strong></p>
+<p>从广义的角度来讲，Iterator模式是Visitor模式的特例。</p>
+<p>Visitor模式的目的是将处理自数据结构中分离出来，而Iterator模式的目的则是将迭代操作自容器结构中分离出来。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechat.png" alt="王艺凯 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/ali.jpg" alt="王艺凯 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>王艺凯</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2018/06/05/Java 设计模式-1Iterator模式/" title="Java 设计模式-1.Iterator模式">http://yoursite.com/2018/06/05/Java 设计模式-1Iterator模式/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/04/Java 设计模式-UML/" rel="next" title="Java 设计模式-UML">
+                <i class="fa fa-chevron-left"></i> Java 设计模式-UML
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/08/Java 设计模式-2Adapter模式/" rel="prev" title="Java 设计模式-2.Adapter模式">
+                Java 设计模式-2.Adapter模式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/avatar.jpg"
+                alt="王艺凯" />
+            
+              <p class="site-author-name" itemprop="name">王艺凯</p>
+              <p class="site-description motion-element" itemprop="description">Thou Shalt Comment</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">189</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">117</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/ReimuWang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:1505580759@qq.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用网站
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.bilibili.com/" title="bilibili" target="_blank">bilibili</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://acg12.com/" title="ACG调查小队" target="_blank">ACG调查小队</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.com/" title="leetcode" target="_blank">leetcode</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#综述"><span class="nav-number">1.</span> <span class="nav-text">综述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#示例程序"><span class="nav-number">2.</span> <span class="nav-text">示例程序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#登场角色"><span class="nav-number">3.</span> <span class="nav-text">登场角色</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么要使用Iterator模式"><span class="nav-number">4.</span> <span class="nav-text">为什么要使用Iterator模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java集合框架对Iterator模式的应用"><span class="nav-number">5.</span> <span class="nav-text">Java集合框架对Iterator模式的应用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#相关设计模式"><span class="nav-number">6.</span> <span class="nav-text">相关设计模式</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老滚6催更协会</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+  <div class="footer-custom"><i>明明可以靠脸吃饭，你却要靠才华，这就是你和明明的差距</i></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+
+</body>
+</html>

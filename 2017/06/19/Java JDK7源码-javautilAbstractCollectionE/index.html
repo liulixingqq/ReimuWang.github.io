@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/myLogo.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="源码">
+<meta name="keywords" content="Java,源码,Collection">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java JDK7源码-java.util.AbstractCollection&amp;lt;E&amp;gt;">
+<meta property="og:url" content="http://yoursite.com/2017/06/19/Java JDK7源码-javautilAbstractCollectionE/index.html">
+<meta property="og:site_name" content="ReimuWang&#39;s Blog">
+<meta property="og:description" content="源码">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-03-08T11:08:56.482Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java JDK7源码-java.util.AbstractCollection&amp;lt;E&amp;gt;">
+<meta name="twitter:description" content="源码">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="ReimuWang's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/19/Java JDK7源码-javautilAbstractCollectionE/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java JDK7源码-java.util.AbstractCollection&lt;E&gt; | ReimuWang's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ReimuWang's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">189</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">117</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类<span class="badge">24</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404.html" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />公益 404</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+    
+      
+    
+    <a href="https://github.com/ReimuWang" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#222; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg>
+    
+      </a>
+    
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/19/Java JDK7源码-javautilAbstractCollectionE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王艺凯">
+      <meta itemprop="description" content="Thou Shalt Comment">
+      <meta itemprop="image" content="/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ReimuWang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java JDK7源码-java.util.AbstractCollection&lt;E&gt;
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-06-19 15:55:27" itemprop="dateCreated datePublished" datetime="2017-06-19T15:55:27+08:00">2017-06-19</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-03-08 19:08:56" itemprop="dateModified" datetime="2018-03-08T19:08:56+08:00">2018-03-08</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java-JDK7源码/" itemprop="url" rel="index"><span itemprop="name">Java JDK7源码</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h1><a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br><span class="line">433</span><br><span class="line">434</span><br><span class="line">435</span><br><span class="line">436</span><br><span class="line">437</span><br><span class="line">438</span><br><span class="line">439</span><br><span class="line">440</span><br></pre></td><td class="code"><pre><span class="line">package java.util;</span><br><span class="line"></span><br><span class="line">public abstract class AbstractCollection&lt;E&gt; implements Collection&lt;E&gt; &#123;</span><br><span class="line"></span><br><span class="line">    protected AbstractCollection() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 实现接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 查询操作。</span><br><span class="line">     * 返回一个集合的迭代器，该迭代器默认从头开始迭代。</span><br><span class="line">     */</span><br><span class="line">    public abstract Iterator&lt;E&gt; iterator();</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 实现接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 查询操作。</span><br><span class="line">     * 返回集合包含的元素个数。</span><br><span class="line">     * 若集合包含的元素个数大于Integer.MAX_VALUE，则返回Integer.MAX_VALUE。</span><br><span class="line">     */</span><br><span class="line">    public abstract int size();</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 实现接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 查询操作。</span><br><span class="line">     * 若集合不包含元素则返回true。反之返回false。</span><br><span class="line">     */</span><br><span class="line">    public boolean isEmpty() &#123;</span><br><span class="line">        return size() == 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 实现接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 查询操作。</span><br><span class="line">     * 若集合包含o则返回true，反之返回false。</span><br><span class="line">     * 更具体的说，当且仅当集合包含至少一个元素e，满足(o==null ? e==null : o.equals(e))时，返回true，反之返回false。</span><br><span class="line">     * 本方法会用迭代器迭代集合中的每个元素，检查每个元素是否与o相等。</span><br><span class="line">     * </span><br><span class="line">     * 本方法与后文介绍的containsAll(Collection&lt;?&gt; c)方法很相似，可对比学习。</span><br><span class="line">     * </span><br><span class="line">     * @throws ClassCastException o的类型与集合不相容。</span><br><span class="line">     * @throws NullPointerException o==null且集合不允许空元素存在。</span><br><span class="line">     */</span><br><span class="line">    public boolean contains(Object o) &#123;</span><br><span class="line">        Iterator&lt;E&gt; it = iterator();</span><br><span class="line">        if (o==null) &#123;</span><br><span class="line">            while (it.hasNext())</span><br><span class="line">                if (it.next()==null)</span><br><span class="line">                    return true;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            while (it.hasNext())</span><br><span class="line">                if (o.equals(it.next()))</span><br><span class="line">                    return true;</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 实现接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 查询操作。</span><br><span class="line">     * 本方法是连接集合与数组之间的桥梁。</span><br><span class="line">     * </span><br><span class="line">     * 返回一个包含集合所有元素的数组，该数组由集合的迭代器遍历而得，数组中元素的顺序与迭代器遍历而得的顺序相同。</span><br><span class="line">     * 返回的数组的长度等于迭代器遍历而得的元素的个数。</span><br><span class="line">     * 在本方法的开始会调用一次size()得到集合的长度</span><br><span class="line">     * 通常情况下这与迭代器遍历而得的元素个数相同。</span><br><span class="line">     * 但是集合在迭代过程中发生结构性变化时，最终返回的数组的长度以迭代器实际取出的元素个数为准，这个长度可能会与之前调用的size()方法时得到的结果不同。</span><br><span class="line">     * </span><br><span class="line">     * 本方法等价于：</span><br><span class="line">     * List&lt;E&gt; list = new ArrayList&lt;E&gt;(size());</span><br><span class="line">     * for (E e : this) list.add(e);</span><br><span class="line">     * return list.toArray();</span><br><span class="line">     * </span><br><span class="line">     * 返回的数组与集合之间不存在引用关系(即使集合是基于数组的)，数组中的元素是集合中的元素的浅拷贝。</span><br><span class="line">     * </span><br><span class="line">     * 本方法与后文介绍的toArray(T[] a)方法很相似，可对比学习。</span><br><span class="line">     */</span><br><span class="line">    public Object[] toArray() &#123;</span><br><span class="line">        Object[] r = new Object[size()];</span><br><span class="line">        Iterator&lt;E&gt; it = iterator();</span><br><span class="line">        for (int i = 0; i &lt; r.length; i++) &#123;</span><br><span class="line">            if (! it.hasNext())    // 迭代器得到的元素少于预期，发生截断</span><br><span class="line">                // 注1：Arrays.copyOf(r, i)</span><br><span class="line">                return Arrays.copyOf(r, i);</span><br><span class="line">            r[i] = it.next();</span><br><span class="line">        &#125;</span><br><span class="line">        // 若it.hasNext()==true说明迭代器得到的元素多于预期：即集合在迭代过程中长度增加</span><br><span class="line">        // 注2：finishToArray(r, it)</span><br><span class="line">        return it.hasNext() ? finishToArray(r, it) : r;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 实现接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 查询操作。</span><br><span class="line">     * 本方法是连接集合与数组之间的桥梁。</span><br><span class="line">     * </span><br><span class="line">     * 返回包含集合所有元素的数组。返回数组的类型即为a的类型。顺序为迭代器的迭代顺序。</span><br><span class="line">     * 具体规则的伪代码为：</span><br><span class="line">     * if (a.length &lt; collection.size())</span><br><span class="line">     *     不修改a，而是以a的类型新建长度为collection.size()的数组并填入集合中的值，随后返回这个新生成的数组。</span><br><span class="line">     * else if (a.length == collection.size()</span><br><span class="line">     *     将返回的结果直接填入a后返回a(若a中已有值，则a中的原值会被覆盖)。</span><br><span class="line">     * else</span><br><span class="line">     *     数组索引在[0, collection.size() -1]的元素会被集合对应位置的元素覆盖。</span><br><span class="line">     *     数组索引 == collection.size()的元素会被置为null</span><br><span class="line">     *     数组中后续元素(如果有的话)不变。</span><br><span class="line">     * </span><br><span class="line">     * 若集合不允许包含空元素，则本方法此时可用来计算集合的长度：返回的数组第一次出现null的索引即为集合的长度。</span><br><span class="line">     * </span><br><span class="line">     * 返回的数组与集合之间不存在引用关系(即使集合的底层就是基于数组实现的)，数组中的元素是集合中元素的浅拷贝。</span><br><span class="line">     * </span><br><span class="line">     * 小例子：</span><br><span class="line">     * String[] y = x.toArray(new String[0]);</span><br><span class="line">     * x是一个元素类型为String的集合，则上述语句会将x中的元素依序复制一份浅拷贝到数组y。</span><br><span class="line">     * </span><br><span class="line">     * 关于本方法与前文介绍的toArray()方法，需明确：</span><br><span class="line">     * collection.toArray()</span><br><span class="line">     * collection.toArray(new Object[s])</span><br><span class="line">     * 当s &lt; collection.size()时，上述两行代码的效果等价。</span><br><span class="line">     * </span><br><span class="line">     * 返回数组的有效长度(数组中属于集合中的元素的长度)等于迭代器遍历而得的元素的个数。</span><br><span class="line">     * 本方法开始时会调用一次size()得到集合的长度，通常情况下这与迭代器遍历而得的元素个数相同。</span><br><span class="line">     * 但当集合在迭代过程中发生结构性变化时，最终返回的数组的有效长度以迭代器实际取出的元素个数为准。</span><br><span class="line">     * 这个长度可能会与之前调用size()时得到的结果不同。</span><br><span class="line">     * </span><br><span class="line">     * 注4：toArray(T[] a)的调用示例</span><br><span class="line">     * </span><br><span class="line">     * 本方法与前文介绍的toArray()方法很相似，可对比学习。</span><br><span class="line">     * </span><br><span class="line">     * @throws ArrayStoreException a的类型collection不支持。</span><br><span class="line">     * @throws NullPointerException null==a。</span><br><span class="line">     */</span><br><span class="line">    public &lt;T&gt; T[] toArray(T[] a) &#123;</span><br><span class="line">        int size = size();</span><br><span class="line">        // 以a中元素的类型为基础，根据反射新声明一个长度为size的数组</span><br><span class="line">        T[] r = a.length &gt;= size ? a :</span><br><span class="line">                  (T[])java.lang.reflect.Array</span><br><span class="line">                  .newInstance(a.getClass().getComponentType(), size);</span><br><span class="line">        Iterator&lt;E&gt; it = iterator();</span><br><span class="line"></span><br><span class="line">        for (int i = 0; i &lt; r.length; i++) &#123;</span><br><span class="line">            if (! it.hasNext()) &#123;    // 迭代器得到元素少于预期，可能原因有2:</span><br><span class="line">                                     // 1.迭代过程中集合的元素减少。</span><br><span class="line">                                     // 2.a.length&gt;size</span><br><span class="line">                if (a == r) &#123;    // a.length&gt;=size，此时操作r与操作a等效。</span><br><span class="line">                    r[i] = null;</span><br><span class="line">                 // 后续else都是在处理a.length&lt;size的情况。</span><br><span class="line">                 // 此时r与a是两个完全不同的数组。</span><br><span class="line">                &#125; else if (a.length &lt; i) &#123;    // 此时少于预期的原因无论是1或2，集合依然无法放入a中。</span><br><span class="line">                    // 注1：Arrays.copyOf(r, i)</span><br><span class="line">                    // 截取r并返回截取后的数组</span><br><span class="line">                    return Arrays.copyOf(r, i);</span><br><span class="line">                &#125; else &#123;    // 此时虽然最初有a.length&lt;size，但是因为原因1，a又能装下集合了。</span><br><span class="line">                            // 因此仍然选择将集合存入a。</span><br><span class="line">                    // 注3：System.arraycopy(r, 0, a, 0, i)</span><br><span class="line">                    // 调用此方法时有：r.length=size&gt;a.length&gt;=i</span><br><span class="line">                    // 因此前有值时操作的均为r，故将r中的数据复制索引[0,i-1]至a。</span><br><span class="line">                    System.arraycopy(r, 0, a, 0, i);</span><br><span class="line">                    if (a.length &gt; i) &#123;    // a.length==i的情况不需要置null。</span><br><span class="line">                        a[i] = null;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                return a;</span><br><span class="line">            &#125;</span><br><span class="line">            r[i] = (T)it.next();</span><br><span class="line">        &#125;</span><br><span class="line">        // 迭代器得到元素多于预期。</span><br><span class="line">        // 可能的原因为：迭代过程中集合的元素增加。</span><br><span class="line">        // 注2：finishToArray(r, it)</span><br><span class="line">        return it.hasNext() ? finishToArray(r, it) : r;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 通常情况下，允许创建的最大数组长度</span><br><span class="line">     * </span><br><span class="line">     * 某些JVM会在数组中存储同步关键词</span><br><span class="line">     * 因此在声明容量较大的数组时应注意避免OutOfMemoryError</span><br><span class="line">     * -8是一个相对安全的经验之谈，具体是否出错还要看实际的JVM实现</span><br><span class="line">     */</span><br><span class="line">    private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 在调用toArray(T[] a)或toArray()时</span><br><span class="line">     * 若迭代器返回的元素个数多于预期，则会调用本方法返回新数组，对原数组进行扩容</span><br><span class="line">     * 并将迭代器中多于预期的元素填入新数组</span><br><span class="line">     */</span><br><span class="line">    private static &lt;T&gt; T[] finishToArray(T[] r, Iterator&lt;?&gt; it) &#123;</span><br><span class="line">        int i = r.length;</span><br><span class="line">        while (it.hasNext()) &#123;</span><br><span class="line">            int cap = r.length;</span><br><span class="line">            if (i == cap) &#123;    // 本if中是一次扩容操作：</span><br><span class="line">                               // 当前待插入索引i==r.length时需扩容。</span><br><span class="line">                // 若本句越界，则不会进入后面的if条件，会在调用Arrays.copyOf(r, newCap);时抛出异常。</span><br><span class="line">                int newCap = cap + (cap &gt;&gt; 1) + 1;</span><br><span class="line">                // 满足进入本if的条件很苛刻：</span><br><span class="line">                // newCap &gt; MAX_ARRAY_SIZE &amp;&amp; newCap &lt; Integer.MAX_VALUE。只有7个值。</span><br><span class="line">                // 进入本if说明当前的newCap OutOfMemoryError的风险较高。</span><br><span class="line">                if (newCap - MAX_ARRAY_SIZE &gt; 0)</span><br><span class="line">                    // 使用cap重新计算一个相对安全的newCap</span><br><span class="line">                    // hugeCapacity(cap + 1):见紧随本方法之后的下一个方法</span><br><span class="line">                    // cap + 1为此时能允许的最小长度，因为cap已经不够用了</span><br><span class="line">                    newCap = hugeCapacity(cap + 1);</span><br><span class="line">                // 执行扩容操作。扩容后r已指向了一个全新的数组</span><br><span class="line">                r = Arrays.copyOf(r, newCap);    // 注1</span><br><span class="line">            &#125;</span><br><span class="line">            r[i++] = (T)it.next();</span><br><span class="line">        &#125;</span><br><span class="line">        // 若扩容后的数组过大则将多余位置截断</span><br><span class="line">        return (i == r.length) ? r : Arrays.copyOf(r, i);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 当数组规模极大时才需要调用本方法。</span><br><span class="line">     * minCapacity为调用方能接受的最小扩容后的数组长度。</span><br><span class="line">     * </span><br><span class="line">     * 本方法判断minCapacity的值系统是否可接受</span><br><span class="line">     * 若能接受则基于minCapacity返回一个合理的扩容后的长度，若不能接受则抛出OutOfMemoryError。</span><br><span class="line">     */</span><br><span class="line">    private static int hugeCapacity(int minCapacity) &#123;</span><br><span class="line">        if (minCapacity &lt; 0)    // minCapacity本来为一个极大的数，此处minCapacity&lt;0说明其已越界。</span><br><span class="line">            throw new OutOfMemoryError</span><br><span class="line">                (&quot;Required array size too large&quot;);</span><br><span class="line">        // 如果可能尽量将大小的上限控制为MAX_ARRAY_SIZE。</span><br><span class="line">        // 如果调用方能接受的容量范围在(MAX_ARRAY_SIZE,Integer.MAX_VALUE]，</span><br><span class="line">        // 此时虽然OutOfMemoryError的风险较大，但系统仍会返回Integer.MAX_VALUE。</span><br><span class="line">        return (minCapacity &gt; MAX_ARRAY_SIZE) ?</span><br><span class="line">            Integer.MAX_VALUE :</span><br><span class="line">            MAX_ARRAY_SIZE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 实现接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 修改操作</span><br><span class="line">     * 本方法始终抛出UnsupportedOperationException</span><br><span class="line">     * </span><br><span class="line">     * @throws UnsupportedOperationException 集合不支持本方法。</span><br><span class="line">     * @throws ClassCastException e因其类型禁止被插入集合。</span><br><span class="line">     * @throws NullPointerException e==null且集合禁止包含null。</span><br><span class="line">     * @throws IllegalArgumentException e因其某些属性禁止被插入集合。</span><br><span class="line">     * @throws IllegalStateException 因插入限制，此时e不能被插入集合。</span><br><span class="line">     */</span><br><span class="line">    public boolean add(E e) &#123;</span><br><span class="line">        throw new UnsupportedOperationException();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 实现接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 修改操作。</span><br><span class="line">     * 若本方法改变了集合则返回true，反之返回false。</span><br><span class="line">     * </span><br><span class="line">     * 使用集合的迭代器遍历集合</span><br><span class="line">     * 并用iterator.remove()移除集合符合条件的元素e：</span><br><span class="line">     * (o==null ? e==null : o.equals(e))。</span><br><span class="line">     * 若有多个e符合条件，则本方法只会移除iterator遍历得到的第一个。</span><br><span class="line">     * </span><br><span class="line">     * 若集合包含o且其迭代器未实现remove()，则抛出UnsupportedOperationException。</span><br><span class="line">     * </span><br><span class="line">     * 本方法与后文介绍的removeAll(Collection&lt;?&gt; c)方法很相似，可对比学习。</span><br><span class="line">     * </span><br><span class="line">     * @throws UnsupportedOperationException 集合不支持本方法。</span><br><span class="line">     * @throws ClassCastException o的类型与集合不相容。</span><br><span class="line">     * @throws NullPointerException o==null且集合不允许空元素存在。</span><br><span class="line">     */</span><br><span class="line">    public boolean remove(Object o) &#123;</span><br><span class="line">        Iterator&lt;E&gt; it = iterator();</span><br><span class="line">        if (o==null) &#123;</span><br><span class="line">            while (it.hasNext()) &#123;</span><br><span class="line">                if (it.next()==null) &#123;</span><br><span class="line">                    it.remove();</span><br><span class="line">                    return true;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            while (it.hasNext()) &#123;</span><br><span class="line">                if (o.equals(it.next())) &#123;</span><br><span class="line">                    it.remove();</span><br><span class="line">                    return true;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 实现接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 批量查询操作。</span><br><span class="line">     * 若集合包含c中所有元素则返回true，反之返回false。</span><br><span class="line">     *</span><br><span class="line">     * 本方法与前文介绍的contains(Object o)方法很相似，可对比学习。</span><br><span class="line">     * </span><br><span class="line">     * @throws ClassCastException c中至少有一个元素的类型与集合不相容。</span><br><span class="line">     * @throws NullPointerException c==null或</span><br><span class="line">     *                              c中至少有一个元素为null且集合不允许空元素存在。</span><br><span class="line">     */</span><br><span class="line">    public boolean containsAll(Collection&lt;?&gt; c) &#123;</span><br><span class="line">        for (Object e : c)</span><br><span class="line">            if (!contains(e))</span><br><span class="line">                return false;</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 实现接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 批量修改操作</span><br><span class="line">     * 将c中所有元素插入集合。</span><br><span class="line">     * 若集合因本方法发生变化则返回true，反之返回false。</span><br><span class="line">     * </span><br><span class="line">     * 本方法未定义如下事件发生时的解决策略：在将c中的元素添加至集合的过程中c发生变化。</span><br><span class="line">     * 这也意味着如下事件的解决策略同样未定义：将一个非空集合添加至自身。</span><br><span class="line">     * </span><br><span class="line">     * 在c!=null的前提下，若未重写add(E e)，则本方法将抛出UnsupportedOperationException。</span><br><span class="line">     * </span><br><span class="line">     * 本方法与前文介绍的add(E e)方法很相似，可对比学习。</span><br><span class="line">     * </span><br><span class="line">     * @throws UnsupportedOperationException 集合不支持本方法。</span><br><span class="line">     * @throws ClassCastException c中任意一个元素因其类型禁止被插入集合。</span><br><span class="line">     * @throws NullPointerException c==null或</span><br><span class="line">     *                              c中至少有一个元素为null且集合不允许空元素存在。</span><br><span class="line">     * @throws IllegalArgumentException c中任意一个元素因其某些属性禁止被插入集合。</span><br><span class="line">     * @throws IllegalStateException 因插入限制，此时并非c中所有元素都能被插入集合。</span><br><span class="line">     */</span><br><span class="line">    public boolean addAll(Collection&lt;? extends E&gt; c) &#123;</span><br><span class="line">        boolean modified = false;</span><br><span class="line">        for (E e : c)</span><br><span class="line">            if (add(e))</span><br><span class="line">                modified = true;</span><br><span class="line">        return modified;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 实现接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 批量修改操作</span><br><span class="line">     * 从集合中移除所有与c的交集元素(求差集)。</span><br><span class="line">     * 若集合因本方法发生变化则返回true，反之返回false。</span><br><span class="line">     * </span><br><span class="line">     * 若迭代器未实现remove()且集合至少有一个元素在c中则抛出UnsupportedOperationException。</span><br><span class="line">     * </span><br><span class="line">     * 本方法与前文介绍的remove(Object o)方法很相似，可对比学习。</span><br><span class="line">     * 本方法与后文介绍的retainAll(Collection&lt;?&gt; c)方法正相反，可对比学习。</span><br><span class="line">     * </span><br><span class="line">     * @throws UnsupportedOperationException 集合不支持本方法。</span><br><span class="line">     * @throws ClassCastException c中至少有一个元素的类型与集合不相容。</span><br><span class="line">     * @throws NullPointerException c==null或</span><br><span class="line">     *                              集合中至少有一个元素为null且c不允许空元素存在。</span><br><span class="line">     */</span><br><span class="line">    public boolean removeAll(Collection&lt;?&gt; c) &#123;</span><br><span class="line">        boolean modified = false;</span><br><span class="line">        Iterator&lt;?&gt; it = iterator();</span><br><span class="line">        while (it.hasNext()) &#123;</span><br><span class="line">            if (c.contains(it.next())) &#123;</span><br><span class="line">                it.remove();</span><br><span class="line">                modified = true;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return modified;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 实现接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 批量修改操作</span><br><span class="line">     * 保留集合中与c的交集元素。</span><br><span class="line">     * 若集合因本方法发生变化则返回true，反之返回false。</span><br><span class="line">     * </span><br><span class="line">     * 若迭代器未实现remove()且集合至少有一个元素不在c中则抛出UnsupportedOperationException。</span><br><span class="line">     * </span><br><span class="line">     * 本方法与前文介绍的removeAll(Collection&lt;?&gt; c)方法正相反，可对比学习。</span><br><span class="line">     * </span><br><span class="line">     * @throws UnsupportedOperationException 集合不支持本方法。</span><br><span class="line">     * @throws ClassCastException c中至少有一个元素的类型与集合不相容。</span><br><span class="line">     * @throws NullPointerException c==null或</span><br><span class="line">     *                              集合中至少有一个元素为null且c不允许空元素存在。</span><br><span class="line">     */</span><br><span class="line">    public boolean retainAll(Collection&lt;?&gt; c) &#123;</span><br><span class="line">        boolean modified = false;</span><br><span class="line">        Iterator&lt;E&gt; it = iterator();</span><br><span class="line">        while (it.hasNext()) &#123;</span><br><span class="line">            if (!c.contains(it.next())) &#123;</span><br><span class="line">                it.remove();</span><br><span class="line">                modified = true;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return modified;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 实现接口:java.util.Collection&lt;E&gt;</span><br><span class="line">     * </span><br><span class="line">     * 批量修改操作</span><br><span class="line">     * 清空集合。</span><br><span class="line">     * </span><br><span class="line">     * 若迭代器未实现remove()且集合非空则抛出UnsupportedOperationException。</span><br><span class="line">     * </span><br><span class="line">     * @throws UnsupportedOperationException 集合不支持本方法。</span><br><span class="line">     */</span><br><span class="line">    public void clear() &#123;</span><br><span class="line">        Iterator&lt;E&gt; it = iterator();</span><br><span class="line">        while (it.hasNext()) &#123;</span><br><span class="line">            it.next();</span><br><span class="line">            it.remove();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 字符串变换</span><br><span class="line">     * 返回集合的字符串表述：</span><br><span class="line">     * [e1, e2, e3]</span><br><span class="line">     * 其中e1,e2,e3为集合按其迭代器顺序排列的元素。</span><br><span class="line">     * </span><br><span class="line">     * 注5 toString()调用示例</span><br><span class="line">     */</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        Iterator&lt;E&gt; it = iterator();</span><br><span class="line">        if (! it.hasNext())</span><br><span class="line">            return &quot;[]&quot;;</span><br><span class="line"></span><br><span class="line">        StringBuilder sb = new StringBuilder();</span><br><span class="line">        sb.append(&apos;[&apos;);</span><br><span class="line">        for (;;) &#123;</span><br><span class="line">            E e = it.next();</span><br><span class="line">            // 防止自包含时无限递归</span><br><span class="line">            sb.append(e == this ? &quot;(this Collection)&quot; : e);</span><br><span class="line">            if (! it.hasNext())</span><br><span class="line">                return sb.append(&apos;]&apos;).toString();</span><br><span class="line">            sb.append(&apos;,&apos;).append(&apos; &apos;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="已整理层级关系"><a href="#已整理层级关系" class="headerlink" title="已整理层级关系"></a>已整理层级关系</h1><p><strong><em>本类直接实现的接口</em></strong></p>
+<ul>
+<li><a href="/2017/05/23/Java JDK7源码-javautilCollectionE/">java.util.Collection&lt;E&gt;</a></li>
+</ul>
+<p><strong><em>直接继承本类的类</em></strong></p>
+<ul>
+<li><a href="/2017/06/19/Java JDK7源码-javautilAbstractListE/">java.util.AbstractList&lt;E&gt;</a></li>
+<li><a href="/2017/06/28/Java JDK7源码-javautilAbstractSetE/">java.util.AbstractSet&lt;E&gt;</a></li>
+<li><a href="/2017/06/30/Java JDK7源码-javautilAbstractQueueE/">java.util.AbstractQueue&lt;E&gt;</a></li>
+</ul>
+<h1 id="综述"><a href="#综述" class="headerlink" title="综述"></a>综述</h1><p>本类是Java集合框架中的一员，提供了Collection接口的基本实现。</p>
+<p>如果要实现一个不需要改变的集合，程序员仅仅需要继承本类然后提供iterator()(iterator()返回的iterator必须实现hasNext()及next())及size()的实现。</p>
+<p>例如，某个不可变的实现如下(为了填入数据，至少还需要初始化数据的代码，笔者将其放到了构造函数中)：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">import java.util.AbstractCollection;</span><br><span class="line">import java.util.Collection;</span><br><span class="line">import java.util.HashMap;</span><br><span class="line">import java.util.Iterator;</span><br><span class="line">import java.util.Map;</span><br><span class="line"></span><br><span class="line">public class UnmoCol&lt;E&gt; extends AbstractCollection&lt;E&gt; &#123;</span><br><span class="line"></span><br><span class="line">    private Map&lt;E, Object&gt; map = new HashMap&lt;E, Object&gt;();</span><br><span class="line"></span><br><span class="line">    public UnmoCol(Collection&lt;E&gt; c) &#123;</span><br><span class="line">        Iterator&lt;E&gt; cIterator = c.iterator();</span><br><span class="line">        while (cIterator.hasNext()) this.map.put(cIterator.next(), new Object());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Iterator&lt;E&gt; iterator() &#123;</span><br><span class="line">        return this.map.keySet().iterator();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int size() &#123;</span><br><span class="line">        return this.map.size();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用demo如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">import java.util.Collection;</span><br><span class="line">import java.util.HashSet;</span><br><span class="line">import java.util.Iterator;</span><br><span class="line">import java.util.Set;</span><br><span class="line"></span><br><span class="line">public class Main &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Set&lt;String&gt; set = new HashSet&lt;String&gt;();</span><br><span class="line">        set.add(&quot;reimu&quot;);</span><br><span class="line">        set.add(&quot;wang&quot;);</span><br><span class="line">        Collection&lt;String&gt; collection = new UnmoCol&lt;String&gt;(set);</span><br><span class="line">        System.out.println(collection.size());</span><br><span class="line">        Iterator&lt;String&gt; iterator = collection.iterator();</span><br><span class="line">        while (iterator.hasNext()) System.out.println(iterator.next());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行后输出如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2</span><br><span class="line">reimu</span><br><span class="line">wang</span><br></pre></td></tr></table></figure>
+<p>如果要实现一个可变的集合，程序员必须重写本类的add(E e)方法(否则会抛出UnsupportedOperationException)。然后iterator()返回的iterator必须实现hasNext(),next(),remove()。</p>
+<p>例如，某个实现如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">import java.util.AbstractCollection;</span><br><span class="line">import java.util.HashMap;</span><br><span class="line">import java.util.Iterator;</span><br><span class="line">import java.util.Map;</span><br><span class="line"></span><br><span class="line">public class Mocol&lt;E&gt; extends AbstractCollection&lt;E&gt; &#123;</span><br><span class="line"></span><br><span class="line">    private Map&lt;E, Object&gt; map = new HashMap&lt;E, Object&gt;();</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Iterator&lt;E&gt; iterator() &#123;</span><br><span class="line">        return this.map.keySet().iterator();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int size() &#123;</span><br><span class="line">        return this.map.size();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean add(E e) &#123;</span><br><span class="line">        return this.map.put(e, new Object()) == null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用demo如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">import java.util.Collection;</span><br><span class="line">import java.util.Iterator;</span><br><span class="line"></span><br><span class="line">public class Main &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Collection&lt;String&gt; collection = new Mocol&lt;String&gt;();</span><br><span class="line">        collection.add(&quot;reimu&quot;);</span><br><span class="line">        collection.add(&quot;wang&quot;);</span><br><span class="line">        System.out.println(collection.size());</span><br><span class="line">        Iterator&lt;String&gt; iterator = collection.iterator();</span><br><span class="line">        while (iterator.hasNext()) System.out.println(iterator.next());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行本demo输出如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2</span><br><span class="line">reimu</span><br><span class="line">wang</span><br></pre></td></tr></table></figure>
+<p>Java语言规范建议程序员在继承本类时实现两个构造函数：void(无参)构造函数。接收一个collection的构造函数。</p>
+<p>综上所述，现写本类的测试继承类如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">import java.util.AbstractCollection;</span><br><span class="line">import java.util.Collection;</span><br><span class="line">import java.util.HashMap;</span><br><span class="line">import java.util.Iterator;</span><br><span class="line"></span><br><span class="line">public class AbstractCollectionTest&lt;E&gt; extends AbstractCollection&lt;E&gt; &#123;</span><br><span class="line"></span><br><span class="line">    private HashMap&lt;E, Object&gt; map = new HashMap&lt;E, Object&gt;();</span><br><span class="line"></span><br><span class="line">    public AbstractCollectionTest() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public AbstractCollectionTest(Collection&lt;E&gt; c) &#123;</span><br><span class="line">        Iterator&lt;E&gt; cIterator = c.iterator();</span><br><span class="line">        while (cIterator.hasNext()) this.map.put(cIterator.next(), new Object());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Iterator&lt;E&gt; iterator() &#123;</span><br><span class="line">        return this.map.keySet().iterator();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int size() &#123;</span><br><span class="line">        return this.map.size();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean add(E e) &#123;</span><br><span class="line">        return map.put(e, new Object()) == null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="注1：Arrays-copyOf-r-i"><a href="#注1：Arrays-copyOf-r-i" class="headerlink" title="注1：Arrays.copyOf(r, i)"></a>注1：Arrays.copyOf(r, i)</h1><p>以r为基础返回一个长度为i的数组。</p>
+<ul>
+<li><p>若i&lt;r.length则r发生截断。实际返回的数组为r中索引为[0,i-1]的元素。</p>
+</li>
+<li><p>若i==r.length，则返回的数组与r相等。</p>
+</li>
+<li><p>若i&gt;r.length，返回的数组中索引为[0, r.length-1]的元素为r中对应位置的元素，索引为[r.length, i-1]的元素以null填充。</p>
+</li>
+</ul>
+<p>无论如何，返回的数组都是新生成的，与r不存在引用关系。返回的数组中的元素是r中元素的浅拷贝。</p>
+<h1 id="注2：finishToArray-r-it"><a href="#注2：finishToArray-r-it" class="headerlink" title="注2：finishToArray(r, it)"></a>注2：finishToArray(r, it)</h1><p>finishToArray(r, it)会以r为基础声明一个长度足够的新数组r2，并将it中超出预期仍未取完的元素添加至r2，而后返回r2。</p>
+<h1 id="注3：System-arraycopy-r-0-a-0-i"><a href="#注3：System-arraycopy-r-0-a-0-i" class="headerlink" title="注3：System.arraycopy(r, 0, a, 0, i)"></a>注3：System.arraycopy(r, 0, a, 0, i)</h1><p>参数含义依次为：</p>
+<ol>
+<li>r: 待复制的源数组。</li>
+<li>0: 源数组中开始复制的索引。</li>
+<li>a: 复制目标数组。</li>
+<li>0: 目标数组中接收元素的起始索引。</li>
+<li>i: 复制的元素个数。</li>
+</ol>
+<h1 id="注4：toArray-T-a-的调用示例"><a href="#注4：toArray-T-a-的调用示例" class="headerlink" title="注4：toArray(T[] a)的调用示例"></a>注4：toArray(T[] a)的调用示例</h1><p>示例1：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">import java.util.Collection;</span><br><span class="line">import java.util.HashSet;</span><br><span class="line">import java.util.Set;</span><br><span class="line"></span><br><span class="line">public class Main &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Set&lt;String&gt; set = new HashSet&lt;String&gt;();</span><br><span class="line">        set.add(&quot;reimu&quot;);</span><br><span class="line">        set.add(&quot;wang&quot;);</span><br><span class="line">        Collection&lt;String&gt; collection = new UnmoCol&lt;String&gt;(set);</span><br><span class="line">        String[] a = &#123;&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;&#125;;</span><br><span class="line">        String[] a1 = collection.toArray(a);</span><br><span class="line">        for (String e : a1) System.out.println(e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">reimu</span><br><span class="line">wang</span><br><span class="line">null</span><br><span class="line">4</span><br></pre></td></tr></table></figure>
+<hr>
+<p>示例2</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">package com.collectiontest.main;</span><br><span class="line"></span><br><span class="line">import java.util.Collection;</span><br><span class="line">import java.util.HashSet;</span><br><span class="line">import java.util.Set;</span><br><span class="line"></span><br><span class="line">public class Main &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Set&lt;String&gt; set = new HashSet&lt;String&gt;();</span><br><span class="line">        set.add(&quot;reimu&quot;);</span><br><span class="line">        set.add(&quot;wang&quot;);</span><br><span class="line">        Collection&lt;String&gt; collection = new UnmoCol&lt;String&gt;(set);</span><br><span class="line">        String[] a = &#123;&#125;;</span><br><span class="line">        String[] a1 = collection.toArray(a);</span><br><span class="line">        for (String e : a1) System.out.println(e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="输出结果："><a href="#输出结果：" class="headerlink" title="输出结果："></a>输出结果：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">reimu</span><br><span class="line">wang</span><br></pre></td></tr></table></figure>
+<h1 id="注5-toString-调用示例"><a href="#注5-toString-调用示例" class="headerlink" title="注5 toString()调用示例"></a>注5 toString()调用示例</h1><p><strong>自包含测试</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">import java.util.Collection;</span><br><span class="line"></span><br><span class="line">public class Main &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Collection&lt;Collection&gt; collection = new AbstractCollectionTest&lt;Collection&gt;();</span><br><span class="line">        collection.add(collection);</span><br><span class="line">        System.out.println(collection);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[(this Collection)]</span><br></pre></td></tr></table></figure>
+<p><strong>非自包含情况测试</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">import java.util.Collection;</span><br><span class="line">import java.util.HashSet;</span><br><span class="line">import java.util.Set;</span><br><span class="line"></span><br><span class="line">public class Main &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Set&lt;String&gt; set = new HashSet&lt;String&gt;();</span><br><span class="line">        set.add(&quot;reimu&quot;);</span><br><span class="line">        set.add(&quot;wang&quot;);</span><br><span class="line">        Collection&lt;String&gt; collection = new AbstractCollectionTest&lt;String&gt;(set);</span><br><span class="line">        System.out.println(collection);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[reimu, wang]</span><br></pre></td></tr></table></figure>
+<h1 id="未整理层级关系"><a href="#未整理层级关系" class="headerlink" title="未整理层级关系"></a>未整理层级关系</h1><p><strong><em>本类直接继承的类</em></strong></p>
+<ul>
+<li><a href="">java.lang.Object</a></li>
+</ul>
+<p><strong><em>直接继承本类的类</em></strong></p>
+<ul>
+<li><a href="">java.util.ArrayDeque&lt;E&gt;</a></li>
+<li><a href="">java.util.concurrent.ConcurrentLinkedDeque&lt;E&gt;</a></li>
+</ul>
+<p><strong><em>直接继承本类的内部类</em></strong></p>
+<ul>
+<li><a href="">静态成员内部类java.lang.ProcessEnvironment.CheckedValues</a></li>
+<li><a href="">实例成员内部类java.util.HashMap&lt;K,V&gt;.Values</a></li>
+<li><a href="">实例成员内部类java.util.IdentityHashMap&lt;K,V&gt;.Values</a></li>
+<li><a href="">实例成员内部类java.util.WeakHashMap&lt;K,V&gt;.Values</a></li>
+<li><a href="">实例成员内部类java.util.TreeMap&lt;K,V&gt;.Values</a></li>
+<li><a href="">实例成员内部类java.util.Hashtable&lt;K,V&gt;.ValueCollection</a></li>
+<li><a href="">实例成员内部类java.util.EnumMap&lt;K extends Enum&lt;K&gt;, V&gt;.Values</a></li>
+<li><a href="">实例成员内部类java.util.concurrent.ConcurrentHashMap&lt;K, V&gt;.Values</a></li>
+<li><a href="">实例成员内部类java.util.concurrent.ConcurrentSkipListMap&lt;K,V&gt;.Values&lt;E&gt;</a></li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechat.png" alt="王艺凯 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/ali.jpg" alt="王艺凯 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>王艺凯</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2017/06/19/Java JDK7源码-javautilAbstractCollectionE/" title="Java JDK7源码-java.util.AbstractCollection&lt;E&gt;">http://yoursite.com/2017/06/19/Java JDK7源码-javautilAbstractCollectionE/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/源码/" rel="tag"># 源码</a>
+          
+            <a href="/tags/Collection/" rel="tag"># Collection</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/16/Java JDK7源码-javautilQueueE/" rel="next" title="Java JDK7源码-java.util.Queue&lt;E&gt;">
+                <i class="fa fa-chevron-left"></i> Java JDK7源码-java.util.Queue&lt;E&gt;
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/19/Java JDK7源码-javautilAbstractListE/" rel="prev" title="Java JDK7源码-java.util.AbstractList&lt;E&gt;">
+                Java JDK7源码-java.util.AbstractList&lt;E&gt; <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/avatar.jpg"
+                alt="王艺凯" />
+            
+              <p class="site-author-name" itemprop="name">王艺凯</p>
+              <p class="site-description motion-element" itemprop="description">Thou Shalt Comment</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">189</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">117</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/ReimuWang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:1505580759@qq.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用网站
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.bilibili.com/" title="bilibili" target="_blank">bilibili</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://acg12.com/" title="ACG调查小队" target="_blank">ACG调查小队</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.com/" title="leetcode" target="_blank">leetcode</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#源码"><span class="nav-number">1.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#已整理层级关系"><span class="nav-number">2.</span> <span class="nav-text">已整理层级关系</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#综述"><span class="nav-number">3.</span> <span class="nav-text">综述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#注1：Arrays-copyOf-r-i"><span class="nav-number">4.</span> <span class="nav-text">注1：Arrays.copyOf(r, i)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#注2：finishToArray-r-it"><span class="nav-number">5.</span> <span class="nav-text">注2：finishToArray(r, it)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#注3：System-arraycopy-r-0-a-0-i"><span class="nav-number">6.</span> <span class="nav-text">注3：System.arraycopy(r, 0, a, 0, i)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#注4：toArray-T-a-的调用示例"><span class="nav-number">7.</span> <span class="nav-text">注4：toArray(T[] a)的调用示例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#输出结果："><span class="nav-number">7.1.</span> <span class="nav-text">输出结果：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#注5-toString-调用示例"><span class="nav-number">8.</span> <span class="nav-text">注5 toString()调用示例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#未整理层级关系"><span class="nav-number">9.</span> <span class="nav-text">未整理层级关系</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老滚6催更协会</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+  <div class="footer-custom"><i>明明可以靠脸吃饭，你却要靠才华，这就是你和明明的差距</i></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+
+</body>
+</html>

@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/myLogo.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="创建基本的窗体AWT中封装窗体逻辑的类为java.awt.Frame，通常我们通过继承它来使用它的功能，它的类定义为： 1public class Frame extends Window implements MenuContainer">
+<meta name="keywords" content="Java,GUI,AWT">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java AWT-基本操作">
+<meta property="og:url" content="http://yoursite.com/2018/02/03/Java AWT-基本操作/index.html">
+<meta property="og:site_name" content="ReimuWang&#39;s Blog">
+<meta property="og:description" content="创建基本的窗体AWT中封装窗体逻辑的类为java.awt.Frame，通常我们通过继承它来使用它的功能，它的类定义为： 1public class Frame extends Window implements MenuContainer">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20AWT/基本操作/0.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20AWT/基本操作/1.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20AWT/基本操作/2.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20AWT/基本操作/3.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20AWT/基本操作/4.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20AWT/基本操作/5.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20AWT/基本操作/6.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20AWT/基本操作/7.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20AWT/基本操作/8.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20AWT/基本操作/9.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20AWT/基本操作/10.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20AWT/基本操作/11.jpg">
+<meta property="og:updated_time" content="2018-08-22T10:57:28.951Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java AWT-基本操作">
+<meta name="twitter:description" content="创建基本的窗体AWT中封装窗体逻辑的类为java.awt.Frame，通常我们通过继承它来使用它的功能，它的类定义为： 1public class Frame extends Window implements MenuContainer">
+<meta name="twitter:image" content="http://yoursite.com/images/blog_pic/Java%20AWT/基本操作/0.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="ReimuWang's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/02/03/Java AWT-基本操作/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java AWT-基本操作 | ReimuWang's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ReimuWang's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">189</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">117</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类<span class="badge">24</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404.html" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />公益 404</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+    
+      
+    
+    <a href="https://github.com/ReimuWang" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#222; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg>
+    
+      </a>
+    
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/03/Java AWT-基本操作/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王艺凯">
+      <meta itemprop="description" content="Thou Shalt Comment">
+      <meta itemprop="image" content="/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ReimuWang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java AWT-基本操作
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-02-03 12:37:55" itemprop="dateCreated datePublished" datetime="2018-02-03T12:37:55+08:00">2018-02-03</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-08-22 18:57:28" itemprop="dateModified" datetime="2018-08-22T18:57:28+08:00">2018-08-22</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java-AWT/" itemprop="url" rel="index"><span itemprop="name">Java AWT</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="创建基本的窗体"><a href="#创建基本的窗体" class="headerlink" title="创建基本的窗体"></a>创建基本的窗体</h1><p>AWT中封装窗体逻辑的类为java.awt.Frame，通常我们通过继承它来使用它的功能，它的类定义为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class Frame extends Window implements MenuContainer</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>下面我们给出Frame常用方法的定义。首先给出Frame继承自它的父类java.awt.Window的方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 设定窗体相对于屏幕的位置为(x,y)</span><br><span class="line"> */</span><br><span class="line">public void setLocation(int x, int y)</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 设定窗体的宽为width，高为height</span><br><span class="line"> */</span><br><span class="line">public void setSize(int width, int height)</span><br></pre></td></tr></table></figure>
+<p>然后我们就可以开始写第一个小例子了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">import java.awt.Frame;</span><br><span class="line"></span><br><span class="line">public class GameFrame extends Frame &#123;</span><br><span class="line"></span><br><span class="line">    private static final long serialVersionUID = 1L;</span><br><span class="line"></span><br><span class="line">    public void launchFrame() &#123;</span><br><span class="line">        super.setLocation(700, 300);</span><br><span class="line">        super.setSize(400, 300);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        new GameFrame().launchFrame();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行后无输出，程序也无法终止。之所以无输出，是因为窗体默认是不可见的。而之所以无法终止，是因为窗体虽然是不可见的，但它的确存在。</p>
+<p>为了让窗体可见，我们还要使用Frame继承自它的父类java.awt.Window中的另一个方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * true--窗体可见,false--窗体不可见</span><br><span class="line"> * 默认为false</span><br><span class="line"> */</span><br><span class="line">public void setVisible(boolean b)</span><br></pre></td></tr></table></figure>
+<p>相应的代码改为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">import java.awt.Frame;</span><br><span class="line"></span><br><span class="line">public class GameFrame extends Frame &#123;</span><br><span class="line"></span><br><span class="line">    private static final long serialVersionUID = 1L;</span><br><span class="line"></span><br><span class="line">    public void launchFrame() &#123;</span><br><span class="line">        super.setLocation(700, 300);</span><br><span class="line">        super.setSize(400, 300);</span><br><span class="line">        super.setVisible(true);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        new GameFrame().launchFrame();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时运行程序，会按设定生成所需的窗体：</p>
+<p><img src="/images/blog_pic/Java AWT/基本操作/0.jpg" alt="0.jpg"></p>
+<p>之所以不默认设定窗体可见，是为了使得窗体可见的时机可控。很多时候，窗体的加载是一个耗时的操作，我们并不希望给用户展示一个”半成品”，此时我们就可以待窗体加载到”可以见人了”的程度后再设定为可见。</p>
+<p>至此我们已绘制出了窗体，不过当我们点击窗体右上角的叉时却无法关闭窗体，其原因为默认情况下并没有给”点击叉”这一行为关联任何动作。因此我们需要自行添加窗口监听设定被触发的行为。添加窗口监听的方法依然在java.awt.Window中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public synchronized void addWindowListener(WindowListener l)</span><br></pre></td></tr></table></figure>
+<p>不妨稍微插一句，至此为止我们介绍的所有Frame中的方法都不是存在于Frame中的，而是Frame继承自其父类Window的。事实上，我们后文介绍的方法也基本都是这个套路。核心的骨架已在Window中确定好，Frame只负责封装一些小的细节。</p>
+<p>引入监听器后，代码改进为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">import java.awt.Frame;</span><br><span class="line">import java.awt.event.WindowAdapter;</span><br><span class="line">import java.awt.event.WindowEvent;</span><br><span class="line"></span><br><span class="line">public class GameFrame extends Frame &#123;</span><br><span class="line"></span><br><span class="line">    private static final long serialVersionUID = 1L;</span><br><span class="line"></span><br><span class="line">    public void launchFrame() &#123;</span><br><span class="line">        super.setLocation(700, 300);</span><br><span class="line">        super.setSize(400, 300);</span><br><span class="line">        super.addWindowListener(</span><br><span class="line">            new WindowAdapter() &#123;</span><br><span class="line">                @Override</span><br><span class="line">                public void windowClosing(WindowEvent e) &#123;</span><br><span class="line">                    System.exit(0);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        );</span><br><span class="line">	super.setVisible(true);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        new GameFrame().launchFrame();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里我们让”点击叉”这个行为触发程序的结束。现在我们再运行程序，就可以通过点击右上角的叉结束程序，关闭窗体了。之所以不将结束程序设定为默认操作，是为了给程序员留出编码空间，例如，我们可以在真正关闭前设定再弹出一个框:”是否确定退出？”做二次确认。事实上，绝大多数的桌面应用软件也都是这么做的。</p>
+<h1 id="绘制窗体中的组件"><a href="#绘制窗体中的组件" class="headerlink" title="绘制窗体中的组件"></a>绘制窗体中的组件</h1><p>绘制方法依然在java.awt.Window中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public void paint(Graphics g)</span><br></pre></td></tr></table></figure>
+<p>其中Graphics可以理解为画笔。通常我们通过重写该方法来封装自身的业务逻辑：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">import java.awt.Frame;</span><br><span class="line">import java.awt.Graphics;</span><br><span class="line">import java.awt.event.WindowAdapter;</span><br><span class="line">import java.awt.event.WindowEvent;</span><br><span class="line"></span><br><span class="line">public class GameFrame extends Frame &#123;</span><br><span class="line"></span><br><span class="line">    private static final long serialVersionUID = 1L;</span><br><span class="line"></span><br><span class="line">    public void launchFrame() &#123;</span><br><span class="line">        super.setLocation(700, 300);</span><br><span class="line">        super.setSize(400, 300);</span><br><span class="line">        super.addWindowListener(</span><br><span class="line">            new WindowAdapter() &#123;</span><br><span class="line">                @Override</span><br><span class="line">                public void windowClosing(WindowEvent e) &#123;</span><br><span class="line">                    System.exit(0);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        );</span><br><span class="line">	super.setVisible(true);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void paint(Graphics g) &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        new GameFrame().launchFrame();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行后并未绘制任何组件：这是理所当然的，因为paint()方法为空。下面我们就来举一个绘制的小例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">import java.awt.Frame;</span><br><span class="line">import java.awt.Graphics;</span><br><span class="line">import java.awt.event.WindowAdapter;</span><br><span class="line">import java.awt.event.WindowEvent;</span><br><span class="line"></span><br><span class="line">public class GameFrame extends Frame &#123;</span><br><span class="line"></span><br><span class="line">    private static final long serialVersionUID = 1L;</span><br><span class="line"></span><br><span class="line">    public void launchFrame() &#123;</span><br><span class="line">        super.setLocation(700, 300);</span><br><span class="line">        super.setSize(400, 300);</span><br><span class="line">        super.addWindowListener(</span><br><span class="line">            new WindowAdapter() &#123;</span><br><span class="line">                @Override</span><br><span class="line">                public void windowClosing(WindowEvent e) &#123;</span><br><span class="line">                    System.exit(0);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        );</span><br><span class="line">	super.setVisible(true);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void paint(Graphics g) &#123;</span><br><span class="line">        g.drawLine(100, 100, 200, 200);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        new GameFrame().launchFrame();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<p><img src="/images/blog_pic/Java AWT/基本操作/1.jpg" alt="1.jpg"></p>
+<p>这样就绘制了一条线段。由此可见，绘制组件最终是要着落在Graphics这个类上的。</p>
+<h1 id="Graphics绘制基本图形"><a href="#Graphics绘制基本图形" class="headerlink" title="Graphics绘制基本图形"></a>Graphics绘制基本图形</h1><p>下面我们会介绍Graphics类常用的绘制基本图形的方法，基本沿用前文代码，若有需要可能会改变窗体大小。</p>
+<p>首先是上一小节已经展示的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 绘制一条线段</span><br><span class="line"> * @param x1 int, 端点1横坐标</span><br><span class="line"> * @param y1 int, 端点1纵坐标</span><br><span class="line"> * @param x2 int, 端点2横坐标</span><br><span class="line"> * @param y2 int, 端点2纵坐标</span><br><span class="line"> */</span><br><span class="line">public abstract void drawLine(int x1, int y1, int x2, int y2)</span><br></pre></td></tr></table></figure>
+<hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 绘制一个矩形</span><br><span class="line"> * @param x int, 左上角横坐标</span><br><span class="line"> * @param y int, 左上角纵坐标</span><br><span class="line"> * @param width int, 矩形宽</span><br><span class="line"> * @param height int, 矩形高</span><br><span class="line"> */</span><br><span class="line">public void drawRect(int x, int y, int width, int height)</span><br></pre></td></tr></table></figure>
+<p>实例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g.drawRect(0, 0, 100, 100);</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<p><img src="/images/blog_pic/Java AWT/基本操作/2.jpg" alt="2.jpg"></p>
+<p>上一个绘制线段的例子可能看得不够真切，不过本例中就暴露了一个需要注意的点：绘制图形时会以窗体的外轮廓为起点，并不会让出标题栏的宽度。</p>
+<hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 绘制一个椭圆</span><br><span class="line"> * 给定的入参实质上是在确定椭圆所属的外切矩形</span><br><span class="line"> * @param x int, 左上角横坐标</span><br><span class="line"> * @param y int, 左上角纵坐标</span><br><span class="line"> * @param width int, 矩形宽</span><br><span class="line"> * @param height int, 矩形高</span><br><span class="line"> */</span><br><span class="line">public abstract void drawOval(int x, int y, int width, int height)</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g.drawOval(100, 100, 100, 200);</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<p><img src="/images/blog_pic/Java AWT/基本操作/3.jpg" alt="3.jpg"></p>
+<p>特别的，若外切矩形是一个正方形，绘制出的自然是一个圆了，示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g.drawOval(100, 100, 200, 200);</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<p><img src="/images/blog_pic/Java AWT/基本操作/4.jpg" alt="4.jpg"></p>
+<hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 绘制文字</span><br><span class="line"> * @param x String, 文字内容</span><br><span class="line"> * @param x int, 第一个字符的横坐标</span><br><span class="line"> * @param y int, 字符串的纵坐标</span><br><span class="line"> */</span><br><span class="line">public abstract void drawString(String str, int x, int y)</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g.drawString(&quot;博丽灵梦&quot;, 0, 100);</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<p><img src="/images/blog_pic/Java AWT/基本操作/5.jpg" alt="5.jpg"></p>
+<p>字符串并没有打全，其原因就在于其实不仅仅是标题栏，整个窗体其实围了一圈的外边框，而这一圈外边框都是无法绘制图形的，但是计算坐标又是以窗体外边框为起点。不得不说，这可着实让人蛋疼。</p>
+<p>如果想改变字体，可自定义字体类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">g.setFont(new Font(&quot;楷体&quot;, Font.BOLD, 20));</span><br><span class="line">g.drawString(&quot;博丽灵梦&quot;, 100, 100);</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<p><img src="/images/blog_pic/Java AWT/基本操作/6.jpg" alt="6.jpg"></p>
+<hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 绘制一个填充矩形</span><br><span class="line"> * @param x int, 左上角横坐标</span><br><span class="line"> * @param y int, 左上角纵坐标</span><br><span class="line"> * @param width int, 矩形宽</span><br><span class="line"> * @param height int, 矩形高</span><br><span class="line"> */</span><br><span class="line">public abstract void fillRect(int x, int y, int width, int height)</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g.fillRect(100, 100, 100, 200);</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<p><img src="/images/blog_pic/Java AWT/基本操作/7.jpg" alt="7.jpg"></p>
+<p>同理：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public abstract void fillOval(int x, int y, int width, int height)</span><br></pre></td></tr></table></figure>
+<p>则可绘制一个填充椭圆。</p>
+<h1 id="Graphics改变画笔颜色"><a href="#Graphics改变画笔颜色" class="headerlink" title="Graphics改变画笔颜色"></a>Graphics改变画笔颜色</h1><p>在绘制前修改画笔颜色即可：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">g.setColor(Color.BLUE);</span><br><span class="line">g.fillRect(100, 100, 100, 200);</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<p><img src="/images/blog_pic/Java AWT/基本操作/8.jpg" alt="8.jpg"></p>
+<p>为避免画笔颜色被修改乱套，建议每次修改前保存下，用完后再改回去：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Color base = g.getColor();</span><br><span class="line">g.setColor(Color.BLUE);</span><br><span class="line">g.fillRect(100, 100, 100, 200);</span><br><span class="line">g.setColor(base);</span><br></pre></td></tr></table></figure>
+<h1 id="Graphics绘制图片"><a href="#Graphics绘制图片" class="headerlink" title="Graphics绘制图片"></a>Graphics绘制图片</h1><p>事实上，绘制基本图形的方法上文只介绍了其中很小的一本分，之所以不都介绍完，是因为实际写代码时基本用不到，而用不到的原因则在于：</p>
+<p><strong>实在是太TM丑了！</strong></p>
+<p>实际编程中，我们基本只会绘制一种组件：那就是图片。</p>
+<p>既然要绘制图片，第一步自然就是将图片加载至内存：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 加载默认图片目录下的图片</span><br><span class="line"> * 图片默认目录为：src/main/resources/images</span><br><span class="line"> * @param path String, 图片相对于图片默认目录的路径。</span><br><span class="line"> *             例如图片为src/main/resources/images/a.jpg</span><br><span class="line"> *             则path=a.jpg</span><br><span class="line"> * @return Image, 存入内存中的图片信息</span><br><span class="line"> * @throws IOException </span><br><span class="line"> */</span><br><span class="line">public static Image loadImage(String path) throws IOException &#123;</span><br><span class="line">    URL url = Utils.class.getClassLoader()</span><br><span class="line">                         .getResource(&quot;images/&quot; + path);</span><br><span class="line">    BufferedImage bImage = ImageIO.read(url);</span><br><span class="line">    return bImage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试用图命名为test.jpg，丢到images目录下。test.jpg为：</p>
+<p><img src="/images/blog_pic/Java AWT/基本操作/9.jpg" alt="9.jpg"></p>
+<p>然后我们就可以开始绘制了，此时的paint方法为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public void paint(Graphics g) &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        Image image = Utils.loadImage(&quot;test.jpg&quot;);</span><br><span class="line">        g.drawImage(image, 100, 100, null);</span><br><span class="line">    &#125; catch (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中用于绘制的方法的定义为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 绘制图片</span><br><span class="line"> * @param img Image, 加载至内存中的图片</span><br><span class="line"> * @param x int, 目标位置左上角横坐标</span><br><span class="line"> * @param y int, 目标位置左上角纵坐标</span><br><span class="line"> * @param observer ImageObserver, 通常传入null即可</span><br><span class="line"> */</span><br><span class="line">public abstract boolean drawImage(Image img, int x, int y, ImageObserver observer)</span><br></pre></td></tr></table></figure>
+<p>输出为：</p>
+<p><img src="/images/blog_pic/Java AWT/基本操作/10.jpg" alt="10.jpg"></p>
+<p>很显然，该方法取了源图片全图，并且不加任何修改。如果只想取部分图片，或是调整图片大小比例，可使用如下方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 绘制图片</span><br><span class="line"> * @param img Image, 加载至内存中的图片</span><br><span class="line"> * @param dx1 int, 目标图片左上角横坐标</span><br><span class="line"> * @param dy1 int, 目标图片左上角纵坐标</span><br><span class="line"> * @param dx2 int, 目标图片右下角横坐标</span><br><span class="line"> * @param dy2 int, 目标图片右下角纵坐标</span><br><span class="line"> * @param sx1 int, 源图片左上角横坐标</span><br><span class="line"> * @param sy1 int, 源图片左上角纵坐标</span><br><span class="line"> * @param sx2 int, 源图片右下角横坐标</span><br><span class="line"> * @param sy2 int, 源图片右下角纵坐标</span><br><span class="line"> * @param observer ImageObserver, 通常传入null即可</span><br><span class="line"> */</span><br><span class="line">public abstract boolean drawImage(Image img,</span><br><span class="line">                                  int dx1, int dy1, int dx2, int dy2,</span><br><span class="line">                                  int sx1, int sy1, int sx2, int sy2,</span><br><span class="line">                                  ImageObserver observer);</span><br></pre></td></tr></table></figure>
+<p>乍一看入参可真他娘的多啊，好麻烦的样子。仔细看来其实很有条理：(sx1,sy1)-(sx2,sy2)确定了源图片的取图区域，(dx1,dy1)-(dx2,dy2)确定了目标位置的放置区域。这两份区域大小，比例可不相同，进而使得绘制出的图片的大小，比例不同于源图。</p>
+<p>示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">g.drawImage(image</span><br><span class="line">           , 17, 50, 517, 550</span><br><span class="line">           , 400, 150, 900, 650</span><br><span class="line">           , null);</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<p><img src="/images/blog_pic/Java AWT/基本操作/11.jpg" alt="11.jpg"></p>
+<h1 id="绘制通用控件"><a href="#绘制通用控件" class="headerlink" title="绘制通用控件"></a>绘制通用控件</h1><p>如果要绘制按钮，文本输入框，选择框之类的控件，可参见<a href="">Java 设计模式-16.Mediator模式</a>中的示例程序。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechat.png" alt="王艺凯 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/ali.jpg" alt="王艺凯 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>王艺凯</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2018/02/03/Java AWT-基本操作/" title="Java AWT-基本操作">http://yoursite.com/2018/02/03/Java AWT-基本操作/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/GUI/" rel="tag"># GUI</a>
+          
+            <a href="/tags/AWT/" rel="tag"># AWT</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/03/Java GUI-碎片/" rel="next" title="Java GUI-碎片">
+                <i class="fa fa-chevron-left"></i> Java GUI-碎片
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/03/Java AWT-动画/" rel="prev" title="Java AWT-动画">
+                Java AWT-动画 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/avatar.jpg"
+                alt="王艺凯" />
+            
+              <p class="site-author-name" itemprop="name">王艺凯</p>
+              <p class="site-description motion-element" itemprop="description">Thou Shalt Comment</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">189</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">117</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/ReimuWang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:1505580759@qq.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用网站
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.bilibili.com/" title="bilibili" target="_blank">bilibili</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://acg12.com/" title="ACG调查小队" target="_blank">ACG调查小队</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.com/" title="leetcode" target="_blank">leetcode</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#创建基本的窗体"><span class="nav-number">1.</span> <span class="nav-text">创建基本的窗体</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#绘制窗体中的组件"><span class="nav-number">2.</span> <span class="nav-text">绘制窗体中的组件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Graphics绘制基本图形"><span class="nav-number">3.</span> <span class="nav-text">Graphics绘制基本图形</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Graphics改变画笔颜色"><span class="nav-number">4.</span> <span class="nav-text">Graphics改变画笔颜色</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Graphics绘制图片"><span class="nav-number">5.</span> <span class="nav-text">Graphics绘制图片</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#绘制通用控件"><span class="nav-number">6.</span> <span class="nav-text">绘制通用控件</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老滚6催更协会</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+  <div class="footer-custom"><i>明明可以靠脸吃饭，你却要靠才华，这就是你和明明的差距</i></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+
+</body>
+</html>

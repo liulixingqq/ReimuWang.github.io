@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/myLogo.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在《图解设计模式》一书中，Interpreter模式被归入了第10部分用类来表现。在GoF原书中，Interpreter模式则被归入了行为型设计模式。">
+<meta name="keywords" content="Java,设计模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 设计模式-23.Interpreter模式">
+<meta property="og:url" content="http://yoursite.com/2018/09/10/Java 设计模式-23Interpreter模式/index.html">
+<meta property="og:site_name" content="ReimuWang&#39;s Blog">
+<meta property="og:description" content="在《图解设计模式》一书中，Interpreter模式被归入了第10部分用类来表现。在GoF原书中，Interpreter模式则被归入了行为型设计模式。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/23Interpreter模式/0.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/23Interpreter模式/1.png">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/23Interpreter模式/2.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/23Interpreter模式/3.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/23Interpreter模式/4.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/23Interpreter模式/5.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/23Interpreter模式/6.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/23Interpreter模式/7.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/23Interpreter模式/8.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/23Interpreter模式/9.png">
+<meta property="og:updated_time" content="2018-09-18T09:37:24.076Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 设计模式-23.Interpreter模式">
+<meta name="twitter:description" content="在《图解设计模式》一书中，Interpreter模式被归入了第10部分用类来表现。在GoF原书中，Interpreter模式则被归入了行为型设计模式。">
+<meta name="twitter:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/23Interpreter模式/0.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="ReimuWang's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/10/Java 设计模式-23Interpreter模式/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java 设计模式-23.Interpreter模式 | ReimuWang's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ReimuWang's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">189</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">117</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类<span class="badge">24</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404.html" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />公益 404</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+    
+      
+    
+    <a href="https://github.com/ReimuWang" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#222; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg>
+    
+      </a>
+    
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/10/Java 设计模式-23Interpreter模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王艺凯">
+      <meta itemprop="description" content="Thou Shalt Comment">
+      <meta itemprop="image" content="/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ReimuWang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java 设计模式-23.Interpreter模式
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-09-10 14:45:49" itemprop="dateCreated datePublished" datetime="2018-09-10T14:45:49+08:00">2018-09-10</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-09-18 17:37:24" itemprop="dateModified" datetime="2018-09-18T17:37:24+08:00">2018-09-18</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java-设计模式/" itemprop="url" rel="index"><span itemprop="name">Java 设计模式</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在《图解设计模式》一书中，Interpreter模式被归入了第10部分<a href="">用类来表现</a>。在GoF原书中，Interpreter模式则被归入了<a href="">行为型设计模式</a>。</p>
+<a id="more"></a>
+<h1 id="综述"><a href="#综述" class="headerlink" title="综述"></a>综述</h1><p>现今主流的编程语言依然都属于第三代编程语言，这些语言的文法接近人类的自然语言，对程序员极其友好。然而实际执行程序的机器依然只能识别第一代编程语言(也就是一串1和0组成的流啦)，这就导致了，无论使用何种第三代编程语言，是Java也好，还是C++也罢，虽然具体的实现细节依语言不同而千差万别，但终归都需要进行一种操作：将程序员编写的高级语言代码翻译为机器能够识别的01码。</p>
+<p>下面我们就以Java为例，来相对详细的说说这个过程。</p>
+<p>和大多直接由高级语言翻译(编译执行与解释执行只是手段，其本质目的都还是翻译)为机器语言不同的是，Java将它内部的翻译过程又分为了两个阶段(当然，对外部使用者，也就是实际执行机器码的机器而言，这个过程是黑盒的)：首先会从程序员编写的，人类能够识别的Java语言翻译为.class文件(编译期)。而后再将.class文件翻译为机器能识别的机器码。</p>
+<p>简单来说，程序员编写的Java语言遵循着一套语法(不妨标记为语法1)，机器识别机器码时遵循着另一套语法(语法3)。在此之外，Java又在其内部搞出了一个.class文件(语法2)。这样翻译链的顺序就变为了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">语法1 --&gt; 语法2 --&gt; 语法3</span><br></pre></td></tr></table></figure>
+<p>之所以要这么搞，是为了实现Java语言的语言无关性。详见<a href="/2017/10/16/Java 基础-技术体系/">Java 基础-技术体系</a>。</p>
+<p>且不说翻译了几次，单说翻译行为本身，它的作用大致可归为以下两点：</p>
+<ol>
+<li>虽然翻译本身增加了额外的开销，却使得程序员得以用更加类似自然语言的语法编写程序，极大的降低了学习成本，同时提高了代码编写的便利性与可维护性。</li>
+<li>完成了各级语言间的解耦。以语法1 –&gt; 语法2的过程为例。Java程序员只需要知道Java语言的语法，而它的翻译者(我们称其为编译器)在此基础上还需要知道.class文件的语法。这意味着，无论是语法1亦或是语法2发生了何种变化，只要另一种语法尚能实现相同的功能，那么对彼此而言，这种变化就是透明的：它会被翻译者消化掉。从这种意义上来讲，翻译者颇有些<a href="">2.Adapter模式</a>中的适配器的意思。</li>
+</ol>
+<p>将这种思想进一步扩展，得到的就是Interpreter模式。</p>
+<p>主流的高级编程语言都是通用的，虽然各有擅长的点，但基本都能胜任绝大多数场景。而这种通用的另一面就是不够特化：高级语言语法的设计者当然不可能因为某个需求就修改语法。不过，高级语言的设计者虽然不能这么做，但需求的设计者却可以这样做：也就是说，我们为某个需求，或是某一类需求，定制一种”迷你语言”。如果我们将其称之为”语法0”的话，那么上文的翻译链就变为了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">语法0 --&gt; 语法1 --&gt; 语法2 --&gt; 语法3</span><br></pre></td></tr></table></figure>
+<p>如果想要这么做的话，我们当然也可以在语法0前面加上个”语法-1”，使得翻译链无限的向上堆叠上去，只不过这会让程序变得复杂，而这种复杂通常是没什么意义的，所以通常都不会这么做。</p>
+<p>具体到这个应用场景，我们再来说下引入”语法0”的好处：</p>
+<ol>
+<li>较之高级语言，迷你语言的语法简单，且为需求高度定制。使得代码(此时程序员写的当然就是迷你语言的代码啦)的书写更为容易，目的性也更强。</li>
+<li>在这个场景下，高级语言的语法一般不会发生变化，迷你语言的语法通常也不会发生变化。发生变化的基本只会是使用迷你语言编写的代码。</li>
+</ol>
+<p>如果要使用Interpreter模式编写程序的话，难点通常并不是在于编写迷你语言本身，而是在于编写”语法0 –&gt; 语法1”的翻译器。因为迷你语言完全是程序员根据需求生造出来的，只有他自己才知道语法，因此也只有他本身才能编写翻译器。这也是Interpreter模式被称为”解释器模式”的原因所在。通常翻译器我们都会用”语法1”，也就是作为基底的高级语言来开发。</p>
+<h1 id="控制人物移动的迷你语言"><a href="#控制人物移动的迷你语言" class="headerlink" title="控制人物移动的迷你语言"></a>控制人物移动的迷你语言</h1><p>下面我们就针对”控制人物移动”这个需求来创建一门全新的迷你语言吧！</p>
+<p>首先介绍下本文用于作为行走角色的妹子，来自东方Project的<a href="https://baike.baidu.com/item/%E4%BC%8A%E5%90%B9%E8%90%83%E9%A6%99/8771754?fr=aladdin" target="_blank" rel="noopener">伊吹萃香</a>：</p>
+<p><img src="/images/blog_pic/Java 设计模式/23Interpreter模式/0.jpg" alt="0.jpg"></p>
+<p>萃香好可爱啊~融化了。</p>
+<p>这是用到的行走图素材，也是萌萌哒：</p>
+<p><img src="/images/blog_pic/Java 设计模式/23Interpreter模式/1.png" alt="1.png"></p>
+<p>按需求，我们可以向人物下达如下3种指令：</p>
+<ul>
+<li>前进1个长度单位(go)</li>
+<li>右转(right)</li>
+<li>左转(left)</li>
+</ul>
+<p>其中左转与右转是严格意义上的原地转向。在此之上，为了构成一个相对复杂的语言，我们引入了新的指令：</p>
+<ul>
+<li>重复(repeat)</li>
+</ul>
+<p>这可以让人物重复一定次数的指令集合。至此，我们已得到构成本文迷你语言的全部指令。</p>
+<p>要想被称之为一门语言，光有指令(相当于自然语言中的单词)是不够的，我们还需要规定一个语法将它们组合起来。对于本文的迷你语言，我们先来看一段最简单的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">program</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+<p>我们规定，这门迷你语言必须以program开头，后面跟随着指令集合(command list)。command list必须以end结尾。如果command list为空，那么就会出现上文中program后面直接跟着一个end的情况啦。显然，上述代码不会产生任何实际的效果。</p>
+<p>程序可以采用换行，空格，tab等任何主流的分隔符，这意味上述代码我们也可以写成这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">program end</span><br></pre></td></tr></table></figure>
+<p>不过为了便于阅读，对于书写任意语言而言，适当的缩进都是很必要的。</p>
+<p>然后我们再来看一段稍微复杂点的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">program</span><br><span class="line">  go go right</span><br><span class="line">  go go right</span><br><span class="line">  go go right</span><br><span class="line">  go go right</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+<p>程序会按指令的书写顺序执行它们。执行这段指令，可以输出：</p>
+<p><img src="/images/blog_pic/Java 设计模式/23Interpreter模式/2.jpg" alt="2.jpg"></p>
+<p>该代码会让人物走一个正方形，而后回到初始的位置和朝向。为了在静态的图片中表现出代码的执行过程，我们绘制了人物移动的轨迹。</p>
+<p>如果仔细看一下上述代码的话，会发现我们将：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go go right</span><br></pre></td></tr></table></figure>
+<p>这个代码片段重复写了4遍。显然这是很low的行为。因此就需要repeat指令登场啦：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">program</span><br><span class="line">  repeat 4 go go right end</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+<p>repeat指令的语法规则为：首先是作为关键字的repeat，然后是表示循环次数的数字。最后是实际被循环的command list。执行该代码后输出与前图相同。</p>
+<p>我们可以再来走一个更复杂的轨迹：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">program</span><br><span class="line">  repeat 1000</span><br><span class="line">    repeat 4</span><br><span class="line">      repeat 3 go right go left end</span><br><span class="line">      right</span><br><span class="line">    end</span><br><span class="line">  end</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+<p>这段代码会重复一个相对复杂的轨迹1000次，贴几张移动过程中的截图吧：</p>
+<p><img src="/images/blog_pic/Java 设计模式/23Interpreter模式/3.jpg" alt="3.jpg"></p>
+<p><img src="/images/blog_pic/Java 设计模式/23Interpreter模式/4.jpg" alt="4.jpg"></p>
+<p><img src="/images/blog_pic/Java 设计模式/23Interpreter模式/5.jpg" alt="5.jpg"></p>
+<p><img src="/images/blog_pic/Java 设计模式/23Interpreter模式/6.jpg" alt="6.jpg"></p>
+<p><img src="/images/blog_pic/Java 设计模式/23Interpreter模式/7.jpg" alt="7.jpg"></p>
+<h1 id="示例程序"><a href="#示例程序" class="headerlink" title="示例程序"></a>示例程序</h1><p>迷你语言的语法结构至此就算是结束了，该语言非常简单，简单到只有顺序和循环结构，连分支结构都没有。不过用来作说明已经是足够了。此外，上文我们是以自然语言在进行描述，也就是说给产品经理听的。而技术人员如果要将该语法落实到代码中，还需要用更为准确的数学语言来描述才可以。</p>
+<p>本文采取的描述方法为EBNF(Extended Backus–Naur Form，即扩展的巴科斯-瑙尔范式)。顾名思义，它是对BNF(Backus-Naur Form，巴科斯范式)的扩展。我们先给出全部的语法描述：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;program&gt; ::= program &lt;command list&gt;</span><br><span class="line">&lt;command list&gt; ::= &lt;command&gt;* end</span><br><span class="line">&lt;command&gt; ::= &lt;repeat command&gt; | &lt;primitive command&gt;</span><br><span class="line">&lt;repeat command&gt; ::= repeat &lt;number&gt; &lt;command list&gt;</span><br><span class="line">&lt;primitive command&gt; ::= go | left | right</span><br></pre></td></tr></table></figure>
+<p>较之自然语言，是不是简洁了许多呢(事实上，不仅仅是看起来简洁了，也更为精确了)？下面就来逐句分析一下吧！</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;program&gt; ::= program &lt;command list&gt;</span><br></pre></td></tr></table></figure>
+<p>首先是第一句，这个::=我们简单的理解为赋值就可以啦！该句用于描述&lt;program&gt;这个标签，或者更确切的说，是构成语法树的&lt;program&gt;结点。按照描述，&lt;program&gt;节点就是program关键字后跟上一个&lt;command list&gt;。</p>
+<p>至此&lt;program&gt;算是描述完了，但是我们却无法真正能说完全了解它，program作为一个普通的字符串没什么可说的，不过这个&lt;command list&gt;是什么呢？这就好比表达式y=x+3，如果我们不知道x是什么，自然也不能知道y是什么。</p>
+<p>不过不要急，第二句就是在描述&lt;command list&gt;啦：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;command list&gt; ::= &lt;command&gt;* end</span><br></pre></td></tr></table></figure>
+<p>哦，原来&lt;command list&gt;是0到多个(描述范式中*所代表的含义，熟悉正则的朋友们应该会感到很亲切吧)&lt;command&gt;节点后再加上end关键字。那么这个&lt;command&gt;是什么呢：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;command&gt; ::= &lt;repeat command&gt; | &lt;primitive command&gt;</span><br></pre></td></tr></table></figure>
+<p>范式告诉我们，&lt;command&gt;是一个&lt;repeat command&gt;结点或是一个&lt;primitive command&gt;结点。</p>
+<p>而&lt;repeat command&gt;：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;repeat command&gt; ::= repeat &lt;number&gt; &lt;command list&gt;</span><br></pre></td></tr></table></figure>
+<p>它是repeat关键字后跟随一个&lt;number&gt;结点，再跟随一个前文介绍过的&lt;command list&gt;结点。从而形成了递归结构。</p>
+<p>最后是&lt;primitive command&gt;：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;primitive command&gt; ::= go | left | right</span><br></pre></td></tr></table></figure>
+<p>它是go,left,right这3个关键字中的某一个。在编程领域，像&lt;primitive command&gt;这样描述它的信息中不包含其他结点的，或者更直观的说，我们可以仅仅通过描述语句本身就完全弄明白含义的结点，被称为终结符表达式(Terminal Expression)。与之相对的，像&lt;command list&gt;，&lt;command&gt;等需要进一步展开的结点则被称为非终结符表达式(Nonterminal Expression)。所谓递归，其实就是因非终结符表达式而起，最后收束于终结符表达式。</p>
+<p>细心的朋友想必可以发现，我们还剩一个&lt;number&gt;结点没有描述。其实是应该写的，它应该是一个大于等于0的整数，是一个终结符表达式。只不过它的描述较为复杂，这里便省略了。</p>
+<p>完成了语法的数学化描述后，下一步就是根据该描述将迷你语言的代码依据语法规则翻译为语法树，并存入宿主语言(本文使用Java)中，这一步被称为解析。而后再执行语法树中存储的语义，得到输出。这么说还是会有一些抽象，还是让我们赶紧来看具体的代码吧。</p>
+<p>本程序中的所有代码将被统一置于design23包下，结构如下：</p>
+<p><img src="/images/blog_pic/Java 设计模式/23Interpreter模式/8.jpg" alt="8.jpg"></p>
+<p>迷你语言的示例程序使用前文介绍过的那个重复绘制1000次的复制图形。它被存储在名为code.txt的文件中。</p>
+<p><strong>code.txt</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">program</span><br><span class="line">  repeat 1000</span><br><span class="line">    repeat 4</span><br><span class="line">      repeat 3 go right go left end</span><br><span class="line">      right</span><br><span class="line">    end</span><br><span class="line">  end</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+<p>然后我们介绍本文的重点，也就是model.parse包下的内容。这个包下的代码完成了前文说到的迷你语言的语法树的构建(即解析)以及执行。秉承Java语言”一切都是对象，对象就是一切”的思想，上文介绍的EBNF中的结点最终都被翻译为了类，这在后文的代码中将会有很明显的体现。</p>
+<p><strong>Node类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">package design23.model.parse;</span><br><span class="line"></span><br><span class="line">import design23.model.entity.GameMap;</span><br><span class="line"></span><br><span class="line">public abstract class Node &#123;</span><br><span class="line"></span><br><span class="line">    public abstract void parse(Context context) throws ParseException;</span><br><span class="line"></span><br><span class="line">    public abstract void exe(GameMap map);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Node类是所有结点的抽象父类。按照需求，它约束自身的子类必须实现两个基本的功能：parse() –&gt; 解析 及 exe() –&gt; 执行。很显然，这两个方法的调用是有先后顺序的，即我们必须先完成解析，形成语法树，才能执行。</p>
+<p>在解析方法parse()的方法定义中，我们抛出了自定义异常ParseException：</p>
+<p><strong>ParseException类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">package design23.model.parse;</span><br><span class="line"></span><br><span class="line">public class ParseException extends Exception &#123;</span><br><span class="line"></span><br><span class="line">    private static final long serialVersionUID = 1L;</span><br><span class="line"></span><br><span class="line">    ParseException(String msg) &#123;</span><br><span class="line">        super(msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这只是一个很简单的异常类，就不多做赘述了。</p>
+<p><strong>ProgramNode类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">package design23.model.parse;</span><br><span class="line"></span><br><span class="line">import design23.model.entity.GameMap;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * &lt;program&gt; ::= program &lt;command list&gt;</span><br><span class="line"> */</span><br><span class="line">public class ProgramNode extends Node &#123;</span><br><span class="line"></span><br><span class="line">    private CommandListNode commandListNode;</span><br><span class="line"></span><br><span class="line">    private static final String PROGRAM_STR = &quot;program&quot;;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void parse(Context context) throws ParseException &#123;</span><br><span class="line">        context.skip(ProgramNode.PROGRAM_STR);</span><br><span class="line">        this.commandListNode = new CommandListNode();</span><br><span class="line">        this.commandListNode.parse(context);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;[&quot; + ProgramNode.PROGRAM_STR + &quot; &quot; + this.commandListNode + &quot;]&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void exe(GameMap map) &#123;</span><br><span class="line">        this.commandListNode.exe(map);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>终于到EBNF中介绍的真正的结点了。很显然，ProgramNode对应&lt;program&gt;，这在类首的注释中也有所体现。我们会为每一个结点都加上类似的类首注释，以表明它代表的是EBNF中的哪个结点，因此后文在介绍其他结点时就不会再显式的点出这种对应关系了。</p>
+<p>关于将EBNF翻译为实际的类，有一个很重要的点就是”不要做多余的事”。简单来说，在我们编写ProgramNode时，能参照的就仅仅只是:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;program&gt; ::= program &lt;command list&gt;</span><br></pre></td></tr></table></figure>
+<p>其他的一切都不需要知道。也不要耍小聪明做一些EBNF中没有的事，如果实在是想加新功能，也需要修改EBNF，而不是在翻译出的代码中自作主张。语法的设计在EBNF中已全部完成了，从EBNF到具体的代码仅仅只需要机械的翻译。</p>
+<p>因此，这些结点的代码本身其实没什么好说的，后续结点的代码我们将快速的贴出。</p>
+<p><strong>CommandListNode类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">package design23.model.parse;</span><br><span class="line"></span><br><span class="line">import java.util.ArrayList;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">import design23.model.entity.GameMap;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * &lt;command list&gt; ::= &lt;command&gt;* end</span><br><span class="line"> */</span><br><span class="line">public class CommandListNode extends Node &#123;</span><br><span class="line"></span><br><span class="line">    private List&lt;CommandNode&gt; commandList = new ArrayList&lt;CommandNode&gt;();</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void parse(Context context) throws ParseException &#123;</span><br><span class="line">        while (true) &#123;</span><br><span class="line">            String current = context.peek();</span><br><span class="line">            String endstr = &quot;end&quot;;</span><br><span class="line">            if (null == current) throw new ParseException(&quot;Missing &apos;&quot; + endstr + &quot;&apos;&quot;);</span><br><span class="line">            if (endstr.equals(current)) &#123;</span><br><span class="line">                context.skip(endstr);</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">            CommandNode commandNode = new CommandNode();</span><br><span class="line">            this.commandList.add(commandNode);</span><br><span class="line">            commandNode.parse(context);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return this.commandList.toString();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void exe(GameMap map) &#123;</span><br><span class="line">        for (CommandNode commandNode : this.commandList)</span><br><span class="line">            commandNode.exe(map);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>CommandNode类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">package design23.model.parse;</span><br><span class="line"></span><br><span class="line">import design23.model.entity.GameMap;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * &lt;command&gt; ::= &lt;repeat command&gt; | &lt;primitive command&gt;</span><br><span class="line"> */</span><br><span class="line">public class CommandNode extends Node &#123;</span><br><span class="line"></span><br><span class="line">    private CommandNode commandNode;</span><br><span class="line"></span><br><span class="line">    protected static final String REPEAT_STR = &quot;repeat&quot;;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void parse(Context context) throws ParseException &#123;</span><br><span class="line">        this.commandNode = CommandNode.REPEAT_STR.equals(context.peek()) ?</span><br><span class="line">                           new RepeatCommandNode() :</span><br><span class="line">                           new PrimitiveCommandNode();</span><br><span class="line">        this.commandNode.parse(context);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return this.commandNode.toString();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void exe(GameMap map) &#123;</span><br><span class="line">        this.commandNode.exe(map);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>RepeatCommandNode类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">package design23.model.parse;</span><br><span class="line"></span><br><span class="line">import design23.model.entity.GameMap;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * &lt;repeat command&gt; ::= repeat &lt;number&gt; &lt;command list&gt;</span><br><span class="line"> */</span><br><span class="line">public class RepeatCommandNode extends CommandNode &#123;</span><br><span class="line"></span><br><span class="line">    private int number;</span><br><span class="line"></span><br><span class="line">    private CommandListNode commandListNode;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void parse(Context context) throws ParseException &#123;</span><br><span class="line">        context.skip(CommandNode.REPEAT_STR);</span><br><span class="line">        try &#123;</span><br><span class="line">            this.number = Integer.parseInt(context.peek());</span><br><span class="line">        &#125; catch (NumberFormatException e) &#123;</span><br><span class="line">            throw new ParseException(&quot;fail to parse &quot; + CommandNode.REPEAT_STR + &quot; times.&quot; + e);</span><br><span class="line">        &#125;</span><br><span class="line">        context.next();</span><br><span class="line">        this.commandListNode = new CommandListNode();</span><br><span class="line">        this.commandListNode.parse(context);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;[&quot; + CommandNode.REPEAT_STR + &quot; &quot; + this.number + &quot; &quot; + this.commandListNode + &quot;]&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void exe(GameMap map) &#123;</span><br><span class="line">        for (int i = 0; i &lt; this.number; i++)</span><br><span class="line">            this.commandListNode.exe(map);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>PrimitiveCommandNode类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br></pre></td><td class="code"><pre><span class="line">package design23.model.parse;</span><br><span class="line"></span><br><span class="line">import design23.model.entity.GameMap;</span><br><span class="line">import design23.model.entity.Grid;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * &lt;primitive command&gt; ::= go | left | right</span><br><span class="line"> */</span><br><span class="line">public class PrimitiveCommandNode extends CommandNode &#123;</span><br><span class="line"></span><br><span class="line">    private String name;</span><br><span class="line"></span><br><span class="line">    public static final String GO = &quot;go&quot;;</span><br><span class="line"></span><br><span class="line">    public static final String LEFT = &quot;left&quot;;</span><br><span class="line"></span><br><span class="line">    public static final String RIGHT = &quot;right&quot;;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void parse(Context context) throws ParseException &#123;</span><br><span class="line">        this.name = context.peek();</span><br><span class="line">        context.skip(this.name);</span><br><span class="line">        if (!PrimitiveCommandNode.GO.equals(this.name) &amp;&amp;</span><br><span class="line">            !PrimitiveCommandNode.LEFT.equals(this.name) &amp;&amp;</span><br><span class="line">            !PrimitiveCommandNode.RIGHT.equals(this.name))</span><br><span class="line">            throw new ParseException(&quot;command &quot; + this.name + &quot; is undefined&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return this.name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void exe(GameMap map) &#123;</span><br><span class="line">        int maxR = map.getGrids().length;</span><br><span class="line">        int maxC = map.getGrids()[0].length;</span><br><span class="line">        int focusR = map.getFocusR();</span><br><span class="line">        int focusC = map.getFocusC();</span><br><span class="line">        Grid focusGrid = map.getGrids()[focusR][focusC];</span><br><span class="line">        int direction = focusGrid.getDirection();</span><br><span class="line">        if (PrimitiveCommandNode.GO.equals(this.name)) &#123;</span><br><span class="line">            int newFocusR = focusR;</span><br><span class="line">            int newFocusC = focusC;</span><br><span class="line">            switch (direction) &#123;</span><br><span class="line">            case 0:</span><br><span class="line">                if (focusR + 1 == maxR) break;</span><br><span class="line">                newFocusR = focusR + 1;</span><br><span class="line">                break;</span><br><span class="line">            case 1:</span><br><span class="line">                if (focusC == 0) break;</span><br><span class="line">                newFocusC = focusC - 1;</span><br><span class="line">                break;</span><br><span class="line">            case 2:</span><br><span class="line">                if (focusC + 1 == maxC) break;</span><br><span class="line">                newFocusC = focusC + 1;</span><br><span class="line">                break;</span><br><span class="line">            case 3:</span><br><span class="line">                if (focusR == 0) break;</span><br><span class="line">                newFocusR = focusR - 1;</span><br><span class="line">            &#125;</span><br><span class="line">            // 模拟走路动作</span><br><span class="line">            for (int i = 0; i &lt; map.getStageCount(); i++) &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    Thread.sleep(300);</span><br><span class="line">                &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                focusGrid.setStage((focusGrid.getStage() + 1) % map.getStageCount());</span><br><span class="line">                if (i == map.getStageCount() / 2) &#123;</span><br><span class="line">                    // 设置新的焦点格</span><br><span class="line">                    map.getGrids()[newFocusR][newFocusC].setDirection(direction);</span><br><span class="line">                    map.getGrids()[newFocusR][newFocusC].setStage(focusGrid.getStage());</span><br><span class="line">                    map.getGrids()[newFocusR][newFocusC].setTimes(map.getGrids()[newFocusR][newFocusC].getTimes() + 1);</span><br><span class="line">                    map.setFocusR(newFocusR);</span><br><span class="line">                    map.setFocusC(newFocusC);</span><br><span class="line">                    // 设置原来的焦点格</span><br><span class="line">                    focusGrid.setDirection(-1);</span><br><span class="line">                    focusGrid.setStage(-1);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else if (PrimitiveCommandNode.LEFT.equals(this.name)) &#123;</span><br><span class="line">            switch (direction) &#123;</span><br><span class="line">            case 0:</span><br><span class="line">                focusGrid.setDirection(2);</span><br><span class="line">                break;</span><br><span class="line">            case 1:</span><br><span class="line">                focusGrid.setDirection(0);</span><br><span class="line">                break;</span><br><span class="line">            case 2:</span><br><span class="line">                focusGrid.setDirection(3);</span><br><span class="line">                break;</span><br><span class="line">            case 3:</span><br><span class="line">                focusGrid.setDirection(1);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            switch (direction) &#123;</span><br><span class="line">            case 0:</span><br><span class="line">                focusGrid.setDirection(1);</span><br><span class="line">                break;</span><br><span class="line">            case 1:</span><br><span class="line">                focusGrid.setDirection(3);</span><br><span class="line">                break;</span><br><span class="line">            case 2:</span><br><span class="line">                focusGrid.setDirection(0);</span><br><span class="line">                break;</span><br><span class="line">            case 3:</span><br><span class="line">                focusGrid.setDirection(2);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>至此，所有的结点我们都介绍完了。不过，为了能让翻译器接收到源码，我们还写了Context类：</p>
+<p><strong>Context类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">package design23.model.parse;</span><br><span class="line"></span><br><span class="line">import java.util.StringTokenizer;</span><br><span class="line"></span><br><span class="line">public class Context &#123;</span><br><span class="line"></span><br><span class="line">    private StringTokenizer st;</span><br><span class="line"></span><br><span class="line">    private String current;</span><br><span class="line"></span><br><span class="line">    public Context(String text) &#123;</span><br><span class="line">        this.st = new StringTokenizer(text);</span><br><span class="line">        this.next();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    String peek() &#123;</span><br><span class="line">        return this.current;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    String next() &#123;</span><br><span class="line">        this.current = this.st.hasMoreTokens() ?</span><br><span class="line">                       this.st.nextToken() :</span><br><span class="line">                       null;</span><br><span class="line">        return this.current;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    void skip(String token) throws ParseException &#123;</span><br><span class="line">        if (!token.equals(this.current))</span><br><span class="line">            throw new ParseException(&quot;need &quot; + token + &quot;, but &quot; + this.current + &quot; is found&quot;);</span><br><span class="line">        this.next();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Context类的功能很简单，它将源码按分割符分割为一个个单词，然后作为解析器会逐个读取单词，而后根据单词生成新的结点，并将结点挂载到语法树合适的位置上。随着语法树的构建，Context中的文本信息会越来越少，直至读完。</p>
+<p>至此，本文要介绍的核心功能就已经描述完了。后文要介绍的代码都只是为了得到一个可视化的结果。</p>
+<p>首先来看model.entity包，这个包下存储了程序要展示的一些实体。一如前文中的截图看到的，我们希望游戏最终能实现RPG制作大师做出的游戏的效果。因此我们需要一张存储所有要素的游戏地图，该地图是由一个个”小格子”组成的。</p>
+<p><strong>GameMap类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">package design23.model.entity;</span><br><span class="line"></span><br><span class="line">public class GameMap &#123;</span><br><span class="line"></span><br><span class="line">    private Grid[][] grids;</span><br><span class="line"></span><br><span class="line">    private int focusR;</span><br><span class="line"></span><br><span class="line">    private int focusC;</span><br><span class="line"></span><br><span class="line">    private int stageCount;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * @param row 地图上小格子的行数</span><br><span class="line">     * @param column 地图上小格子的列数</span><br><span class="line">     * @param stageCount 人物的行走状态</span><br><span class="line">     * @param focusR 初始时人物所在的小格子的行号</span><br><span class="line">     * @param focusC 初始时人物所在的小格子的列号</span><br><span class="line">     * @param initDirection 初始时人物的朝向 </span><br><span class="line">     */</span><br><span class="line">    public GameMap(int row, int column, int stageCount, int focusR, int focusC, int direction) &#123;</span><br><span class="line">        this.stageCount = stageCount;</span><br><span class="line">        this.grids = new Grid[row][column];</span><br><span class="line">        for (int r = 0; r &lt; row; r++)</span><br><span class="line">            for (int c = 0; c &lt; column; c++)</span><br><span class="line">                this.grids[r][c] = new Grid();</span><br><span class="line">        this.focusR = focusR;</span><br><span class="line">        this.focusC = focusC;</span><br><span class="line">        this.grids[this.focusR][this.focusC].setDirection(direction);</span><br><span class="line">        this.grids[this.focusR][this.focusC].setStage(1);</span><br><span class="line">        this.grids[this.focusR][this.focusC].setTimes(1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Grid[][] getGrids() &#123;</span><br><span class="line">        return grids;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getFocusR() &#123;</span><br><span class="line">        return focusR;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setFocusR(int focusR) &#123;</span><br><span class="line">        this.focusR = focusR;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getFocusC() &#123;</span><br><span class="line">        return focusC;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setFocusC(int focusC) &#123;</span><br><span class="line">        this.focusC = focusC;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getStageCount() &#123;</span><br><span class="line">        return stageCount;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Grid类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">package design23.model.entity;</span><br><span class="line"></span><br><span class="line">public class Grid &#123;</span><br><span class="line"></span><br><span class="line">    private int direction = -1;</span><br><span class="line"></span><br><span class="line">    private int stage = -1;</span><br><span class="line"></span><br><span class="line">    private int times;</span><br><span class="line"></span><br><span class="line">    public int getDirection() &#123;</span><br><span class="line">        return direction;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setDirection(int direction) &#123;</span><br><span class="line">        this.direction = direction;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getStage() &#123;</span><br><span class="line">        return stage;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setStage(int stage) &#123;</span><br><span class="line">        this.stage = stage;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getTimes() &#123;</span><br><span class="line">        return times;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setTimes(int times) &#123;</span><br><span class="line">        this.times = times;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用了GameMap的构造函数后，我们便构建了这样的一张地图：</p>
+<ul>
+<li>row行column列</li>
+<li>初始时人物所在的格子位置：grids[this.focusR][this.focusC]</li>
+<li>只会有一个格子处于焦点状态。未处于焦点状态的格子的direction和stage均默认为-1。</li>
+<li>Grid的times属性是指人物来到该格子上的次数，绘制轨迹用。</li>
+</ul>
+<p>这里需要简单介绍下direction与stage的含义。其中direction表示人物当前的朝向。而stage则表示行走状态，在人物从1个格子移动到另一个格子的过程中，我们一共会变化出3张图片，从而模拟出”人物移动的动作”。</p>
+<p>这两个字段实际都是服务于图character.png：</p>
+<p><img src="/images/blog_pic/Java 设计模式/23Interpreter模式/9.png" alt="9.png"></p>
+<p>纵向来看，0-3分别代表下左右上四个朝向。而横向的0-2则代表三个行走状态：站立不动是中间的那张状态1。当人物从一个格子移动到另一个格子上时，发生的变化为：状态1 –&gt; 状态2 –&gt; 状态0 –&gt; 状态1。</p>
+<p>然后我们提供了将parse包及entity包整合起来并对外(指得就是View啦)提供功能接口的Model类：</p>
+<p><strong>Model类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">package design23.model;</span><br><span class="line"></span><br><span class="line">import java.io.BufferedReader;</span><br><span class="line">import java.io.File;</span><br><span class="line">import java.io.FileInputStream;</span><br><span class="line">import java.io.InputStreamReader;</span><br><span class="line"></span><br><span class="line">import org.apache.commons.lang.StringUtils;</span><br><span class="line"></span><br><span class="line">import design23.model.entity.GameMap;</span><br><span class="line">import design23.model.parse.Context;</span><br><span class="line">import design23.model.parse.ParseException;</span><br><span class="line">import design23.model.parse.ProgramNode;</span><br><span class="line"></span><br><span class="line">public class Model &#123;</span><br><span class="line"></span><br><span class="line">    private GameMap map;</span><br><span class="line"></span><br><span class="line">    private ProgramNode root = new ProgramNode();</span><br><span class="line"></span><br><span class="line">    public void initMap(int row, int column, int stageCount, int focusR, int focusC, int direction) &#123;</span><br><span class="line">        this.map = new GameMap(row, column, stageCount, focusR, focusC, direction);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void initInterpreter(String path) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            this.root.parse(new Context(this.loadCode(path)));</span><br><span class="line">        &#125; catch (ParseException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(this.root);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void exe() &#123;</span><br><span class="line">        new Thread() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                Model.this.root.exe(Model.this.map);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public GameMap getMap() &#123;</span><br><span class="line">        return map;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private String loadCode(String path) &#123;</span><br><span class="line">        StringBuilder sb = new StringBuilder();</span><br><span class="line">        FileInputStream fi = null;</span><br><span class="line">        InputStreamReader ir = null;</span><br><span class="line">        BufferedReader br = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            fi = new FileInputStream(new File(path));</span><br><span class="line">            ir = new InputStreamReader(fi, &quot;UTF-8&quot;);</span><br><span class="line">            br = new BufferedReader(ir);</span><br><span class="line">            String lineTxt = null;</span><br><span class="line">            while (!StringUtils.isBlank((lineTxt = br.readLine())))</span><br><span class="line">                sb.append(lineTxt).append(&quot; &quot;);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            try &#123;</span><br><span class="line">                br.close();</span><br><span class="line">                ir.close();</span><br><span class="line">                fi.close();</span><br><span class="line">            &#125; catch (Exception ef) &#123;</span><br><span class="line">                ef.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return sb.toString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后是作为GUI显示的View类，本文使用Java AWT：</p>
+<p><strong>View类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br></pre></td><td class="code"><pre><span class="line">package design23.view;</span><br><span class="line"></span><br><span class="line">import java.awt.Color;</span><br><span class="line">import java.awt.Frame;</span><br><span class="line">import java.awt.Graphics;</span><br><span class="line">import java.awt.Image;</span><br><span class="line">import java.awt.event.WindowAdapter;</span><br><span class="line">import java.awt.event.WindowEvent;</span><br><span class="line">import java.awt.image.BufferedImage;</span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">import javax.imageio.ImageIO;</span><br><span class="line"></span><br><span class="line">import design23.model.Model;</span><br><span class="line">import design23.model.entity.Grid;</span><br><span class="line"></span><br><span class="line">public class View extends Frame &#123;</span><br><span class="line"></span><br><span class="line">    private static final long serialVersionUID = 1L;</span><br><span class="line"></span><br><span class="line">    private int gridSize = 32;</span><br><span class="line"></span><br><span class="line">    private int widebar = 31;</span><br><span class="line"></span><br><span class="line">    private int narrowbar = 6;</span><br><span class="line"></span><br><span class="line">    private Model model = new Model();</span><br><span class="line"></span><br><span class="line">    private BufferedImage img = this.loadImg(&quot;character.png&quot;);</span><br><span class="line"></span><br><span class="line">    public void launchFrame() &#123;</span><br><span class="line">        int gridRow = 7;</span><br><span class="line">        int gridColumn = 7;</span><br><span class="line">        this.model.initMap(gridRow, gridColumn, 3, 3, 0, 3);</span><br><span class="line">        this.model.initInterpreter(&quot;src/main/java/design23/code.txt&quot;);</span><br><span class="line">        super.setLocation(800, 300);</span><br><span class="line">        super.setSize(this.narrowbar + this.gridSize * gridColumn + this.narrowbar, this.widebar + this.gridSize * gridRow + this.narrowbar);</span><br><span class="line">        new Thread(this.new RepaintRunnable()).start();</span><br><span class="line">        super.addWindowListener(</span><br><span class="line">            new WindowAdapter() &#123;</span><br><span class="line">                @Override</span><br><span class="line">                public void windowClosing(WindowEvent e) &#123;</span><br><span class="line">                    System.exit(0);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        );</span><br><span class="line">        this.model.exe();</span><br><span class="line">        super.setVisible(true);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void paint(Graphics g) &#123;</span><br><span class="line">        Grid[][] grids = this.model.getMap().getGrids();</span><br><span class="line">        for (int r = 0; r &lt; grids.length; r++) &#123;</span><br><span class="line">            for (int c = 0; c &lt; grids[0].length; c++) &#123;</span><br><span class="line">                Grid grid = grids[r][c];</span><br><span class="line">                int dx1 = this.narrowbar + c * this.gridSize;</span><br><span class="line">                int dy1 = this.widebar + r * this.gridSize;</span><br><span class="line">                if (grid.getTimes() &gt; 0) &#123;</span><br><span class="line">                    Color tempColor = g.getColor();</span><br><span class="line">                    g.setColor(Color.GRAY);</span><br><span class="line">                    g.fillRect(dx1, dy1, this.gridSize, this.gridSize);</span><br><span class="line">                    g.setColor(tempColor);</span><br><span class="line">                &#125;</span><br><span class="line">                if (grid.getDirection() &gt;= 0) &#123;</span><br><span class="line">                    int direction = grid.getDirection();</span><br><span class="line">                    int stage = grid.getStage();</span><br><span class="line">                    g.drawImage(this.img,</span><br><span class="line">                                dx1,</span><br><span class="line">                                dy1,</span><br><span class="line">                                this.narrowbar + c * this.gridSize + this.gridSize,</span><br><span class="line">                                this.widebar + r * this.gridSize + this.gridSize,</span><br><span class="line">                                stage * this.gridSize,</span><br><span class="line">                                direction * this.gridSize,</span><br><span class="line">                                stage * this.gridSize + this.gridSize,</span><br><span class="line">                                direction * this.gridSize + this.gridSize,</span><br><span class="line">                                null);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private class RepaintRunnable implements Runnable &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            while (true) &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    View.this.repaint();</span><br><span class="line">                    Thread.sleep(10);</span><br><span class="line">                &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void update(Graphics g) &#123;</span><br><span class="line">        Image bImage = super.createImage(this.getWidth(), this.getHeight());</span><br><span class="line">        Graphics bg = bImage.getGraphics();</span><br><span class="line">        this.paint(bg);</span><br><span class="line">        bg.dispose();</span><br><span class="line">        g.drawImage(bImage, 0, 0, this);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private BufferedImage loadImg(String name) &#123;</span><br><span class="line">        BufferedImage bImage = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            bImage = ImageIO.read(View.class.getClassLoader().getResource(&quot;design23/&quot; + name));</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        return bImage;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在View的launchFrame()中，我们先调用model的initMap()初始化了地图，而后又调用model的initInterpreter()初始化了语法树。而后在需要的时候，也就是launchFrame()的最后，我们调用model的exe()方法来执行语法树。该方法会启一个新的线程，按设定的代码移动人物(其实就是改变地图中属性的值)。而View剩余要做的，就是不断的刷新并显示地图，将翻译器更新后的数据显示出来。</p>
+<p>最后给出Main.java。执行该类后，即可得到结果。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">package design23;</span><br><span class="line"></span><br><span class="line">import design23.view.View;</span><br><span class="line"></span><br><span class="line">public class Main &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        new View().launchFrame();        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>需要注意的是，因为我们在Model初始化语法树时将语法树打印出来了。因此除了UI外，我们还会在控制台中得到这样的一句输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[program [[repeat 1000 [[repeat 4 [[repeat 3 [go, right, go, left]], right]]]]]]</span><br></pre></td></tr></table></figure>
+<p>大家可以对照前文的EBNF加深理解。</p>
+<h1 id="登场角色"><a href="#登场角色" class="headerlink" title="登场角色"></a>登场角色</h1><p>上面的示例程序介绍了Interpreter模式的Java实现，下面咱们试着跳出语言层面，抽象出Interpreter模式中登场的角色。</p>
+<p><strong>AbstractExpression(抽象表达式)</strong></p>
+<p>定义结点的基本约束。在示例程序中，由Node类扮演这个角色。</p>
+<p><strong>TerminalExpression(终结符表达式)</strong></p>
+<p>即EBNF中的终结符表达式，在示例程序中，由PrimitiveCommandNode类扮演这个角色。</p>
+<p><strong>NonterminalExpression(非终结符表达式)</strong></p>
+<p>即EBNF中的非终结符表达式，在示例程序中，由ProgramNode类，CommandListNode类，CommandNode类，RepeatCommandNode类联袂扮演这个角色。</p>
+<p><strong>Context(上下文)</strong></p>
+<p>在示例程序中，由Context类扮演这个角色。</p>
+<h1 id="迷你语言可以有哪些？"><a href="#迷你语言可以有哪些？" class="headerlink" title="迷你语言可以有哪些？"></a>迷你语言可以有哪些？</h1><p>其实说白了，只要功能允许，也就是语言A中所表述的实体在语言B中实际存在，那么就可以使用Interpreter模式将语言A至于语言B之上。下面列出的是几种常用和热门的。</p>
+<p><strong>批处理语言</strong></p>
+<p>也就是所谓的第二代语言。这种语言基本就是单词的拼接，能表达的含义远没有第三代语言多。但是在某些本来就不需要那么多含义的场景下，使用批处理语言会使程序”更纯粹”，反而有利于开发和维护。本文示例程序中设计的迷你语言即属于批处理语言。</p>
+<p><strong>正则</strong></p>
+<p>大多数主流语言都支持对正则语法的解析。实现细节虽然千差万别，但核心思想基本不出本文藩篱。</p>
+<p><strong>自然语言</strong></p>
+<p>自然语言的语义识别和语法树的构建是人工智能的关键技术之一。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechat.png" alt="王艺凯 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/ali.jpg" alt="王艺凯 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>王艺凯</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2018/09/10/Java 设计模式-23Interpreter模式/" title="Java 设计模式-23.Interpreter模式">http://yoursite.com/2018/09/10/Java 设计模式-23Interpreter模式/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/07/Java 设计模式-22Command模式/" rel="next" title="Java 设计模式-22.Command模式">
+                <i class="fa fa-chevron-left"></i> Java 设计模式-22.Command模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/14/Leetcode Algorithms-28Implement strStr/" rel="prev" title="Leetcode Algorithms-28.Implement strStr()">
+                Leetcode Algorithms-28.Implement strStr() <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/avatar.jpg"
+                alt="王艺凯" />
+            
+              <p class="site-author-name" itemprop="name">王艺凯</p>
+              <p class="site-description motion-element" itemprop="description">Thou Shalt Comment</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">189</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">117</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/ReimuWang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:1505580759@qq.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用网站
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.bilibili.com/" title="bilibili" target="_blank">bilibili</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://acg12.com/" title="ACG调查小队" target="_blank">ACG调查小队</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.com/" title="leetcode" target="_blank">leetcode</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#综述"><span class="nav-number">1.</span> <span class="nav-text">综述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#控制人物移动的迷你语言"><span class="nav-number">2.</span> <span class="nav-text">控制人物移动的迷你语言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#示例程序"><span class="nav-number">3.</span> <span class="nav-text">示例程序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#登场角色"><span class="nav-number">4.</span> <span class="nav-text">登场角色</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#迷你语言可以有哪些？"><span class="nav-number">5.</span> <span class="nav-text">迷你语言可以有哪些？</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老滚6催更协会</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+  <div class="footer-custom"><i>明明可以靠脸吃饭，你却要靠才华，这就是你和明明的差距</i></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+
+</body>
+</html>

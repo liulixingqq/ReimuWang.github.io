@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/myLogo.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在《图解设计模式》一书中，Observer模式被归入了第8部分管理状态。在GoF原书中，Observer模式则被归入了行为型设计模式。">
+<meta name="keywords" content="Java,设计模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 设计模式-17.Observer模式">
+<meta property="og:url" content="http://yoursite.com/2018/08/28/Java 设计模式-17Observer模式/index.html">
+<meta property="og:site_name" content="ReimuWang&#39;s Blog">
+<meta property="og:description" content="在《图解设计模式》一书中，Observer模式被归入了第8部分管理状态。在GoF原书中，Observer模式则被归入了行为型设计模式。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/17Observer模式/0.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/17Observer模式/1.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/17Observer模式/2.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/17Observer模式/3.jpg">
+<meta property="og:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/17Observer模式/4.jpg">
+<meta property="og:updated_time" content="2018-08-29T08:51:58.344Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 设计模式-17.Observer模式">
+<meta name="twitter:description" content="在《图解设计模式》一书中，Observer模式被归入了第8部分管理状态。在GoF原书中，Observer模式则被归入了行为型设计模式。">
+<meta name="twitter:image" content="http://yoursite.com/images/blog_pic/Java%20设计模式/17Observer模式/0.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="ReimuWang's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/28/Java 设计模式-17Observer模式/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java 设计模式-17.Observer模式 | ReimuWang's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ReimuWang's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">189</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">117</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类<span class="badge">24</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404.html" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />公益 404</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+    
+      
+    
+    <a href="https://github.com/ReimuWang" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#222; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg>
+    
+      </a>
+    
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/28/Java 设计模式-17Observer模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王艺凯">
+      <meta itemprop="description" content="Thou Shalt Comment">
+      <meta itemprop="image" content="/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ReimuWang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java 设计模式-17.Observer模式
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-08-28 17:07:49" itemprop="dateCreated datePublished" datetime="2018-08-28T17:07:49+08:00">2018-08-28</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-08-29 16:51:58" itemprop="dateModified" datetime="2018-08-29T16:51:58+08:00">2018-08-29</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java-设计模式/" itemprop="url" rel="index"><span itemprop="name">Java 设计模式</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在《图解设计模式》一书中，Observer模式被归入了第8部分<a href="">管理状态</a>。在GoF原书中，Observer模式则被归入了<a href="">行为型设计模式</a>。</p>
+<a id="more"></a>
+<h1 id="综述"><a href="#综述" class="headerlink" title="综述"></a>综述</h1><p>Observer的含义是”观察者”，既然有观察者，那么自然就要有”观察对象”。在Observer模式中，观察者可以通过某种手段感知到观察对象某些状态的变化，进而做出相应的决策。</p>
+<h1 id="示例程序"><a href="#示例程序" class="headerlink" title="示例程序"></a>示例程序</h1><p>下面我们来看一个应用了Observer模式的示例程序。该程序的观察对象会定时产生随机数，而观察者在感知到随机数变化后会在控制台打印出数值的变化情况。</p>
+<p>首先是类图：</p>
+<p><img src="/images/blog_pic/Java 设计模式/17Observer模式/0.jpg" alt="0.jpg"></p>
+<p>本程序中的所有代码将被统一置于design17包下，结构如下：</p>
+<p><img src="/images/blog_pic/Java 设计模式/17Observer模式/1.jpg" alt="1.jpg"></p>
+<p>其中Main.java是测试代码，并没有出现在类图中。</p>
+<p>下面将逐个贴出每个类的源码。</p>
+<p><strong>Model类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">package design17;</span><br><span class="line"></span><br><span class="line">import java.util.Random;</span><br><span class="line"></span><br><span class="line">public class Model implements Runnable &#123;</span><br><span class="line"></span><br><span class="line">    int number;</span><br><span class="line"></span><br><span class="line">    long sleepTime;</span><br><span class="line"></span><br><span class="line">    private View view;</span><br><span class="line"></span><br><span class="line">    private int numberRange;</span><br><span class="line"></span><br><span class="line">    public Model(long sleepTime, int numberRange) &#123;</span><br><span class="line">        this.sleepTime = sleepTime;</span><br><span class="line">        this.numberRange = numberRange;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        Random random = new Random();</span><br><span class="line">        while (true) &#123;</span><br><span class="line">            this.number = random.nextInt(this.numberRange);</span><br><span class="line">            this.view.needUpdate.set(true);</span><br><span class="line">            try &#123;</span><br><span class="line">                Thread.sleep(this.sleepTime);</span><br><span class="line">            &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setView(View view) &#123;</span><br><span class="line">        this.view = view;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>View类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">package design17;</span><br><span class="line"></span><br><span class="line">import java.util.concurrent.atomic.AtomicBoolean;</span><br><span class="line"></span><br><span class="line">public class View implements Runnable &#123;</span><br><span class="line"></span><br><span class="line">    AtomicBoolean needUpdate = new AtomicBoolean();</span><br><span class="line"></span><br><span class="line">    private Model model;</span><br><span class="line"></span><br><span class="line">    private long sleepTime;</span><br><span class="line"></span><br><span class="line">    private int lastNumber;</span><br><span class="line"></span><br><span class="line">    public View(Model model) &#123;</span><br><span class="line">        this.model = model;</span><br><span class="line">        this.sleepTime = this.model.sleepTime / 10;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        while (true) &#123;</span><br><span class="line">            if (this.needUpdate.get()) &#123;</span><br><span class="line">                System.out.println(this.lastNumber + &quot; --&gt; &quot; + this.model.number);</span><br><span class="line">                this.lastNumber = this.model.number;</span><br><span class="line">                this.needUpdate.set(false);</span><br><span class="line">            &#125;</span><br><span class="line">            try &#123;</span><br><span class="line">                Thread.sleep(this.sleepTime);</span><br><span class="line">            &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Main类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">package design17;</span><br><span class="line"></span><br><span class="line">public class Main &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Model model = new Model(1000L, 50);</span><br><span class="line">        View view = new View(model);</span><br><span class="line">        model.setView(view);</span><br><span class="line">        new Thread(view).start();</span><br><span class="line">        new Thread(model).start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行本类后，会不停的每隔1秒打印一个[0,49]之间的随机整数。截取部分最初的输出如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">0 --&gt; 30</span><br><span class="line">30 --&gt; 46</span><br><span class="line">46 --&gt; 3</span><br><span class="line">3 --&gt; 23</span><br><span class="line">23 --&gt; 15</span><br><span class="line">15 --&gt; 49</span><br><span class="line">49 --&gt; 40</span><br><span class="line">40 --&gt; 29</span><br><span class="line">29 --&gt; 44</span><br><span class="line">44 --&gt; 39</span><br><span class="line">39 --&gt; 11</span><br></pre></td></tr></table></figure>
+<p>程序的代码和功能都很简单。不过还是有一些需要说明的点：</p>
+<p><strong>Model与View</strong></p>
+<p>在示例程序中，Model类是观察对象，View是观察者。阅读代码后就不难发现，Observer模式与MVC是如此的相似：观察对象对应MVC中的M(model)，观察者对应MVC中的V(view)。这也是本例中类名的用意。</p>
+<p><strong>声明为线程</strong></p>
+<p>在编写设计模式的示例程序时，核心目的是为了介绍设计模式的基本功能点，因此这些设计模式业务逻辑大多非常简单，很少会用到多线程，一般都是单线程跑到底。</p>
+<p>而本例的代码虽然简单，却起了共计3个线程：</p>
+<ul>
+<li>main线程</li>
+<li>model线程</li>
+<li>view线程</li>
+</ul>
+<p>之所以这么做，是为了模拟通信。如果我们不使用多线程，其实也可以实现看起来差不多的功能：观察对象发生变化后，通知观察者，观察者做出应对。</p>
+<p>但是这样仅仅就只能是看起来差不多了。在真正的并发环境下，观察对象发出讯息后工作就结束了，他可以继续做其他事情，也就是说，此时的消息是异步的，这也是现实中实际上发生的情况。而如果只有一个线程，这就仅仅只是看起来发出了一个消息而已，因为此时的消息逻辑是同步的，观察对象必须要等观察者处理完才能做其他事情。</p>
+<p>此外，Java其实提供了一套完整的synchronized-wait()-notify()通讯机制，可以更好的完成通讯的功能。不过它隐藏了一些通讯的细节，所以为了更好的描述消息的传递，本示例通过设置flag实现了一个简单的通讯机制(不能由model直接调用view的更新方法，因为这样的话消息又是同步的了)。</p>
+<p><strong>抽象层级</strong></p>
+<p>示例程序并没有将代码分层，之所以这样做，是因为分层是一个基础性的思路了，并不是Observer模式要讨论的重点。在实际应用中，观察对象与观察者均可以分层：</p>
+<ul>
+<li>观察者的分层是比较常见的。MVC模式中的V通常都会有多个，在接到相同M发来的消息后做出不同的应对。</li>
+<li>相对来说，观察对象的分层就比较少见了。不过如果业务需要，我们只要设计好观察对象统一的对外接口及消息，一个观察者用相同的套路观察多个同一类的观察对象也是可以的。</li>
+<li>最后，当然我们也可以设计出多观察者对多观察对象的代码。不过通常是不会有这样的需求的，就算有也要尽量避免，因为这会导致代码层次过于复杂，使人混乱。</li>
+</ul>
+<p><strong>观察对象与观察者的相互感知</strong></p>
+<p>首先，既然叫做观察者，那么观察者必须要知道自己观察的是谁才行。其次，因为观察对象要将自己的变化通知给观察者，因此观察对象也必须能够感知到观察者。反映到代码中，就是我们在main方法中做的model与view的绑定了。</p>
+<p>在本示例中，这种对绑定的需求是很明显的，如果我们用了Java提供的synchronized-wait()-notify()通讯机制，这种需求看似是变弱了，但实际上它们只是被封装起来而已。这其实是很好理解的：双向沟通的前提当然是要互相知道对方是谁才行。</p>
+<p>这个逻辑其实是有些怪的。因为按照正常的思路来看，观察者需要知道自身观察的对象是理所当然的。但是观察对象其实是无需知道有谁在观察自身的。说明白点，”我就是我，你爱看不看。我变化了也没有义务要通知你”。从更宏观的角度来讲，这其实是因为底层无需对上层负责，就好比父类无需感知到子类那样。</p>
+<h1 id="示例程序2"><a href="#示例程序2" class="headerlink" title="示例程序2"></a>示例程序2</h1><p>在上一个示例程序最后，我们提到了观察对象通知观察者自身变动逻辑上的问题。因此我们会在示例程序2种修改这个逻辑：观察对象无需在意观察者，观察者需要自行想办法获取观察对象的变动情况。本示例将采取观察者轮询观察对象的方式。这也是MVC模式下GUI程序中View最常采取的一种方式。为了使得示例程序更贴近实际情境(或者说更像一个真正的产品)，本示例将使用Java AWT技术来编写可视化的View。</p>
+<p>首先是类图：</p>
+<p><img src="/images/blog_pic/Java 设计模式/17Observer模式/2.jpg" alt="2.jpg"></p>
+<p>本程序中的所有代码将被统一置于design17_2包下，结构如下：</p>
+<p><img src="/images/blog_pic/Java 设计模式/17Observer模式/3.jpg" alt="3.jpg"></p>
+<p>其中Main.java是测试代码，并没有出现在类图中。</p>
+<p>下面将逐个贴出每个类的源码。</p>
+<p><strong>Model类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">package design17_2;</span><br><span class="line"></span><br><span class="line">import java.util.Random;</span><br><span class="line"></span><br><span class="line">public class Model implements Runnable &#123;</span><br><span class="line"></span><br><span class="line">    int number;</span><br><span class="line"></span><br><span class="line">    long sleepTime;</span><br><span class="line"></span><br><span class="line">    private int numberRange;</span><br><span class="line"></span><br><span class="line">    public Model(long sleepTime, int numberRange) &#123;</span><br><span class="line">        this.sleepTime = sleepTime;</span><br><span class="line">        this.numberRange = numberRange;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        Random random = new Random();</span><br><span class="line">        while (true) &#123;</span><br><span class="line">            this.number = random.nextInt(this.numberRange);</span><br><span class="line">            try &#123;</span><br><span class="line">                Thread.sleep(this.sleepTime);</span><br><span class="line">            &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>较之前例，Model类并没有什么太大的变化，只是去掉了与View的关联。即，此时的观察对象已无需感知到观察者。</p>
+<p><strong>View类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">package design17_2;</span><br><span class="line"></span><br><span class="line">import java.awt.Font;</span><br><span class="line">import java.awt.Frame;</span><br><span class="line">import java.awt.Graphics;</span><br><span class="line">import java.awt.Image;</span><br><span class="line">import java.awt.event.WindowAdapter;</span><br><span class="line">import java.awt.event.WindowEvent;</span><br><span class="line"></span><br><span class="line">public class View extends Frame &#123;</span><br><span class="line"></span><br><span class="line">    private static final long serialVersionUID = 1L;</span><br><span class="line"></span><br><span class="line">    private Model model;</span><br><span class="line"></span><br><span class="line">    private long sleepTime;</span><br><span class="line"></span><br><span class="line">    private int lastNumber;</span><br><span class="line"></span><br><span class="line">    private int nowNumber;</span><br><span class="line"></span><br><span class="line">    public View (Model model) &#123;</span><br><span class="line">        this.model = model;</span><br><span class="line">        this.sleepTime = this.model.sleepTime / 10;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void launchFrame() &#123;</span><br><span class="line">        super.setLocation(700, 300);</span><br><span class="line">        super.setSize(300, 150);</span><br><span class="line">        new Thread(this.new RepaintRunnable()).start();</span><br><span class="line">        super.addWindowListener(</span><br><span class="line">            new WindowAdapter() &#123;</span><br><span class="line">                @Override</span><br><span class="line">                public void windowClosing(WindowEvent e) &#123;</span><br><span class="line">                    System.exit(0);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        );</span><br><span class="line">        super.setVisible(true);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void paint(Graphics g) &#123;</span><br><span class="line">        g.setFont(new Font(null, Font.BOLD, 30));</span><br><span class="line">        if (this.nowNumber != this.model.number) &#123;</span><br><span class="line">            this.lastNumber = this.nowNumber;</span><br><span class="line">            this.nowNumber = this.model.number;</span><br><span class="line">        &#125;</span><br><span class="line">        g.drawString(this.lastNumber + &quot; --&gt; &quot; + this.nowNumber, 100, 100);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private class RepaintRunnable implements Runnable &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            while (true) &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    View.this.repaint();</span><br><span class="line">                    Thread.sleep(View.this.sleepTime);</span><br><span class="line">                &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void update(Graphics g) &#123;</span><br><span class="line">        Image bImage = super.createImage(this.getWidth(), this.getHeight());</span><br><span class="line">        Graphics bg = bImage.getGraphics();</span><br><span class="line">        this.paint(bg);</span><br><span class="line">        bg.dispose();</span><br><span class="line">        g.drawImage(bImage, 0, 0, this);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>相较之下，View变得就复杂得多了。不过这里大部分都是Java AWT的代码，与Observer模式无关。虽然可能会不太明显，不过Java AWT起了独立线程RepaintRunnable类的实例每隔一段时间定时刷新面板，我们也正是借此完成了观察者对观察对象主动的轮询。</p>
+<p><strong>Main类</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">package design17_2;</span><br><span class="line"></span><br><span class="line">public class Main &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Model model = new Model(1000L, 50);</span><br><span class="line">        new Thread(model).start();</span><br><span class="line">        new View(model).launchFrame();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行后输出这样的一个面板：</p>
+<p><img src="/images/blog_pic/Java 设计模式/17Observer模式/4.jpg" alt="4.jpg"></p>
+<p>面板上的数字会依逻辑实时变动。</p>
+<h1 id="登场角色"><a href="#登场角色" class="headerlink" title="登场角色"></a>登场角色</h1><p><strong>Observer(观察者)</strong></p>
+<p>在两个示例程序中，均由View类扮演这个角色。</p>
+<p><strong>Subject(观察对象)</strong></p>
+<p>在两个示例程序中，均由Model类扮演这个角色。</p>
+<p>因为Observer模式中的观察者与观察对象间的关系灵活且相对简单，因此就不给出无关语言的通用的类图了。</p>
+<h1 id="观察者也可以兼任改变者"><a href="#观察者也可以兼任改变者" class="headerlink" title="观察者也可以兼任改变者"></a>观察者也可以兼任改变者</h1><p>在本文的两个小例子，以及标准的MVC的定义中，观察者的职责是很明确的：它就仅仅负责观察被观察对象，并不会对被观察对象做出修改。不过有些情境下，观察对象在观测到被观察对象发生变化后，或者是其他条件的变化，可能会需要改变观察对象的某些属性。此时观察者相当于兼任了修改者的工作。</p>
+<p>我们并不能说这种做法有错。只不过这会导致程序混乱，并且增大程序出错的可能。例如此时稍有不慎，就可能造成无休止的循环：</p>
+<p>观察对象变化 –&gt; 观察者观测到这种变化 –&gt; 观察者修改观察对象，导致观察对象再次变化 –&gt; 观察者观测到这种变化…</p>
+<p>当然，我们可以通过代码避免这种循环，比如不会对因自身造成的变化进行处理等。不过这样终究是平添了代码逻辑的复杂性，依然不能算是优雅的代码。究其原因，还是因为角色身份的混乱。如果我们实在要实现类似的功能。也应再创建一个修改者的角色，然后通过观察者与修改者的交互达到目的。而观察者依然只有观察这一个使命，保证角色功能的单一性。</p>
+<h1 id="观察与通知"><a href="#观察与通知" class="headerlink" title="观察与通知"></a>观察与通知</h1><p>依笔者的拙见，Observer模式的标准样式应该是示例程序2那样的。然而，在GoF书官方给出的介绍中，示例程序1才是Observer模式的标准调用方式。示例程序2顶多算是Observer模式的变种。对此我是不太服气的，不过争论这些其实也没什么意义(正如一再提到的，设计模式其实没什么标准可言)，日常应用中其实还是示例程序2那种的多见一些。</p>
+<p>针对示例程序1那样实现的Observer模式，我们还给它起了一个别名：Publish-Subscribe(发布-订阅)模式。私以为这个命名才是比较贴切的。从我个人的理解来看，我会将示例程序1认为是Publish-Subscribe模式，而将示例程序2认为是Observer模式。二者是同一个大的思路下很相近的两种设计模式。</p>
+<h1 id="Java-API对Observer模式的应用"><a href="#Java-API对Observer模式的应用" class="headerlink" title="Java API对Observer模式的应用"></a>Java API对Observer模式的应用</h1><p>Java API提供了java.util.Observer接口：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">package java.util;</span><br><span class="line"></span><br><span class="line">public interface Observer &#123;</span><br><span class="line"></span><br><span class="line">    void update(Observable o, Object arg);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>很显然这是Observer模式中的观察者。而java.util.Observable则是观察对象，这个类就有些复杂了，我们只给出类定义：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class Observable</span><br></pre></td></tr></table></figure>
+<p>不幸的是，看来Java API的开发人员与我的意见是相左的，他们使用的也是示例程序1的那种方式(不如说好像只有我一个人的想法不一样。看来关于这件事真的就是私下认为一下得了，对外和人沟通时还是采取示例程序1的思路)。观察者的update()方法除了接收观察对象本身之外，还会接收一个附加信息。</p>
+<p>不过说实话，Java API提供的这套代码挺鸡肋的。究其原因，还是因为Observable被声明为了一个类，这样的好处自然是Java API的开发人员可以在其中封装很多逻辑，在要求不高的情况下，直接使用也是可以的。只不过Java是单继承的语言，这意味着如果要使用Observer-Observable，观察对象就不能再继承其他父类，不得不说这个限制还是很大的。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechat.png" alt="王艺凯 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/ali.jpg" alt="王艺凯 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>王艺凯</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2018/08/28/Java 设计模式-17Observer模式/" title="Java 设计模式-17.Observer模式">http://yoursite.com/2018/08/28/Java 设计模式-17Observer模式/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/设计模式/" rel="tag"># 设计模式</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/23/Java 设计模式-16Mediator模式/" rel="next" title="Java 设计模式-16.Mediator模式">
+                <i class="fa fa-chevron-left"></i> Java 设计模式-16.Mediator模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/30/Java 设计模式-18Memento模式/" rel="prev" title="Java 设计模式-18.Memento模式">
+                Java 设计模式-18.Memento模式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/avatar.jpg"
+                alt="王艺凯" />
+            
+              <p class="site-author-name" itemprop="name">王艺凯</p>
+              <p class="site-description motion-element" itemprop="description">Thou Shalt Comment</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">189</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">117</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/ReimuWang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:1505580759@qq.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用网站
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.bilibili.com/" title="bilibili" target="_blank">bilibili</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://acg12.com/" title="ACG调查小队" target="_blank">ACG调查小队</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.com/" title="leetcode" target="_blank">leetcode</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#综述"><span class="nav-number">1.</span> <span class="nav-text">综述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#示例程序"><span class="nav-number">2.</span> <span class="nav-text">示例程序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#示例程序2"><span class="nav-number">3.</span> <span class="nav-text">示例程序2</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#登场角色"><span class="nav-number">4.</span> <span class="nav-text">登场角色</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#观察者也可以兼任改变者"><span class="nav-number">5.</span> <span class="nav-text">观察者也可以兼任改变者</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#观察与通知"><span class="nav-number">6.</span> <span class="nav-text">观察与通知</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java-API对Observer模式的应用"><span class="nav-number">7.</span> <span class="nav-text">Java API对Observer模式的应用</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老滚6催更协会</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+  <div class="footer-custom"><i>明明可以靠脸吃饭，你却要靠才华，这就是你和明明的差距</i></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+
+</body>
+</html>

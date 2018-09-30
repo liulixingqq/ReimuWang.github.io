@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.4.1" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/myLogo.png?v=6.4.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.1" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.4.1',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="1991.4 —– Java前身OakSun公司(Sun Microsystems，Sun的由来为斯坦福大学校园网[Stanford University Network])的James Gosling领导的绿色计划(Green Project)开发出了一种面向消费性电子产品(如机顶盒，冰箱，收音机)的语言Oak(橡树)，反响平平。 1995.5.23 —– Java语言1.0随着互联网大潮的袭来">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 基础-发展历史">
+<meta property="og:url" content="http://yoursite.com/2017/10/16/Java 基础-发展历史/index.html">
+<meta property="og:site_name" content="ReimuWang&#39;s Blog">
+<meta property="og:description" content="1991.4 —– Java前身OakSun公司(Sun Microsystems，Sun的由来为斯坦福大学校园网[Stanford University Network])的James Gosling领导的绿色计划(Green Project)开发出了一种面向消费性电子产品(如机顶盒，冰箱，收音机)的语言Oak(橡树)，反响平平。 1995.5.23 —– Java语言1.0随着互联网大潮的袭来">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-03-28T10:05:33.698Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 基础-发展历史">
+<meta name="twitter:description" content="1991.4 —– Java前身OakSun公司(Sun Microsystems，Sun的由来为斯坦福大学校园网[Stanford University Network])的James Gosling领导的绿色计划(Green Project)开发出了一种面向消费性电子产品(如机顶盒，冰箱，收音机)的语言Oak(橡树)，反响平平。 1995.5.23 —– Java语言1.0随着互联网大潮的袭来">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="ReimuWang's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/16/Java 基础-发展历史/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java 基础-发展历史 | ReimuWang's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ReimuWang's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">189</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">117</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类<span class="badge">24</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404.html" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />公益 404</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+    
+      
+    
+    <a href="https://github.com/ReimuWang" class="github-corner" target="_blank" title="Follow me on GitHub" aria-label="Follow me on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#222; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg>
+    
+      </a>
+    
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/16/Java 基础-发展历史/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王艺凯">
+      <meta itemprop="description" content="Thou Shalt Comment">
+      <meta itemprop="image" content="/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ReimuWang's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java 基础-发展历史
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-10-16 16:31:49" itemprop="dateCreated datePublished" datetime="2017-10-16T16:31:49+08:00">2017-10-16</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2018-03-28 18:05:33" itemprop="dateModified" datetime="2018-03-28T18:05:33+08:00">2018-03-28</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java-基础/" itemprop="url" rel="index"><span itemprop="name">Java 基础</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1991-4-—–-Java前身Oak"><a href="#1991-4-—–-Java前身Oak" class="headerlink" title="1991.4 —– Java前身Oak"></a>1991.4 —– Java前身Oak</h1><p>Sun公司(Sun Microsystems，Sun的由来为斯坦福大学校园网[Stanford University Network])的James Gosling领导的绿色计划(Green Project)开发出了一种面向消费性电子产品(如机顶盒，冰箱，收音机)的语言Oak(橡树)，反响平平。</p>
+<h1 id="1995-5-23-—–-Java语言1-0"><a href="#1995-5-23-—–-Java语言1-0" class="headerlink" title="1995.5.23 —– Java语言1.0"></a>1995.5.23 —– Java语言1.0</h1><p>随着互联网大潮的袭来，Oak迅速找到了自身的市场定位，并在Sun World大会上改名为Java并发布了1.0版本。同时Java也提出了它那句最为著名的广告语：Write Once,Run Anywhere。</p>
+<a id="more"></a>
+<h1 id="1996-1-23-—–-JDK1-0"><a href="#1996-1-23-—–-JDK1-0" class="headerlink" title="1996.1.23 —– JDK1.0"></a>1996.1.23 —– JDK1.0</h1><p>JDK(Java Development Kit)是JVM+Java语言语法+Java API类库中的核心类库的统称。至此Java终于拥有了完整的官方运行环境。</p>
+<p>JDK1.0所使用的JVM为Sun Classic VM，这是一个纯解释执行的虚拟机，因此执行代码较慢，给很多人留下了Java运行慢的第一印象并直至今日。实际上，随着JIT及各种优化策略的引入，当今Java在执行速度上已不弱于其他主流语言。</p>
+<p>JDK1.0的代表技术包括：</p>
+<ul>
+<li><p>Applet：包含在Html页面中的Java小程序。</p>
+</li>
+<li><p>AWT(Abstract Window Toolkit，抽象窗口工具集)：Java的图形用户界面(Graphical User Interface,GUI)的根基。</p>
+</li>
+</ul>
+<h1 id="1996-3"><a href="#1996-3" class="headerlink" title="1996.3"></a>1996.3</h1><p>微软申请并获得了Java许可证。</p>
+<h1 id="1996-4"><a href="#1996-4" class="headerlink" title="1996.4"></a>1996.4</h1><p>10个最主要的操作系统供应商申明将在其产品中嵌入Java技术。</p>
+<h1 id="1996-5月底"><a href="#1996-5月底" class="headerlink" title="1996.5月底"></a>1996.5月底</h1><p>Sun公司于美国旧金山举行了首届JavaOne大会，自此其成为了Java使用者每年一度的技术盛会。</p>
+<h1 id="1996-9"><a href="#1996-9" class="headerlink" title="1996.9"></a>1996.9</h1><p>已有大约8.3万个网页应用了Java技术。</p>
+<h1 id="1997-2-19-—–-JDK1-1"><a href="#1997-2-19-—–-JDK1-1" class="headerlink" title="1997.2.19 —– JDK1.1"></a>1997.2.19 —– JDK1.1</h1><p>JDK1.1发布了大量Java中最为基础的技术支撑点，例如：</p>
+<ul>
+<li><p>JDBC(Java DataBase Connectivity)。</p>
+</li>
+<li><p>JAR(Java Archive)：java归档文件格式。</p>
+</li>
+<li><p>JavaBean。</p>
+</li>
+<li><p>RMI(Remote Method Invoke，远程方法调用)。</p>
+</li>
+<li><p>内部类(Inner Class)。</p>
+</li>
+<li><p>反射(Reflection)。</p>
+</li>
+</ul>
+<h1 id="1997-9-12-—–-JDK1-1-4"><a href="#1997-9-12-—–-JDK1-1-4" class="headerlink" title="1997.9.12 —– JDK1.1.4"></a>1997.9.12 —– JDK1.1.4</h1><p>截至1997年9月12日为止，共发布了3个JDK1.1的升级版本：JDK1.1.1~JDK1.1.3。</p>
+<p>1997年9月12日JDK1.1.4发布，自此开始基本每个版本都会有一个工程代号，JDK1.1.4的工程代号为Sparkler(宝石)。</p>
+<h1 id="1997-10"><a href="#1997-10" class="headerlink" title="1997.10"></a>1997.10</h1><p>Sun状告微软于1997年发布的Visual J++对Java做出了”不恰当的修改”，这些修改将Java绑定在了Windows平台下，违背了JVM平台无关性的基本规划。</p>
+<h1 id="1997-12-03-—–-JDK1-1-5"><a href="#1997-12-03-—–-JDK1-1-5" class="headerlink" title="1997.12.03 —– JDK1.1.5"></a>1997.12.03 —– JDK1.1.5</h1><p>工程代号Pumpkin(南瓜)。</p>
+<h1 id="1998-4-24-—–-JDK1-1-6"><a href="#1998-4-24-—–-JDK1-1-6" class="headerlink" title="1998.4.24 —– JDK1.1.6"></a>1998.4.24 —– JDK1.1.6</h1><p>工程代号Abigail(阿比盖尔，女性名)。</p>
+<h1 id="1998-9-28-—–-JDK1-1-7"><a href="#1998-9-28-—–-JDK1-1-7" class="headerlink" title="1998.9.28 —– JDK1.1.7"></a>1998.9.28 —– JDK1.1.7</h1><p>工程代号Brutus(布鲁图，古罗马政治家，将军)。</p>
+<h1 id="1998-12-4-—–-JDK1-2"><a href="#1998-12-4-—–-JDK1-2" class="headerlink" title="1998.12.4 —– JDK1.2"></a>1998.12.4 —– JDK1.2</h1><p>工程代号Playground(竞技场)。</p>
+<p>JDK1.2将Java的技术体系依应用平台划分为3个方向：J2ME(Java 2 Platform, Micro Edition)，J2SE(Java 2 Platform, Standard Edition)，J2EE(Java 2 Platform, Enterprise Edition)。详见<a href="/2017/10/16/Java 基础-技术体系/">Java 基础-技术体系</a>。</p>
+<p>JDK1.2的代表性技术包括：</p>
+<ul>
+<li><p>EJB(Enterprise JavaBean)：J2EE平台下对JavaBean技术的扩展。</p>
+</li>
+<li><p>Java Plug-in：因官司纠纷的原因IE不支持JAVA2的特征，所以Sun设计了该插件以解决这个问题。</p>
+</li>
+<li><p>Java IDL(Interface Definition Language)：实现网络上不同平台不同语言之间的交互。</p>
+</li>
+<li><p>Swing：新一代GUI，AWT的升级版。</p>
+</li>
+<li><p>strictfp(strict float point,精确浮点)关键字。</p>
+</li>
+<li><p>Collection框架。</p>
+</li>
+</ul>
+<p>JDK1.2在整个周期中曾存在过3个JVM：</p>
+<ul>
+<li><p>Sun Classic VM：JDK1.0~JDK1.1中的唯一JVM，JDK1.2中依然以其为默认JVM。</p>
+</li>
+<li><p>HotSpot VM。</p>
+</li>
+<li><p>Exact VM：只在Solaris平台上出现过。因使用准确式内存管理(Exact Memory Management)而得名(详见<a href="/2017/10/26/JVM-垃圾收集/">JVM-垃圾收集</a>)。</p>
+</li>
+</ul>
+<p>JDK1.2首次引入了JIT(Just In Time)编译器。Sun Classic VM只能以外挂的形式使用JIT编译器，且编译器与解释器无法混合使用，即要么纯编译，要么纯解释(因此执行效率依然糟糕)。HotSpot VM及Exact VM则内置了JIT编译器，且编译器与解释器可以混合执行。</p>
+<h1 id="1999-3-30-—–-JDK1-2-1"><a href="#1999-3-30-—–-JDK1-2-1" class="headerlink" title="1999.3.30 —– JDK1.2.1"></a>1999.3.30 —– JDK1.2.1</h1><p>无工程代号。</p>
+<h1 id="1999-4-8-—–-JDK1-1-8"><a href="#1999-4-8-—–-JDK1-1-8" class="headerlink" title="1999.4.8 —– JDK1.1.8"></a>1999.4.8 —– JDK1.1.8</h1><p>工程代号Chelsea(切尔西，城市名)。</p>
+<h1 id="1999-4-27-—–-HotSpot-VM发布"><a href="#1999-4-27-—–-HotSpot-VM发布" class="headerlink" title="1999.4.27 —– HotSpot VM发布"></a>1999.4.27 —– HotSpot VM发布</h1><p>HotSpot VM最初由一家名为Longview Technologies的小公司所开发，后该公司于1997年被Sun收购。</p>
+<p>与Sun自行研发的Exact VM相比，HotSpot VM具备作为Exact VM名称由来的准确式内存管理技术。相对的，Exact VM同样具备作为HotSpot VM名称由来的热点探测技术。因此二者在核心竞争力上其实相去不远。关于二者究竟哪一个会作为后续版本的主力JVM在Sun内部还曾有过激烈的争论。因此HotSpot VM最终的胜利并非是依托于压倒性的技术优势，而是带有一些”总得选一个吧，那就它吧”的小幸运。</p>
+<p>所谓热点探测技术，就是指可以通过执行计数器找到最具编译价值的代码，然后通过JIT编译器以方法为单位进行编译。若方法被频繁调用将会触发标准编译。若方法中的有效循环次数很多，将会触发栈上替换(OSR)。</p>
+<h1 id="1999-7-8-JDK1-2-2"><a href="#1999-7-8-JDK1-2-2" class="headerlink" title="1999.7.8 JDK1.2.2"></a>1999.7.8 JDK1.2.2</h1><p>工程代号Cricket(板球)。</p>
+<h1 id="2000-5-8-JDK1-3-0"><a href="#2000-5-8-JDK1-3-0" class="headerlink" title="2000.5.8 JDK1.3.0"></a>2000.5.8 JDK1.3.0</h1><p>工程代号Kestrel(美洲红隼)。自JDK1.3.0起，HotSpot VM成为默认JVM，Classic VM则作为可选JVM提供。</p>
+<p>本次大版本的更新主要集中在类库上，例如数学运算和新的Timer API等。</p>
+<p>JNDI(Java Naming and Directory Interface,Java命名和目录接口)开始被作为一项平台级服务被提供(此前仅仅是一项扩展)。</p>
+<p>使用CORBA IIOP(Internet Inter-ORB Protocol,互联网内部对象请求代理协议)实现RMI的通信协议。</p>
+<p>提供了大量新的Java 2D API(然并卵)，并新增JavaSound类库。</p>
+<p>自本版本起，Sun维持了一个习惯：大约每隔两年发布一个大版本，以动物命名工程代号；期间的小版本则以昆虫命名工程代号。</p>
+<h1 id="2001-5-17-JDK1-3-1"><a href="#2001-5-17-JDK1-3-1" class="headerlink" title="2001.5.17 JDK1.3.1"></a>2001.5.17 JDK1.3.1</h1><p>工程代号Ladybird(瓢虫)。</p>
+<h1 id="2001-1"><a href="#2001-1" class="headerlink" title="2001.1"></a>2001.1</h1><p>Sun与微软达成和解。微软承诺会逐步在其产品中移除Java技术。</p>
+<h1 id="2001-7"><a href="#2001-7" class="headerlink" title="2001.7"></a>2001.7</h1><p>微软公布新版的Windows XP将不再支持Sun的JVM，并且推出了.NET平台与Java分庭抗礼。</p>
+<h1 id="2002-2-13-JDK1-4-0"><a href="#2002-2-13-JDK1-4-0" class="headerlink" title="2002.2.13 JDK1.4.0"></a>2002.2.13 JDK1.4.0</h1><p>工程代号Merlin(灰背隼)。在这个大版本的更新中，JDK真正的摆脱了成长期走入了成熟。Compaq(康柏电脑)，Fujitsu(富士通)，SAS(STATISTICAL ANALYSIS SYSTEM)，Symbian(塞班)，IBM(International Business Machines Corporation,国际商业机器公司)等都参与甚至实现了自己独立的JDK1.4。正因为如此，JDK1.4.0至今仍能基本被主流应用(Spring等)所兼容。</p>
+<p>JDK1.4带来了很多新特性，例如正则表达式，异常链，NIO(java non-blocking IO或New IO，用以替代此前的阻塞式IO)，日志系统，XML解析器，XSLT(XSL指EXtensible Stylesheet Language,扩展样式表语言，其为XML的扩展。T指转换)转换器等。</p>
+<p>JVM方面，彻底移除了Classic VM。</p>
+<h1 id="2002-9-16-JDK1-4-1"><a href="#2002-9-16-JDK1-4-1" class="headerlink" title="2002.9.16 JDK1.4.1"></a>2002.9.16 JDK1.4.1</h1><p>工程代号Grasshopper(蚱蜢)。</p>
+<h1 id="2003-6-26-JDK1-4-2"><a href="#2003-6-26-JDK1-4-2" class="headerlink" title="2003.6.26 JDK1.4.2"></a>2003.6.26 JDK1.4.2</h1><p>工程代号Mantis(螳螂)。</p>
+<h1 id="2004-9-29-JDK1-5-0"><a href="#2004-9-29-JDK1-5-0" class="headerlink" title="2004.9.29 JDK1.5.0"></a>2004.9.29 JDK1.5.0</h1><p>工程代号Tiger(老虎)。自本版本起，官方在宣发上已不再采取类似于JDK1.5.0的命名方式，取而代之的是采用JDK5。只有在程序内部使用的开发版本号(Developer Version，例如java -version的输出)才继续沿用此前的命名方式。为了行文统一，本文在后续描述中将沿用此前的命名方式。</p>
+<p>JDK1.5做出了自JDK1.2以来在语法层面上最大幅度的改进。引入了自动装箱，泛型，动态注解，枚举，可变长参数，foreach等新功能点。</p>
+<p>JVM层面改进了Java的内存模型JMM(Java Memory Model)。</p>
+<p>API层面引入了java.util.concurrent并发包实现了一个粗粒度的并发框架。</p>
+<h1 id="2006-11-13-开源"><a href="#2006-11-13-开源" class="headerlink" title="2006.11.13 开源"></a>2006.11.13 开源</h1><p>在当日的JavaOne大会上，Sun宣布将对Java进行开源。并建立起OpenJDK组织管理这些开源代码。在随后的一年多的时间内，除了极少量的私有的与语言特性基本无关的代码以外，OpenJDK基本可与官方的JDK等同。</p>
+<p>OpenJDK中所用的JVM与官方的JDK相同，即也为HotSpot VM。</p>
+<h1 id="2006-12-11-JDK1-6-0"><a href="#2006-12-11-JDK1-6-0" class="headerlink" title="2006.12.11 JDK1.6.0"></a>2006.12.11 JDK1.6.0</h1><p>工程代号Mustang(野马)。自本版本起sun终结了J2SE,J2ME,J2EE，转而使用Java SE 6,Java ME 6,Java EE 6。</p>
+<p>该版本新增的功能包括：通过内置Mozilla JavaScript Rhino引擎的方式提供动态语言支持。提供编译APT。提供微型HTTP服务器API。</p>
+<p>JVM方面，改进了锁与同步，垃圾收集，类加载等方面的算法。</p>
+<h1 id="2009-4-20-Oracle收购Sun"><a href="#2009-4-20-Oracle收购Sun" class="headerlink" title="2009.4.20 Oracle收购Sun"></a>2009.4.20 Oracle收购Sun</h1><p>此前Oracle已收购了BEA并从其手中接收了三大商用JVM之一的JRockit(主要面向的市场为服务器端，因此可以不必考虑启动时间及响应时间，JRockit内部仅有即时编译器而没有解释器)。收购Sun后Oracle又从其手中接收了三大商用JVM中的第二个，也是最为流行的HotSpot。Oracle计划未来将会将这两款JVM合二为一，形成HotRockit。合并后的JVM将兼具两家之长，譬如使用JRockit的垃圾回收器与MissionControl(任务控制，是一种调优工具)。使用HotSpot的JIT编译器等。</p>
+<p>三大商用JVM中的最后一个为IBM公司的J9，该虚拟机主要用于支持IBM自身的Java设备。其应用范围和HotSpot基本一致。</p>
+<h1 id="2011-7-28-JDK1-7-0"><a href="#2011-7-28-JDK1-7-0" class="headerlink" title="2011.7.28 JDK1.7.0"></a>2011.7.28 JDK1.7.0</h1><p>工程代号Dolphin(海豚)。</p>
+<p>JDK1.7.0立项时共计划了10个里程碑，原始计划至2010年9月9日完成所有里程碑。2009年2月19日完成了第一个里程碑后，因为Sun公司经营上的问题，进度将无法如期完成。</p>
+<p>在Sun被Oracle收购后，为保证JDK1.7.0能在2011年7月28日准时发布，只能放弃部分计划中的功能点：例如Lambda项目(Lambda表达式，函数式编程)，Jigsaw项目(虚拟机模块化支持)，Coin项目(语言细节进化)等。</p>
+<p>最终，JDK1.7的功能为：动态语言支持，GarbageFirst(G1)收集器(刚推出时G1依然处于Experimental状态，直到2012年4月的Update 4才转为正式版)，加强对非Java语言的调用支持(JSR-292，直至JDK1.7周期结束也未完全完成)，改进类加载架构等。</p>
+<p>API层面引入了java.util.concurrent.forkjoin包完善了java.util.concurrent的并发框架。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/wechat.png" alt="王艺凯 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/ali.jpg" alt="王艺凯 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>王艺凯</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://yoursite.com/2017/10/16/Java 基础-发展历史/" title="Java 基础-发展历史">http://yoursite.com/2017/10/16/Java 基础-发展历史/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/16/Java 基础-技术体系/" rel="next" title="Java 基础-技术体系">
+                <i class="fa fa-chevron-left"></i> Java 基础-技术体系
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/17/JVM-运行时数据区域/" rel="prev" title="JVM-运行时数据区域">
+                JVM-运行时数据区域 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/avatar.jpg"
+                alt="王艺凯" />
+            
+              <p class="site-author-name" itemprop="name">王艺凯</p>
+              <p class="site-description motion-element" itemprop="description">Thou Shalt Comment</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">189</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">117</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/ReimuWang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:1505580759@qq.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                常用网站
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.bilibili.com/" title="bilibili" target="_blank">bilibili</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://acg12.com/" title="ACG调查小队" target="_blank">ACG调查小队</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.com/" title="leetcode" target="_blank">leetcode</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1991-4-—–-Java前身Oak"><span class="nav-number">1.</span> <span class="nav-text">1991.4 —– Java前身Oak</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1995-5-23-—–-Java语言1-0"><span class="nav-number">2.</span> <span class="nav-text">1995.5.23 —– Java语言1.0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1996-1-23-—–-JDK1-0"><span class="nav-number">3.</span> <span class="nav-text">1996.1.23 —– JDK1.0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1996-3"><span class="nav-number">4.</span> <span class="nav-text">1996.3</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1996-4"><span class="nav-number">5.</span> <span class="nav-text">1996.4</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1996-5月底"><span class="nav-number">6.</span> <span class="nav-text">1996.5月底</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1996-9"><span class="nav-number">7.</span> <span class="nav-text">1996.9</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1997-2-19-—–-JDK1-1"><span class="nav-number">8.</span> <span class="nav-text">1997.2.19 —– JDK1.1</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1997-9-12-—–-JDK1-1-4"><span class="nav-number">9.</span> <span class="nav-text">1997.9.12 —– JDK1.1.4</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1997-10"><span class="nav-number">10.</span> <span class="nav-text">1997.10</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1997-12-03-—–-JDK1-1-5"><span class="nav-number">11.</span> <span class="nav-text">1997.12.03 —– JDK1.1.5</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1998-4-24-—–-JDK1-1-6"><span class="nav-number">12.</span> <span class="nav-text">1998.4.24 —– JDK1.1.6</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1998-9-28-—–-JDK1-1-7"><span class="nav-number">13.</span> <span class="nav-text">1998.9.28 —– JDK1.1.7</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1998-12-4-—–-JDK1-2"><span class="nav-number">14.</span> <span class="nav-text">1998.12.4 —– JDK1.2</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1999-3-30-—–-JDK1-2-1"><span class="nav-number">15.</span> <span class="nav-text">1999.3.30 —– JDK1.2.1</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1999-4-8-—–-JDK1-1-8"><span class="nav-number">16.</span> <span class="nav-text">1999.4.8 —– JDK1.1.8</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1999-4-27-—–-HotSpot-VM发布"><span class="nav-number">17.</span> <span class="nav-text">1999.4.27 —– HotSpot VM发布</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1999-7-8-JDK1-2-2"><span class="nav-number">18.</span> <span class="nav-text">1999.7.8 JDK1.2.2</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2000-5-8-JDK1-3-0"><span class="nav-number">19.</span> <span class="nav-text">2000.5.8 JDK1.3.0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2001-5-17-JDK1-3-1"><span class="nav-number">20.</span> <span class="nav-text">2001.5.17 JDK1.3.1</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2001-1"><span class="nav-number">21.</span> <span class="nav-text">2001.1</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2001-7"><span class="nav-number">22.</span> <span class="nav-text">2001.7</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2002-2-13-JDK1-4-0"><span class="nav-number">23.</span> <span class="nav-text">2002.2.13 JDK1.4.0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2002-9-16-JDK1-4-1"><span class="nav-number">24.</span> <span class="nav-text">2002.9.16 JDK1.4.1</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2003-6-26-JDK1-4-2"><span class="nav-number">25.</span> <span class="nav-text">2003.6.26 JDK1.4.2</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2004-9-29-JDK1-5-0"><span class="nav-number">26.</span> <span class="nav-text">2004.9.29 JDK1.5.0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2006-11-13-开源"><span class="nav-number">27.</span> <span class="nav-text">2006.11.13 开源</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2006-12-11-JDK1-6-0"><span class="nav-number">28.</span> <span class="nav-text">2006.12.11 JDK1.6.0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2009-4-20-Oracle收购Sun"><span class="nav-number">29.</span> <span class="nav-text">2009.4.20 Oracle收购Sun</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2011-7-28-JDK1-7-0"><span class="nav-number">30.</span> <span class="nav-text">2011.7.28 JDK1.7.0</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老滚6催更协会</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+  <div class="footer-custom"><i>明明可以靠脸吃饭，你却要靠才华，这就是你和明明的差距</i></div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+
+</body>
+</html>
