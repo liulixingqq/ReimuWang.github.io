@@ -484,9 +484,9 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[Leetcode Algorithms-26.Remove Duplicates from Sorted Array]]></title>
-    <url>%2F2018%2F05%2F30%2FLeetcode%20Algorithms-26Remove%20DuplicatesfromSortedArray%2F</url>
-    <content type="text"><![CDATA[问题地址Remove Duplicates from Sorted Array - LeetCode 问题描述 解法代码 123456789101112public class Solution &#123; public int removeDuplicates(int[] nums) &#123; if (null == nums || nums.length == 0) return 0; int lastIndex = 0; for (int i = 0; i &lt; nums.length; i++) &#123; if (nums[lastIndex] == nums[i]) continue; nums[++lastIndex] = nums[i]; &#125; return lastIndex + 1; &#125;&#125;]]></content>
+    <title><![CDATA[Leetcode Algorithms-21.Merge Two Sorted Lists]]></title>
+    <url>%2F2018%2F05%2F30%2FLeetcode%20Algorithms-21MergeTwoSortedLists%2F</url>
+    <content type="text"><![CDATA[问题地址Merge Two Sorted Lists - LeetCode 问题描述 解法思路 注意在迭代的过程中不要将链表弄断即可。 代码 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950/** * Definition for singly-linked list. * public class ListNode &#123; * int val; * ListNode next; * ListNode(int x) &#123; val = x; &#125; * &#125; */public class Solution &#123; public ListNode mergeTwoLists(ListNode l1, ListNode l2) &#123; ListNode l1Current = l1; ListNode l2Current = l2; if (null == l1Current) return l2Current; if (null == l2Current) return l1Current; ListNode head = null; if (l1Current.val &lt; l2Current.val) &#123; head = l1Current; l1Current = l1Current.next; &#125; else &#123; head = l2Current; l2Current = l2Current.next; &#125; ListNode current = head; while (null != l1Current &amp;&amp; null != l2Current) &#123; if (l1Current.val &lt; l2Current.val) &#123; current.next = l1Current; l1Current = l1Current.next; &#125; else &#123; current.next = l2Current; l2Current = l2Current.next; &#125; current = current.next; &#125; if (null == l1Current) current.next = l2Current; if (null == l2Current) current.next = l1Current; return head; &#125;&#125;class ListNode &#123; int val; ListNode next; ListNode(int x) &#123; val = x; &#125;&#125;]]></content>
       <categories>
         <category>Leetcode Algorithms</category>
       </categories>
@@ -497,9 +497,9 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[Leetcode Algorithms-21.Merge Two Sorted Lists]]></title>
-    <url>%2F2018%2F05%2F30%2FLeetcode%20Algorithms-21MergeTwoSortedLists%2F</url>
-    <content type="text"><![CDATA[问题地址Merge Two Sorted Lists - LeetCode 问题描述 解法思路 注意在迭代的过程中不要将链表弄断即可。 代码 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950/** * Definition for singly-linked list. * public class ListNode &#123; * int val; * ListNode next; * ListNode(int x) &#123; val = x; &#125; * &#125; */public class Solution &#123; public ListNode mergeTwoLists(ListNode l1, ListNode l2) &#123; ListNode l1Current = l1; ListNode l2Current = l2; if (null == l1Current) return l2Current; if (null == l2Current) return l1Current; ListNode head = null; if (l1Current.val &lt; l2Current.val) &#123; head = l1Current; l1Current = l1Current.next; &#125; else &#123; head = l2Current; l2Current = l2Current.next; &#125; ListNode current = head; while (null != l1Current &amp;&amp; null != l2Current) &#123; if (l1Current.val &lt; l2Current.val) &#123; current.next = l1Current; l1Current = l1Current.next; &#125; else &#123; current.next = l2Current; l2Current = l2Current.next; &#125; current = current.next; &#125; if (null == l1Current) current.next = l2Current; if (null == l2Current) current.next = l1Current; return head; &#125;&#125;class ListNode &#123; int val; ListNode next; ListNode(int x) &#123; val = x; &#125;&#125;]]></content>
+    <title><![CDATA[Leetcode Algorithms-26.Remove Duplicates from Sorted Array]]></title>
+    <url>%2F2018%2F05%2F30%2FLeetcode%20Algorithms-26Remove%20DuplicatesfromSortedArray%2F</url>
+    <content type="text"><![CDATA[问题地址Remove Duplicates from Sorted Array - LeetCode 问题描述 解法代码 123456789101112public class Solution &#123; public int removeDuplicates(int[] nums) &#123; if (null == nums || nums.length == 0) return 0; int lastIndex = 0; for (int i = 0; i &lt; nums.length; i++) &#123; if (nums[lastIndex] == nums[i]) continue; nums[++lastIndex] = nums[i]; &#125; return lastIndex + 1; &#125;&#125;]]></content>
       <categories>
         <category>Leetcode Algorithms</category>
       </categories>
@@ -1299,9 +1299,9 @@
       </categories>
       <tags>
         <tag>Java</tag>
-        <tag>JDBC</tag>
         <tag>并发</tag>
         <tag>事务</tag>
+        <tag>JDBC</tag>
       </tags>
   </entry>
   <entry>
@@ -1581,6 +1581,20 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[Java 并发-线程优先级]]></title>
+    <url>%2F2017%2F09%2F29%2FJava%20%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E4%BC%98%E5%85%88%E7%BA%A7%2F</url>
+    <content type="text"><![CDATA[用户可指定不同线程间的优先级，高优先级的线程在竞争资源时更有利。注意这仅仅是”有利”，即高优先级线程较之低优先级线程有更高的概率获得资源，而非在资源争夺中一定会获胜。Java将线程的优先级分为1-10的十个级别，并且提供了3个内置在Thread类中的静态标量： 123public final static int MIN_PRIORITY = 1;public final static int NORM_PRIORITY = 5;public final static int MAX_PRIORITY = 10; 默认情况下，线程的优先级为NORM_PRIORITY = 5。 Java中的线程优先级是一个相对不靠谱的东西： 但凡是牵扯到概率，程序就无法精确控制。我们并不能确定高优先级的线程就一定会先于低优先级的线程获得资源。 本质上，Java线程的优先级必须要映射到操作系统底层的线程优先级才能发挥作用。但是很多操作系统的线程优先级的分级根本就没有10个那么多。这就导致复数个Java层面的线程优先级在操作系统看来实际是一回事。即程序员将两个线程的优先级分别设置为5,6并期望二者能在优先级上有所差异，但其实底层操作系统在实现时也许二者的优先级就完全一样了。这也是Java提供3个静态标量的原因：无论操作系统多么糟心，3个档次的优先级一般还是有的。因此推荐用静态标量的方式设置优先级，而不要自己指定数字。 所以，在要求严格的场合，还是要程序员自己在应用层面通过代码逻辑来控制线程的优先级。 小例子： 1234567891011121314151617181920212223242526272829public class Test extends Thread &#123; public Test(String name) &#123; super(name); &#125; @Override public void run() &#123; int count = 0; while (true) &#123; synchronized (Test.class) &#123; count++; if (count &gt; 10000000) &#123; System.out.println(Thread.currentThread().getName() + &quot; finish.&quot;); break; &#125; &#125; &#125; &#125; public static void main(String[] args) &#123; Thread low = new Test(&quot;low&quot;); low.setPriority(Thread.MIN_PRIORITY); Thread high = new Test(&quot;high&quot;); high.setPriority(Thread.MAX_PRIORITY); low.start(); high.start(); &#125;&#125; 绝大多数情况，输出如下： 12high finish.low finish.]]></content>
+      <categories>
+        <category>Java 并发</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>并发</tag>
+        <tag>线程</tag>
+        <tag>优先级</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Java 并发-3个并发相关的定律]]></title>
     <url>%2F2017%2F09%2F29%2FJava%20%E5%B9%B6%E5%8F%91-3%E4%B8%AA%E5%B9%B6%E5%8F%91%E7%9B%B8%E5%85%B3%E7%9A%84%E5%AE%9A%E5%BE%8B%2F</url>
     <content type="text"><![CDATA[Amdahl定律及Gustafson定律主要探讨的是并发程序对性能的提升。 摩尔定律 摩尔定律是由英特尔(Intel)创始人之一的戈登·摩尔(Gordon Moore)所提出的。其内容为：当价格不变时，集成电路上可容纳的元器件的数目，约每隔24个月便会增加一倍，性能也将提升一倍。 经常被引用的18个月，出自英特尔首席执行官大卫·豪斯。 Amdahl定律 其中： T1:1个CPU时的耗时。Tn：n个CPU时的耗时。F：程序中只能串行执行的比例。 首先分析F的极端情况。若F=0，即程序全部为可并行执行的代码，那么有T1=nTn，即加速比=n，即有几个CPU，程序的速度就被提升了几倍。若F=1，即程序代码全部都只能串行执行，那么有T1=Tn，即加速比=1，此时无论有多少个CPU，程序的效率都不会提升。 然后分析n的极端情况。若n=1，即只有一个CPU，那么有T1=Tn，即加速比=1，此时无论可并行执行的代码比例有多高，程序的效率都不会提升。若n=正无穷大，此时Tn=FT1，即加速比=1/F，与串行化代码的比例成反比，串行化比例越低，程序执行效率越高。 由此可得出：程序串行化代码比例越低，CPU数越多，并行执行的效率越高。 Gustafson定律 其中： 执行时间：并行程序优化后的耗时。总执行时间：未并行化前的耗时。 首先分析F的极端情况。若F=0，即程序全部为可并行执行代码，那么有加速比=n，即有几个CPU，程序的速度就被提升了几倍。若F=1，即程序代码全部都只能串行执行，那么有加速比=1，此时无论有多少个CPU，程序的效率都不会提升。 然后分析n的极端情况。若n=1，即只有一个CPU，那么有加速比=1，此时无论可并行执行的代码比例有多高，程序的效率都不会提升。若n=正无穷大，此时加速比=(1-F)n+F，若F也取极端值，即若F=1，则加速比=1；若F=0，加速比=n。至此还和预期相同，但是当F在(0,1)时，加速比依然为无穷大，只是这个无穷大受F的影响：F越大，增长越慢，但是无穷大依然还是无穷大，与预期的结果不同。 由此可得出：程序串行化代码比例越低，CPU数越多，并行执行的效率越高。 Amdahl定律及Gustafson定律是否矛盾本质上，两个定律描述的都是加速比，CPU数n，串行化执行代码的比例F三者之间的关系。但是二者不仅公式不同，在某些极限值情况下的结果也不同，那么二者是否矛盾？ 首先需要说明的是，所谓的”在某些极限值情况下的结果也不同”其实是弱极限情况。本质上这两个公式都是在用n与F来描述加速比。而前文的极限情况都是n，F其中之一达到极限值，另一个依然是可变的。若n与F都达到极限值，那么这两个定律的结论是相同的。前文推断出的认为Gustafson定律有问题的极限情况其实只有：n达到了正无穷，F未在极限值的状态下这一种。 造成这个差异的原因是因为两个公式在看待这个问题时从一开始的出发点就不同。Amdahl定律着重强调的是F的重要性，即F一定的情况下，无论CPU数怎么折腾，程序都会有一个理论的极限值。Gustafson定律强调的是n的重要性，即当F所占比重足够少时，程序执行的效率将随n线性增长。]]></content>
@@ -1593,20 +1607,6 @@
         <tag>摩尔定律</tag>
         <tag>Amdahl定律</tag>
         <tag>Gustafson定律</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[Java 并发-线程优先级]]></title>
-    <url>%2F2017%2F09%2F29%2FJava%20%E5%B9%B6%E5%8F%91-%E7%BA%BF%E7%A8%8B%E4%BC%98%E5%85%88%E7%BA%A7%2F</url>
-    <content type="text"><![CDATA[用户可指定不同线程间的优先级，高优先级的线程在竞争资源时更有利。注意这仅仅是”有利”，即高优先级线程较之低优先级线程有更高的概率获得资源，而非在资源争夺中一定会获胜。Java将线程的优先级分为1-10的十个级别，并且提供了3个内置在Thread类中的静态标量： 123public final static int MIN_PRIORITY = 1;public final static int NORM_PRIORITY = 5;public final static int MAX_PRIORITY = 10; 默认情况下，线程的优先级为NORM_PRIORITY = 5。 Java中的线程优先级是一个相对不靠谱的东西： 但凡是牵扯到概率，程序就无法精确控制。我们并不能确定高优先级的线程就一定会先于低优先级的线程获得资源。 本质上，Java线程的优先级必须要映射到操作系统底层的线程优先级才能发挥作用。但是很多操作系统的线程优先级的分级根本就没有10个那么多。这就导致复数个Java层面的线程优先级在操作系统看来实际是一回事。即程序员将两个线程的优先级分别设置为5,6并期望二者能在优先级上有所差异，但其实底层操作系统在实现时也许二者的优先级就完全一样了。这也是Java提供3个静态标量的原因：无论操作系统多么糟心，3个档次的优先级一般还是有的。因此推荐用静态标量的方式设置优先级，而不要自己指定数字。 所以，在要求严格的场合，还是要程序员自己在应用层面通过代码逻辑来控制线程的优先级。 小例子： 1234567891011121314151617181920212223242526272829public class Test extends Thread &#123; public Test(String name) &#123; super(name); &#125; @Override public void run() &#123; int count = 0; while (true) &#123; synchronized (Test.class) &#123; count++; if (count &gt; 10000000) &#123; System.out.println(Thread.currentThread().getName() + &quot; finish.&quot;); break; &#125; &#125; &#125; &#125; public static void main(String[] args) &#123; Thread low = new Test(&quot;low&quot;); low.setPriority(Thread.MIN_PRIORITY); Thread high = new Test(&quot;high&quot;); high.setPriority(Thread.MAX_PRIORITY); low.start(); high.start(); &#125;&#125; 绝大多数情况，输出如下： 12high finish.low finish.]]></content>
-      <categories>
-        <category>Java 并发</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>并发</tag>
-        <tag>线程</tag>
-        <tag>优先级</tag>
       </tags>
   </entry>
   <entry>
