@@ -115,20 +115,18 @@
 
 
 
-  <meta name="description" content="原始DAO开发方式的不足">
-<meta name="keywords" content="java,jdbc,mybatis">
+  <meta name="description" content="要求不高的话，SqlMapConfig.xml可以是这样的： 12345678910111213141516171819&amp;lt;!DOCTYPE configuration PUBLIC  &amp;quot;-//mybatis.org//DTD Config 3.0//EN&amp;quot;  &amp;quot;http://mybatis.org/dtd/mybatis-3-config.dtd&amp;quot;&amp;g">
+<meta name="keywords" content="Mybatis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="传智 springmvc+mybatis day1-10.mapper代理开发方式">
-<meta property="og:url" content="http://yoursite.com/2017/08/13/传智springmvcmybatisday1-10mapper代理开发方式/index.html">
+<meta property="og:title" content="Mybatis-全局配置文件">
+<meta property="og:url" content="http://yoursite.com/2018/10/04/Mybatis-全局配置文件/index.html">
 <meta property="og:site_name" content="ReimuWang&#39;s Blog">
-<meta property="og:description" content="原始DAO开发方式的不足">
+<meta property="og:description" content="要求不高的话，SqlMapConfig.xml可以是这样的： 12345678910111213141516171819&amp;lt;!DOCTYPE configuration PUBLIC  &amp;quot;-//mybatis.org//DTD Config 3.0//EN&amp;quot;  &amp;quot;http://mybatis.org/dtd/mybatis-3-config.dtd&amp;quot;&amp;g">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/images/blog_pic/传智springmvcmybatisday1/10mapper代理开发方式/0.jpg">
-<meta property="og:updated_time" content="2018-10-01T11:33:10.121Z">
+<meta property="og:updated_time" content="2018-10-04T05:58:19.794Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="传智 springmvc+mybatis day1-10.mapper代理开发方式">
-<meta name="twitter:description" content="原始DAO开发方式的不足">
-<meta name="twitter:image" content="http://yoursite.com/images/blog_pic/传智springmvcmybatisday1/10mapper代理开发方式/0.jpg">
+<meta name="twitter:title" content="Mybatis-全局配置文件">
+<meta name="twitter:description" content="要求不高的话，SqlMapConfig.xml可以是这样的： 12345678910111213141516171819&amp;lt;!DOCTYPE configuration PUBLIC  &amp;quot;-//mybatis.org//DTD Config 3.0//EN&amp;quot;  &amp;quot;http://mybatis.org/dtd/mybatis-3-config.dtd&amp;quot;&amp;g">
 
 
 
@@ -137,7 +135,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/08/13/传智springmvcmybatisday1-10mapper代理开发方式/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/10/04/Mybatis-全局配置文件/"/>
 
 
 
@@ -147,7 +145,7 @@
   };
 </script>
 
-  <title>传智 springmvc+mybatis day1-10.mapper代理开发方式 | ReimuWang's Blog</title>
+  <title>Mybatis-全局配置文件 | ReimuWang's Blog</title>
   
 
 
@@ -241,7 +239,7 @@
           
           <li class="menu-item menu-item-archives">
     <a href="/archives/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">189</span></a>
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">184</span></a>
   </li>
         
         
@@ -249,7 +247,7 @@
           
           <li class="menu-item menu-item-tags">
     <a href="/tags/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">117</span></a>
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">116</span></a>
   </li>
         
         
@@ -358,7 +356,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/13/传智springmvcmybatisday1-10mapper代理开发方式/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/04/Mybatis-全局配置文件/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="王艺凯">
@@ -375,7 +373,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">传智 springmvc+mybatis day1-10.mapper代理开发方式
+          <h1 class="post-title" itemprop="name headline">Mybatis-全局配置文件
               
             
           </h1>
@@ -400,24 +398,12 @@
                 
               
 
-              <time title="创建时间：2017-08-13 14:35:54" itemprop="dateCreated datePublished" datetime="2017-08-13T14:35:54+08:00">2017-08-13</time>
+              <time title="创建时间：2018-10-04 13:41:08 / 修改时间：13:58:19" itemprop="dateCreated datePublished" datetime="2018-10-04T13:41:08+08:00">2018-10-04</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-10-01 19:33:10" itemprop="dateModified" datetime="2018-10-01T19:33:10+08:00">2018-10-01</time>
               
             
           </span>
@@ -434,7 +420,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/传智-springmvc-mybatis-day1/" itemprop="url" rel="index"><span itemprop="name">传智 springmvc+mybatis day1</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Mybatis/" itemprop="url" rel="index"><span itemprop="name">Mybatis</span></a></span>
 
                 
                 
@@ -449,8 +435,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/08/13/传智springmvcmybatisday1-10mapper代理开发方式/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017/08/13/传智springmvcmybatisday1-10mapper代理开发方式/" itemprop="commentCount"></span>
+                <a href="/2018/10/04/Mybatis-全局配置文件/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/10/04/Mybatis-全局配置文件/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -458,7 +444,7 @@
 
           
           
-             <span id="/2017/08/13/传智springmvcmybatisday1-10mapper代理开发方式/" class="leancloud_visitors" data-flag-title="传智 springmvc+mybatis day1-10.mapper代理开发方式">
+             <span id="/2018/10/04/Mybatis-全局配置文件/" class="leancloud_visitors" data-flag-title="Mybatis-全局配置文件">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -483,7 +469,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">8.9k</span>
+                <span title="本文字数">7.6k</span>
               
 
               
@@ -497,7 +483,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">8 分钟</span>
+                <span title="阅读时长">7 分钟</span>
               
             </div>
           
@@ -517,48 +503,57 @@
       
 
       
-        <h1 id="原始DAO开发方式的不足"><a href="#原始DAO开发方式的不足" class="headerlink" title="原始DAO开发方式的不足"></a>原始DAO开发方式的不足</h1><a id="more"></a>
-<p>DAO的实现类中存在重复的代码，整个代码的模板是重复的：</p>
-<ol>
-<li>创建session</li>
-<li>调用对应session方法</li>
-<li>关闭session</li>
-</ol>
-<hr>
-<p>DAO的实现类中存在硬编码，调用sqlsession方法时传入的statement的namespace+id为硬编码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">userPojo = sqlSession.selectOne(&quot;com.day1_7.user.pojo.UserPojo.selectById&quot;, id);</span><br></pre></td></tr></table></figure>
-<h1 id="mapper开发规范"><a href="#mapper开发规范" class="headerlink" title="mapper开发规范"></a>mapper开发规范</h1><p>要想让Mybatis自动创建DAO接口实现类的代理对象，必须遵循一些规则：</p>
-<p>为了要让Mybatis知道DAO接口对应的是哪个mapper.xml，mapper.xml的namespace必须指定为对应DAO接口的全路径名。因此Mybatis提出了mapper接口的概念，在使用Mybatis开发时，mapper接口与DAO接口的概念等价。</p>
-<p>mapper接口的命名方式通常为 表名+Mapper.java。</p>
-<p>mapper配置文件的命名方式通常为 表名+Mapper.xml(与其对应的mapper接口同名)。</p>
-<hr>
-<p>mapper.xml中statement的id是mapper接口中对应的方法名。</p>
-<p>mapper.xml中statement的parameterType和mapper接口对应方法输入的参数类型一致。</p>
-<p>mapper.xml中statement的resultType和mapper接口对应方法的返回值类型一致。</p>
-<h1 id="项目"><a href="#项目" class="headerlink" title="项目"></a>项目</h1><p>项目路径：</p>
-<ul>
-<li>仓库：chuanzhi_springmvc_mybatis</li>
-<li>项目：day1_8</li>
-</ul>
-<h2 id="项目架构："><a href="#项目架构：" class="headerlink" title="项目架构："></a>项目架构：</h2><p><img src="/images/blog_pic/传智springmvcmybatisday1/10mapper代理开发方式/0.jpg" alt="0.jpg"></p>
-<p><strong>pom.xml</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;</span><br><span class="line">         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0</span><br><span class="line">                             http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</span><br><span class="line">  &lt;groupId&gt;com&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;day1_8&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;</span><br><span class="line">  &lt;packaging&gt;jar&lt;/packaging&gt;</span><br><span class="line"></span><br><span class="line">  &lt;properties&gt;</span><br><span class="line">    &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;</span><br><span class="line">    &lt;project.reporting.outputEncoding&gt;UTF-8&lt;/project.reporting.outputEncoding&gt;</span><br><span class="line">    &lt;maven.compiler.encoding&gt;UTF-8&lt;/maven.compiler.encoding&gt;</span><br><span class="line">  &lt;/properties&gt;</span><br><span class="line"></span><br><span class="line">  &lt;dependencies&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">      &lt;groupId&gt;junit&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;junit&lt;/artifactId&gt;</span><br><span class="line">      &lt;version&gt;4.12&lt;/version&gt;</span><br><span class="line">      &lt;scope&gt;test&lt;/scope&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">      &lt;groupId&gt;org.slf4j&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;slf4j-log4j12&lt;/artifactId&gt;</span><br><span class="line">      &lt;version&gt;1.7.25&lt;/version&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">      &lt;groupId&gt;mysql&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;</span><br><span class="line">      &lt;version&gt;5.1.43&lt;/version&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">      &lt;groupId&gt;org.mybatis&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;mybatis&lt;/artifactId&gt;</span><br><span class="line">      &lt;version&gt;3.4.4&lt;/version&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">      &lt;groupId&gt;asm&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;asm&lt;/artifactId&gt;</span><br><span class="line">      &lt;version&gt;3.3.1&lt;/version&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">      &lt;groupId&gt;cglib&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;cglib&lt;/artifactId&gt;</span><br><span class="line">      &lt;version&gt;3.2.5&lt;/version&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">      &lt;groupId&gt;org.javassist&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;javassist&lt;/artifactId&gt;</span><br><span class="line">      &lt;version&gt;3.21.0-GA&lt;/version&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">      &lt;groupId&gt;com.alibaba&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;fastjson&lt;/artifactId&gt;</span><br><span class="line">      &lt;version&gt;1.2.35&lt;/version&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">  &lt;/dependencies&gt;</span><br><span class="line">&lt;/project&gt;</span><br></pre></td></tr></table></figure>
-<p><strong>log4j.properties</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">log4j.rootLogger=DEBUG,base</span><br><span class="line"></span><br><span class="line">log4j.appender.base=org.apache.log4j.DailyRollingFileAppender</span><br><span class="line">log4j.appender.base.layout=org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.base.layout.conversionPattern=%d&#123;yyyy-MM-dd HH\:mm\:ss&#125; %c\:%L [%-4p] - %m%n</span><br><span class="line">log4j.appender.base.File=/day1_8.log</span><br></pre></td></tr></table></figure>
-<p><strong>mybatis/SqlMapConfig.xml</strong></p>
+        <p>要求不高的话，SqlMapConfig.xml可以是这样的：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE configuration PUBLIC</span><br><span class="line">  &quot;-//mybatis.org//DTD Config 3.0//EN&quot;</span><br><span class="line">  &quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;&gt;</span><br><span class="line">&lt;configuration&gt;</span><br><span class="line">  &lt;environments default=&quot;development&quot;&gt;</span><br><span class="line">    &lt;environment id=&quot;development&quot;&gt;</span><br><span class="line">      &lt;transactionManager type=&quot;JDBC&quot; /&gt;</span><br><span class="line">      &lt;dataSource type=&quot;POOLED&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;driver&quot; value=&quot;com.mysql.jdbc.Driver&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://localhost:3306/mybatis?characterEncoding=utf-8&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;username&quot; value=&quot;root&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;password&quot; value=&quot;&quot; /&gt;</span><br><span class="line">      &lt;/dataSource&gt;</span><br><span class="line">    &lt;/environment&gt;</span><br><span class="line">  &lt;/environments&gt;</span><br><span class="line">  &lt;mappers&gt;</span><br><span class="line">    &lt;mapper resource=&quot;mybatis/mapper/UserMapper.xml&quot; /&gt;</span><br><span class="line">  &lt;/mappers&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
-<p><strong>mybatis/mapper/UserMapper.xml</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;</span><br><span class="line">&lt;mapper namespace=&quot;com.day1_8.user.mapper.UserMapper&quot;&gt;</span><br><span class="line">  &lt;select id=&quot;selectById&quot; parameterType=&quot;int&quot; resultType=&quot;com.day1_8.user.pojo.UserPojo&quot;&gt;</span><br><span class="line">    select * from user where id= #&#123;id&#125;</span><br><span class="line">  &lt;/select&gt;</span><br><span class="line">&lt;/mapper&gt;</span><br></pre></td></tr></table></figure>
-<p><strong>com.day1_8.user.pojo.UserPojo.java</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">package com.day1_8.user.pojo;</span><br><span class="line"></span><br><span class="line">import java.util.Date;</span><br><span class="line"></span><br><span class="line">public class UserPojo &#123;</span><br><span class="line"></span><br><span class="line">    private Integer id;</span><br><span class="line"></span><br><span class="line">    private String name;</span><br><span class="line"></span><br><span class="line">    private Date create_time;</span><br><span class="line"></span><br><span class="line">    public Integer getId() &#123;</span><br><span class="line">        return id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setId(Integer id) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getName() &#123;</span><br><span class="line">        return name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setName(String name) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Date getCreate_time() &#123;</span><br><span class="line">        return create_time;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setCreate_time(Date create_time) &#123;</span><br><span class="line">        this.create_time = create_time;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>com.day1_8.user.mapper.UserMapper.java</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">package com.day1_8.user.mapper;</span><br><span class="line"></span><br><span class="line">import com.day1_8.user.pojo.UserPojo;</span><br><span class="line"></span><br><span class="line">public interface UserMapper &#123;</span><br><span class="line"></span><br><span class="line">    public UserPojo selectById(int id) throws Exception;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>com.UserMapperTest.java</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">package com;</span><br><span class="line"></span><br><span class="line">import org.apache.ibatis.io.Resources;</span><br><span class="line">import org.apache.ibatis.session.SqlSession;</span><br><span class="line">import org.apache.ibatis.session.SqlSessionFactory;</span><br><span class="line">import org.apache.ibatis.session.SqlSessionFactoryBuilder;</span><br><span class="line">import org.junit.Before;</span><br><span class="line">import org.junit.Test;</span><br><span class="line"></span><br><span class="line">import com.alibaba.fastjson.JSON;</span><br><span class="line">import com.day1_8.user.mapper.UserMapper;</span><br><span class="line"></span><br><span class="line">public class UserMapperTest &#123;</span><br><span class="line"></span><br><span class="line">    private SqlSessionFactory sqlSessionFactory;</span><br><span class="line"></span><br><span class="line">    @Before</span><br><span class="line">    public void setUp() throws Exception &#123;</span><br><span class="line">        this.sqlSessionFactory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsStream(&quot;mybatis/SqlMapConfig.xml&quot;));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void testSelectById() throws Exception &#123;</span><br><span class="line">        SqlSession sqlSession = this.sqlSessionFactory.openSession();</span><br><span class="line">        System.out.println(JSON.toJSONString(sqlSession.getMapper(UserMapper.class).selectById(1)));</span><br><span class="line">        sqlSession.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>屏幕打印结果：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;create_time&quot;:1496411217000,&quot;id&quot;:1,&quot;name&quot;:&quot;博丽灵梦&quot;&#125;</span><br></pre></td></tr></table></figure>
-<p>日志信息：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">2017-09-02 11:23:49 org.apache.ibatis.logging.LogFactory:135 [DEBUG] - Logging initialized using &apos;class org.apache.ibatis.logging.slf4j.Slf4jImpl&apos; adapter.</span><br><span class="line">2017-09-02 11:23:49 org.apache.ibatis.datasource.pooled.PooledDataSource:316 [DEBUG] - PooledDataSource forcefully closed/removed all connections.</span><br><span class="line">2017-09-02 11:23:49 org.apache.ibatis.datasource.pooled.PooledDataSource:316 [DEBUG] - PooledDataSource forcefully closed/removed all connections.</span><br><span class="line">2017-09-02 11:23:49 org.apache.ibatis.datasource.pooled.PooledDataSource:316 [DEBUG] - PooledDataSource forcefully closed/removed all connections.</span><br><span class="line">2017-09-02 11:23:49 org.apache.ibatis.datasource.pooled.PooledDataSource:316 [DEBUG] - PooledDataSource forcefully closed/removed all connections.</span><br><span class="line">2017-09-02 11:23:49 org.apache.ibatis.transaction.jdbc.JdbcTransaction:136 [DEBUG] - Opening JDBC Connection</span><br><span class="line">2017-09-02 11:23:49 org.apache.ibatis.datasource.pooled.PooledDataSource:387 [DEBUG] - Created connection 491919031.</span><br><span class="line">2017-09-02 11:23:49 org.apache.ibatis.transaction.jdbc.JdbcTransaction:100 [DEBUG] - Setting autocommit to false on JDBC Connection [com.mysql.jdbc.JDBC4Connection@1d5216b7]</span><br><span class="line">2017-09-02 11:23:49 com.day1_8.user.mapper.UserMapper.selectById:159 [DEBUG] - ==&gt;  Preparing: select * from user where id= ? </span><br><span class="line">2017-09-02 11:23:49 com.day1_8.user.mapper.UserMapper.selectById:159 [DEBUG] - ==&gt; Parameters: 1(Integer)</span><br><span class="line">2017-09-02 11:23:49 com.day1_8.user.mapper.UserMapper.selectById:159 [DEBUG] - &lt;==      Total: 1</span><br><span class="line">2017-09-02 11:23:49 org.apache.ibatis.transaction.jdbc.JdbcTransaction:122 [DEBUG] - Resetting autocommit to true on JDBC Connection [com.mysql.jdbc.JDBC4Connection@1d5216b7]</span><br><span class="line">2017-09-02 11:23:49 org.apache.ibatis.transaction.jdbc.JdbcTransaction:90 [DEBUG] - Closing JDBC Connection [com.mysql.jdbc.JDBC4Connection@1d5216b7]</span><br><span class="line">2017-09-02 11:23:49 org.apache.ibatis.datasource.pooled.PooledDataSource:344 [DEBUG] - Returned connection 491919031 to pool.</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>事实上，这只是configuration标签中的很少的一部分。如果按顺序列出的话，configuration中可以配置如下标签：</p>
+<ul>
+<li>properties(属性)</li>
+<li>settings(全局配置参数)</li>
+<li>typeAliases(类型别名)</li>
+<li>typeHandlers(类型处理器)</li>
+<li>objectFactory(对象工厂)</li>
+<li>objectWrapperFactory</li>
+<li>reflectorFactory</li>
+<li>plugins(插件)</li>
+<li>environments(环境集合属性对象)</li>
+<li>databaseIdProvider</li>
+<li>mappers(映射器)</li>
+</ul>
+<p>每个标签又可包含子标签，例如environments中有environment(环境子属性对象)，而environment中又包含transactionManager(事务管理)及dataSource(数据源)。</p>
+<p>通常来说，配置文件中的标签是无序的，不过Mybatis的DTD特地约束了顺序。如果我们违背这个顺序，例如我们这样写上文的SqlMapConfig.xml：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE configuration PUBLIC</span><br><span class="line">  &quot;-//mybatis.org//DTD Config 3.0//EN&quot;</span><br><span class="line">  &quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;&gt;</span><br><span class="line">&lt;configuration&gt;</span><br><span class="line">  &lt;mappers&gt;</span><br><span class="line">    &lt;mapper resource=&quot;mybatis/mapper/UserMapper.xml&quot; /&gt;</span><br><span class="line">  &lt;/mappers&gt;</span><br><span class="line">  &lt;environments default=&quot;development&quot;&gt;</span><br><span class="line">    &lt;environment id=&quot;development&quot;&gt;</span><br><span class="line">      &lt;transactionManager type=&quot;JDBC&quot; /&gt;</span><br><span class="line">      &lt;dataSource type=&quot;POOLED&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;driver&quot; value=&quot;com.mysql.jdbc.Driver&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://localhost:3306/mybatis?characterEncoding=utf-8&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;username&quot; value=&quot;root&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;password&quot; value=&quot;&quot; /&gt;</span><br><span class="line">      &lt;/dataSource&gt;</span><br><span class="line">    &lt;/environment&gt;</span><br><span class="line">  &lt;/environments&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+<p>此时就会报错：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">The content of element type &quot;configuration&quot; must match </span><br><span class="line"> &quot;(properties?,settings?,typeAliases?,typeHandlers?,objectFactory?,objectWrapperFactory?,reflectorFactory?,plugins?,environments?,databaseIdProvider?,mappers?)&quot;.</span><br></pre></td></tr></table></figure>
+<p>下面我们就来逐个介绍这些标签。</p>
+<h1 id="properties"><a href="#properties" class="headerlink" title="properties"></a>properties</h1><p>properties标签中有两个属性：resource及url。通常我们都会使用前者，它的作用是加载classpath下的属性文件(url自然就是加载网络中的属性文件咯)。</p>
+<p>我们再来看下上文的SqlMapConfig.xml：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE configuration PUBLIC</span><br><span class="line">  &quot;-//mybatis.org//DTD Config 3.0//EN&quot;</span><br><span class="line">  &quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;&gt;</span><br><span class="line">&lt;configuration&gt;</span><br><span class="line">  &lt;mappers&gt;</span><br><span class="line">    &lt;mapper resource=&quot;mybatis/mapper/UserMapper.xml&quot; /&gt;</span><br><span class="line">  &lt;/mappers&gt;</span><br><span class="line">  &lt;environments default=&quot;development&quot;&gt;</span><br><span class="line">    &lt;environment id=&quot;development&quot;&gt;</span><br><span class="line">      &lt;transactionManager type=&quot;JDBC&quot; /&gt;</span><br><span class="line">      &lt;dataSource type=&quot;POOLED&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;driver&quot; value=&quot;com.mysql.jdbc.Driver&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://localhost:3306/mybatis?characterEncoding=utf-8&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;username&quot; value=&quot;root&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;password&quot; value=&quot;&quot; /&gt;</span><br><span class="line">      &lt;/dataSource&gt;</span><br><span class="line">    &lt;/environment&gt;</span><br><span class="line">  &lt;/environments&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+<p>此时，我们把dataSource的连接字段直接写在了SqlMapConfig.xml中。显然，在需要替换数据源的场合，这很不方便。因此我们就可以将dataSource提取为单独的properties文件，而后再由properties标签加载，这样就完成了主配置文件与配置细节的解耦。其他需灵活配置的地方也同理。例如，我们创建了properties文件db.properties:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">jdbc.driver=com.mysql.jdbc.Driver</span><br><span class="line">jdbc.url=jdbc:mysql://localhost:3306/mybatis?characterEncoding=utf-8</span><br><span class="line">jdbc.username=root</span><br><span class="line">jdbc.password=</span><br></pre></td></tr></table></figure>
+<p>此时，SqlMapConfig.xml就可以这样写了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE configuration PUBLIC</span><br><span class="line">  &quot;-//mybatis.org//DTD Config 3.0//EN&quot;</span><br><span class="line">  &quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;&gt;</span><br><span class="line">&lt;configuration&gt;</span><br><span class="line">  &lt;properties resource=&quot;mybatis/db.properties&quot;&gt;&lt;/properties&gt;</span><br><span class="line">  &lt;environments default=&quot;development&quot;&gt;</span><br><span class="line">    &lt;environment id=&quot;development&quot;&gt;</span><br><span class="line">      &lt;transactionManager type=&quot;JDBC&quot; /&gt;</span><br><span class="line">      &lt;dataSource type=&quot;POOLED&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;driver&quot; value=&quot;$&#123;jdbc.driver&#125;&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;url&quot; value=&quot;$&#123;jdbc.url&#125;&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;username&quot; value=&quot;$&#123;jdbc.username&#125;&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;password&quot; value=&quot;$&#123;jdbc.password&#125;&quot; /&gt;</span><br><span class="line">      &lt;/dataSource&gt;</span><br><span class="line">    &lt;/environment&gt;</span><br><span class="line">  &lt;/environments&gt;</span><br><span class="line">  &lt;mappers&gt;</span><br><span class="line">    &lt;mapper resource=&quot;mybatis/mapper/UserMapper.xml&quot; /&gt;</span><br><span class="line">  &lt;/mappers&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+<p>对于dataSource这种相对完整的数据集合而言，最好还是要单独提取出properties文件的。不过，如果属性相对简单，换句话说，不值得单独提取为文件，也可以直接写在properties标签内部：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE configuration PUBLIC</span><br><span class="line">  &quot;-//mybatis.org//DTD Config 3.0//EN&quot;</span><br><span class="line">  &quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;&gt;</span><br><span class="line">&lt;configuration&gt;</span><br><span class="line">  &lt;properties resource=&quot;mybatis/db.properties&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;mapperpath.user&quot; value=&quot;mybatis/mapper/UserMapper.xml&quot;/&gt;</span><br><span class="line">  &lt;/properties&gt;</span><br><span class="line">  &lt;environments default=&quot;development&quot;&gt;</span><br><span class="line">    &lt;environment id=&quot;development&quot;&gt;</span><br><span class="line">      &lt;transactionManager type=&quot;JDBC&quot; /&gt;</span><br><span class="line">      &lt;dataSource type=&quot;POOLED&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;driver&quot; value=&quot;$&#123;jdbc.driver&#125;&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;url&quot; value=&quot;$&#123;jdbc.url&#125;&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;username&quot; value=&quot;$&#123;jdbc.username&#125;&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;password&quot; value=&quot;$&#123;jdbc.password&#125;&quot; /&gt;</span><br><span class="line">      &lt;/dataSource&gt;</span><br><span class="line">    &lt;/environment&gt;</span><br><span class="line">  &lt;/environments&gt;</span><br><span class="line">  &lt;mappers&gt;</span><br><span class="line">    &lt;mapper resource=&quot;$&#123;mapperpath.user&#125;&quot; /&gt;</span><br><span class="line">  &lt;/mappers&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+<p>如上例所示，我们将UserMapper.xml的路径放到了属性中。这样来看，properties可以理解为SqlMapConfig.xml的常量配置仓库。将可能会发生变化的常量集中在properties属性中显然是一个很好的习惯。</p>
+<p>下面是一个老生常谈的问题，properties标签内部的key与resource/url中加载的key重名了怎么办？</p>
+<p>Mybatis是这样处理的：</p>
+<ol>
+<li>首先读取properties标签内部的key</li>
+<li>而后读取resource/url中加载的key，它会覆盖已有同名属性</li>
+<li>最后，若mapper.xml配置文件中statement中的parameterType是pojo类型，那么它内部的值也会被读入，并覆盖同名属性</li>
+</ol>
+<p>不得不说，这其实是挺坑爹的。因为从逻辑上来说，前两项属于系统配置，而第三项是具体的一次SQL查询，二者是不应放在一起的。不过，因为3会覆盖前两项，所以即便重名，每次SQL查询还是优先会取3中的值，因此通常不会有什么问题。</p>
+<p>不过，对于这种放在一起的做法，我们还是很容易就会想到一些问题，假如SqlMapConfig.xml中有属性名为a，而某次statement的parameterType是pojo，且其中同样有名为a的属性。在a不为null时没什么好说的，那么如果该pojo中的a为null呢？会传入SqlMapConfig.xml中的属性a吗？</p>
+<p>答案是不会。传入的依然会是null。</p>
+<p>进一步的，如果pojo中没有属性a，而statement中的SQL误写了属性a，那么此时会传入SqlMapConfig.xml中的a吗？</p>
+<p>答案依然是否定的，此时会报错，告知pojo中没有a。</p>
+<p>因此，虽然这种将配置参数与请求参数混合的做法很坑爹，但是Mybatis还是做了相应的容错的，大家依然可以放心使用。不过为了逻辑上的顺畅，还是建议大家在定义properties用到的key时，起名特殊一些，最好一眼就能看出是配置文件中的参数。</p>
+<h1 id="settings"><a href="#settings" class="headerlink" title="settings"></a>settings</h1><p>如果我们将使用Mybatis的程序看作一个普通的软件的话，那么settings就是在配置该软件全局的运行参数。如果不加设定，会取用某个默认值。</p>
+<p>Mybatis的前身，ibatis的settings中包含了很多性能参数(最大线程数，最长等待时间等)，而Mybatis的settings中移除了这些参数，相关性能调优会由Mybatis自动完成。</p>
+<h1 id="typeAliases"><a href="#typeAliases" class="headerlink" title="typeAliases"></a>typeAliases</h1><p>有的时候mapper配置文件中parameterType/resultType指定的类型会很长(例如com.day1_9.user.pojo.UserPojo)，反复书写的话会很不方便。而且同时在多个statement中硬编码也不利于类型全限定名变更时的维护。此时就需要别名登场啦。</p>
+<p>Mybatis定义了很多默认的别名：</p>
+
       
     </div>
 
@@ -608,7 +603,7 @@
     <strong>本文作者： </strong>王艺凯</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yoursite.com/2017/08/13/传智springmvcmybatisday1-10mapper代理开发方式/" title="传智 springmvc+mybatis day1-10.mapper代理开发方式">http://yoursite.com/2017/08/13/传智springmvcmybatisday1-10mapper代理开发方式/</a>
+    <a href="http://yoursite.com/2018/10/04/Mybatis-全局配置文件/" title="Mybatis-全局配置文件">http://yoursite.com/2018/10/04/Mybatis-全局配置文件/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -621,11 +616,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag"># java</a>
-          
-            <a href="/tags/jdbc/" rel="tag"># jdbc</a>
-          
-            <a href="/tags/mybatis/" rel="tag"># mybatis</a>
+            <a href="/tags/Mybatis/" rel="tag"># Mybatis</a>
           
         </div>
       
@@ -638,8 +629,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/07/13/Java 并发-synchronized/" rel="next" title="Java 并发-synchronized">
-                <i class="fa fa-chevron-left"></i> Java 并发-synchronized
+              <a href="/2018/10/04/Mybatis-DAO开发方式/" rel="next" title="Mybatis-DAO开发方式">
+                <i class="fa fa-chevron-left"></i> Mybatis-DAO开发方式
               </a>
             
           </div>
@@ -647,10 +638,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/08/13/传智springmvcmybatisday1-9原始dao开发方式/" rel="prev" title="传智 springmvc+mybatis day1-9.原始dao开发方式">
-                传智 springmvc+mybatis day1-9.原始dao开发方式 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -727,7 +714,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">189</span>
+                    <span class="site-state-item-count">184</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1033,9 +1020,7 @@
                     
                       
                     
-                      
-                    
-                    <span class="site-state-item-count">117</span>
+                    <span class="site-state-item-count">116</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1121,7 +1106,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#原始DAO开发方式的不足"><span class="nav-number">1.</span> <span class="nav-text">原始DAO开发方式的不足</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mapper开发规范"><span class="nav-number">2.</span> <span class="nav-text">mapper开发规范</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#项目"><span class="nav-number">3.</span> <span class="nav-text">项目</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#项目架构："><span class="nav-number">3.1.</span> <span class="nav-text">项目架构：</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#properties"><span class="nav-number">1.</span> <span class="nav-text">properties</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#settings"><span class="nav-number">2.</span> <span class="nav-text">settings</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#typeAliases"><span class="nav-number">3.</span> <span class="nav-text">typeAliases</span></a></li></ol></div>
             
 
           </div>
@@ -1155,7 +1140,7 @@
     
       <span class="post-meta-item-text">站点总字数：</span>
     
-    <span title="站点总字数">1.2m</span>
+    <span title="站点总字数">1.1m</span>
   
 
   
@@ -1166,7 +1151,7 @@
     
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
     
-    <span title="站点阅读时长">17:47</span>
+    <span title="站点阅读时长">17:01</span>
   
 </div>
 
@@ -1764,5 +1749,5 @@
   </script>
 
 
-<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"live2d-widget-model-miku"},"display":{"position":"right","width":70,"height":130},"mobile":{"show":true},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
 </html>

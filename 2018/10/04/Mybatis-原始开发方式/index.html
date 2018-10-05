@@ -115,20 +115,18 @@
 
 
 
-  <meta name="description" content="SqlMapConfig.xml总结Mybatis全局配置文件，只有一个。名称不固定。其中主要包含以下两项：  配置数据源(引入Spring后数据源将由Spring管理) 管理mapper.xml，mapper.xml中配置核心的SQL语句">
-<meta name="keywords" content="java,jdbc,mybatis">
+  <meta name="description" content="引入依赖在此只给出欲使用Mybatis的依赖的最小集： 123456789101112131415161718192021222324252627282930313233343536&amp;lt;dependency&amp;gt;  &amp;lt;groupId&amp;gt;junit&amp;lt;/groupId&amp;gt;  &amp;lt;artifactId&amp;gt;junit&amp;lt;/artifactId&amp;gt;  &amp;lt;ver">
+<meta name="keywords" content="Mybatis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="传智 springmvc+mybatis day1-8.sqlSession使用范围">
-<meta property="og:url" content="http://yoursite.com/2017/07/02/传智springmvcmybatisday1-8sqlSession使用范围/index.html">
+<meta property="og:title" content="Mybatis-原始开发方式">
+<meta property="og:url" content="http://yoursite.com/2018/10/04/Mybatis-原始开发方式/index.html">
 <meta property="og:site_name" content="ReimuWang&#39;s Blog">
-<meta property="og:description" content="SqlMapConfig.xml总结Mybatis全局配置文件，只有一个。名称不固定。其中主要包含以下两项：  配置数据源(引入Spring后数据源将由Spring管理) 管理mapper.xml，mapper.xml中配置核心的SQL语句">
+<meta property="og:description" content="引入依赖在此只给出欲使用Mybatis的依赖的最小集： 123456789101112131415161718192021222324252627282930313233343536&amp;lt;dependency&amp;gt;  &amp;lt;groupId&amp;gt;junit&amp;lt;/groupId&amp;gt;  &amp;lt;artifactId&amp;gt;junit&amp;lt;/artifactId&amp;gt;  &amp;lt;ver">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/images/blog_pic/传智springmvcmybatisday1/8sqlSession使用范围/0.jpg">
-<meta property="og:updated_time" content="2018-10-01T10:59:10.167Z">
+<meta property="og:updated_time" content="2018-10-04T05:40:48.349Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="传智 springmvc+mybatis day1-8.sqlSession使用范围">
-<meta name="twitter:description" content="SqlMapConfig.xml总结Mybatis全局配置文件，只有一个。名称不固定。其中主要包含以下两项：  配置数据源(引入Spring后数据源将由Spring管理) 管理mapper.xml，mapper.xml中配置核心的SQL语句">
-<meta name="twitter:image" content="http://yoursite.com/images/blog_pic/传智springmvcmybatisday1/8sqlSession使用范围/0.jpg">
+<meta name="twitter:title" content="Mybatis-原始开发方式">
+<meta name="twitter:description" content="引入依赖在此只给出欲使用Mybatis的依赖的最小集： 123456789101112131415161718192021222324252627282930313233343536&amp;lt;dependency&amp;gt;  &amp;lt;groupId&amp;gt;junit&amp;lt;/groupId&amp;gt;  &amp;lt;artifactId&amp;gt;junit&amp;lt;/artifactId&amp;gt;  &amp;lt;ver">
 
 
 
@@ -137,7 +135,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/07/02/传智springmvcmybatisday1-8sqlSession使用范围/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/10/04/Mybatis-原始开发方式/"/>
 
 
 
@@ -147,7 +145,7 @@
   };
 </script>
 
-  <title>传智 springmvc+mybatis day1-8.sqlSession使用范围 | ReimuWang's Blog</title>
+  <title>Mybatis-原始开发方式 | ReimuWang's Blog</title>
   
 
 
@@ -241,7 +239,7 @@
           
           <li class="menu-item menu-item-archives">
     <a href="/archives/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">189</span></a>
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">184</span></a>
   </li>
         
         
@@ -249,7 +247,7 @@
           
           <li class="menu-item menu-item-tags">
     <a href="/tags/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">117</span></a>
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">116</span></a>
   </li>
         
         
@@ -358,7 +356,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/02/传智springmvcmybatisday1-8sqlSession使用范围/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/04/Mybatis-原始开发方式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="王艺凯">
@@ -375,7 +373,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">传智 springmvc+mybatis day1-8.sqlSession使用范围
+          <h1 class="post-title" itemprop="name headline">Mybatis-原始开发方式
               
             
           </h1>
@@ -400,24 +398,12 @@
                 
               
 
-              <time title="创建时间：2017-07-02 18:46:54" itemprop="dateCreated datePublished" datetime="2017-07-02T18:46:54+08:00">2017-07-02</time>
+              <time title="创建时间：2018-10-04 11:27:08 / 修改时间：13:40:48" itemprop="dateCreated datePublished" datetime="2018-10-04T11:27:08+08:00">2018-10-04</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-10-01 18:59:10" itemprop="dateModified" datetime="2018-10-01T18:59:10+08:00">2018-10-01</time>
               
             
           </span>
@@ -434,7 +420,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/传智-springmvc-mybatis-day1/" itemprop="url" rel="index"><span itemprop="name">传智 springmvc+mybatis day1</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Mybatis/" itemprop="url" rel="index"><span itemprop="name">Mybatis</span></a></span>
 
                 
                 
@@ -449,8 +435,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/07/02/传智springmvcmybatisday1-8sqlSession使用范围/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017/07/02/传智springmvcmybatisday1-8sqlSession使用范围/" itemprop="commentCount"></span>
+                <a href="/2018/10/04/Mybatis-原始开发方式/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/10/04/Mybatis-原始开发方式/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -458,7 +444,7 @@
 
           
           
-             <span id="/2017/07/02/传智springmvcmybatisday1-8sqlSession使用范围/" class="leancloud_visitors" data-flag-title="传智 springmvc+mybatis day1-8.sqlSession使用范围">
+             <span id="/2018/10/04/Mybatis-原始开发方式/" class="leancloud_visitors" data-flag-title="Mybatis-原始开发方式">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -483,7 +469,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">2.9k</span>
+                <span title="本文字数">12k</span>
               
 
               
@@ -497,7 +483,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">3 分钟</span>
+                <span title="阅读时长">11 分钟</span>
               
             </div>
           
@@ -517,55 +503,86 @@
       
 
       
-        <h1 id="SqlMapConfig-xml总结"><a href="#SqlMapConfig-xml总结" class="headerlink" title="SqlMapConfig.xml总结"></a>SqlMapConfig.xml总结</h1><p>Mybatis全局配置文件，只有一个。名称不固定。其中主要包含以下两项：</p>
-<ul>
-<li>配置数据源(引入Spring后数据源将由Spring管理)</li>
-<li>管理mapper.xml，mapper.xml中配置核心的SQL语句</li>
-</ul>
+        <h1 id="引入依赖"><a href="#引入依赖" class="headerlink" title="引入依赖"></a>引入依赖</h1><p>在此只给出欲使用Mybatis的依赖的最小集：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;junit&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;junit&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;4.12&lt;/version&gt;</span><br><span class="line">  &lt;scope&gt;test&lt;/scope&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;org.slf4j&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;slf4j-log4j12&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;1.7.25&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;mysql&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;5.1.43&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;org.mybatis&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;mybatis&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;3.4.4&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;asm&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;asm&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;3.3.1&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;cglib&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;cglib&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;3.2.5&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;org.javassist&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;javassist&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;3.21.0-GA&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
 <a id="more"></a>
-<h1 id="mapper-xml总结"><a href="#mapper-xml总结" class="headerlink" title="mapper.xml总结"></a>mapper.xml总结</h1><p>以statement为单位进行配置(把一个SQL称为一个statement，之所以这么说，是因为Mybatis最后会把SQL封装为mapper的statement对象)。statement中配置SQL语句，输入参数类型parameterType(完成输入映射)，输出结果类型resultType(完成输出映射)。</p>
+<h1 id="全局配置文件"><a href="#全局配置文件" class="headerlink" title="全局配置文件"></a>全局配置文件</h1><p>遵循<a href="/2018/10/04/Mybatis-概述/">Mybatis-概述</a>的建议，我们将全局配置文件命名为SqlMapConfig.xml：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE configuration PUBLIC</span><br><span class="line">  &quot;-//mybatis.org//DTD Config 3.0//EN&quot;</span><br><span class="line">  &quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;&gt;</span><br><span class="line">&lt;configuration&gt;</span><br><span class="line">  &lt;!-- 环境配置，与Spring整合后，环境配置将交由Spring管理，彼时environments标签废弃 --&gt;</span><br><span class="line">  &lt;environments default=&quot;development&quot;&gt;</span><br><span class="line">    &lt;environment id=&quot;development&quot;&gt;</span><br><span class="line">      &lt;transactionManager type=&quot;JDBC&quot; /&gt;</span><br><span class="line">      &lt;dataSource type=&quot;POOLED&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;driver&quot; value=&quot;com.mysql.jdbc.Driver&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://localhost:3306/mybatis?characterEncoding=utf-8&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;username&quot; value=&quot;root&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;password&quot; value=&quot;&quot; /&gt;</span><br><span class="line">      &lt;/dataSource&gt;</span><br><span class="line">    &lt;/environment&gt;</span><br><span class="line">  &lt;/environments&gt;</span><br><span class="line">  &lt;mappers&gt;</span><br><span class="line">    &lt;mapper resource=&quot;mybatis/mapper/UserMapper.xml&quot; /&gt;</span><br><span class="line">  &lt;/mappers&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+<h1 id="mapper配置文件"><a href="#mapper配置文件" class="headerlink" title="mapper配置文件"></a>mapper配置文件</h1><p>遵循<a href="2018/10/04/Mybatis-概述/">Mybatis-概述</a>的建议，我们将mapper配置文件命名为UserMapper.xml(本示例只需操作一张表，因此mapper配置文件仅有一个)：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;</span><br><span class="line">&lt;!-- namespace为命名空间，其作用为分类管理SQL语句 --&gt;</span><br><span class="line">&lt;!-- 只要不重名，namespace可随意命名。不过使用mapper代理开发方式后，namespace必须与Mapper接口同名 --&gt;</span><br><span class="line">&lt;mapper namespace=&quot;loveReimu&quot;&gt;</span><br><span class="line">  &lt;!-- namespace+id唯一标识一个statement --&gt;</span><br><span class="line">  &lt;select id=&quot;selectById&quot; parameterType=&quot;int&quot; resultType=&quot;com.user.pojo.UserPojo&quot;&gt;</span><br><span class="line">    select * from user where id= #&#123;id&#125;</span><br><span class="line">  &lt;/select&gt;</span><br><span class="line">  &lt;select id=&quot;selectByName&quot; parameterType=&quot;String&quot; resultType=&quot;com.user.pojo.UserPojo&quot;&gt;</span><br><span class="line">    select * from user where name like &apos;$&#123;value&#125;%&apos;</span><br><span class="line">  &lt;/select&gt;</span><br><span class="line">  &lt;insert id=&quot;insert&quot; parameterType=&quot;com.user.pojo.UserPojo&quot;&gt;</span><br><span class="line">    &lt;selectKey keyProperty=&quot;id&quot; order=&quot;AFTER&quot; resultType=&quot;int&quot;&gt;</span><br><span class="line">      select last_insert_id()</span><br><span class="line">    &lt;/selectKey&gt;</span><br><span class="line">    insert into user(name,create_time) values(#&#123;name&#125;,#&#123;create_time&#125;)</span><br><span class="line">  &lt;/insert&gt;</span><br><span class="line">  &lt;delete id=&quot;delete&quot; parameterType=&quot;int&quot;&gt;</span><br><span class="line">    delete from user where id=#&#123;id&#125;</span><br><span class="line">  &lt;/delete&gt;</span><br><span class="line">  &lt;update id=&quot;update&quot; parameterType=&quot;com.user.pojo.UserPojo&quot;&gt;</span><br><span class="line">    update user set name=#&#123;name&#125;,create_time=#&#123;create_time&#125; where id=#&#123;id&#125;</span><br><span class="line">  &lt;/update&gt;</span><br><span class="line">&lt;/mapper&gt;</span><br></pre></td></tr></table></figure>
+<p>正常写SQL脚本时可在SQL的末尾加上分号以分割。Mybatis不支持SQl后加分号。</p>
+<hr>
+<p>基本单位为statement，即一个select/insert/delete/update。可以认为每个statement都封装了一条SQL语句。其内部会通过parameterType完成输入映射；通过resultType完成输出映射。</p>
+<hr>
+<p>#{}表示一个占位符。它会自动进行Java类型向JDBC类型值的转换。例如传入一个字符串，实际执行时会自动在两边加单引号。再比如传入一个字符串类型的参数至数据库中的datetime类型，mysql会自动将其转换为日期类型(Oricle不支持该功能，传入时就必须传入日期类型)。</p>
+<p>${}表示SQL的拼接符。它类似于#{}，不同之处在于不会自动进行Java类型向JDBC类型值的转换，即实际执行时维持原值。此时PreparedStatement的防注入功能失效。</p>
+<hr>
+<p>#{}或${}接收pojo类型的parameterType时，会使用OGNL以对象导航图的方式解析pojo的属性值。简单来说，就是可以一直.出所需参数值。例如parameterType传入的pojo类型为User，User中的sex属性同样为pojo类型。则若要取到sex中的real字段，则可用#{sex.real}。</p>
+<hr>
+<p>parameterType为传入参数类型，规定只能传入一个参数(因此如果想传入多个值的话，只能通过pojo的OGNL来保证了)。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">parameterType=&quot;String&quot;</span><br></pre></td></tr></table></figure>
+<p>也可写为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">parameterType=&quot;string&quot;</span><br></pre></td></tr></table></figure>
+<p>或：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">parameterType=&quot;java.lang.String&quot;</span><br></pre></td></tr></table></figure>
+<hr>
+<p>resultType为输出结果类型。无论查询结果返回的是一条或多条记录，resultType均指定单条记录映射的pojo或hashmap或Java简单类型等。若返回的是多条记录，Mybatis会自动将其封装为List。</p>
+<hr>
 <p>除parameterType外，还提供parameterMap配置输入参数类型(已过时，不推荐使用)。</p>
-<p>除resultType外，还提供resultMap配置输出结果类型(未过时，仍推荐使用)完成复杂数据类型映射(例如一对多映射，多对多映射)。</p>
-<h1 id="selectOne"><a href="#selectOne" class="headerlink" title="selectOne"></a>selectOne</h1><p>SqlSession.selectOne(String statement, Object parameter)不能用于查询多条记录，会抛出异常。</p>
-<h1 id="Mybatis开发DAO"><a href="#Mybatis开发DAO" class="headerlink" title="Mybatis开发DAO"></a>Mybatis开发DAO</h1><p>Mybatis开发DAO(Data Access Object，数据存取对象)的两种方式：</p>
-<ol>
-<li>原始：DAO接口及DAO实现均需程序员自己编写。</li>
-<li>mapper代理：程序员只需要写DAO接口。DAO实现由Mybatis自动生成代理对象。这么做不会降低程序的灵活性，因为：本身DAO在三层架构中就是一个通用的接口(service不是通用接口)。</li>
-</ol>
-<h1 id="sqlSession的使用范围"><a href="#sqlSession的使用范围" class="headerlink" title="sqlSession的使用范围"></a>sqlSession的使用范围</h1><p>一段sqlSession的创建代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsStream(&quot;mybatis/SqlMapConfig.xml&quot;));</span><br><span class="line">SqlSession sqlSession = sqlSessionFactory.openSession();</span><br></pre></td></tr></table></figure>
-<p>因此创建关系为：</p>
+<p>除resultType外，还提供resultMap配置输出结果类型(未过时，仍推荐使用)完成复杂数据类型映射(例如一对多映射，多对多映射)</p>
+<hr>
+<p>本例中，insert标签中的selectKey类似于habernate的主键返回功能。作用为得到新插入数据自增的主键值(selectKey并不仅仅可以得到主键，这只是它的应用之一)。</p>
+<p>Mysql中的last_insert_id()函数可获得刚插入的自增主键值。</p>
+<p>selectKey标签中的属性：</p>
+<ul>
+<li>keyProperty：将查得的key赋给的属性名。</li>
+<li>order：返回时机。AFTER即为在本条SQL执行完成后得到所需key值。</li>
+<li>resultType：selectKey标签中的SQL语句的返回值类型。</li>
+</ul>
+<p>若所用数据库为Orical，因Orical没有自增主键查询函数，则需使用序列实现主键生成。</p>
+<hr>
+<p>若Mysql表中主键未设置自增，则可用uuid函数生成主键。此时生成的时机应为本条语句执行之前。并将生成的主键作为参数插入数据库中。<br>使用uuid函数的好处为可保证主键在数据库表合并时始终全局唯一。</p>
+<p>此时的insert statement应这样写：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;insert id=&quot;insert&quot; parameterType=&quot;com.day1_5.user.pojo.UserPojo&quot;&gt;</span><br><span class="line">  &lt;selectKey keyProperty=&quot;id&quot; order=&quot;BEFORE&quot; resultType=&quot;string&quot;&gt;</span><br><span class="line">    select uuid()</span><br><span class="line">  &lt;/selectKey&gt;</span><br><span class="line">  insert into user2(id,name,create_time) values(#&#123;id&#125;,#&#123;name&#125;,#&#123;create_time&#125;)</span><br><span class="line">&lt;/insert&gt;</span><br></pre></td></tr></table></figure>
+<p>注意：Mysql uuid()生成的id长度为36位，因此用于接收的varchar字段长度至少要为36。最后得到的id形如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">6f644312-3de7-11e7-910e-1002b501dff5</span><br></pre></td></tr></table></figure>
+<h1 id="测试类"><a href="#测试类" class="headerlink" title="测试类"></a>测试类</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line">package com;</span><br><span class="line"></span><br><span class="line">import java.util.Date;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">import org.apache.ibatis.io.Resources;</span><br><span class="line">import org.apache.ibatis.session.SqlSession;</span><br><span class="line">import org.apache.ibatis.session.SqlSessionFactory;</span><br><span class="line">import org.apache.ibatis.session.SqlSessionFactoryBuilder;</span><br><span class="line">import org.junit.Before;</span><br><span class="line">import org.junit.Test;</span><br><span class="line"></span><br><span class="line">import com.alibaba.fastjson.JSON;</span><br><span class="line">import com.user.pojo.UserPojo;</span><br><span class="line"></span><br><span class="line">public class MybatisTest &#123;</span><br><span class="line"></span><br><span class="line">    private SqlSessionFactory sqlSessionFactory;</span><br><span class="line"></span><br><span class="line">    @Before</span><br><span class="line">    public void init() throws Exception &#123;</span><br><span class="line">        this.sqlSessionFactory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsStream(&quot;mybatis/SqlMapConfig.xml&quot;));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void selectById() &#123;</span><br><span class="line">        SqlSession sqlSession = sqlSessionFactory.openSession();</span><br><span class="line">        UserPojo userPojo = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            userPojo = sqlSession.selectOne(&quot;loveReimu.selectById&quot;, 2);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            sqlSession.close();</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(JSON.toJSONString(userPojo));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void selectByName() &#123;</span><br><span class="line">        SqlSession sqlSession = sqlSessionFactory.openSession();</span><br><span class="line">        List&lt;UserPojo&gt; userPojoList = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            userPojoList = sqlSession.selectList(&quot;loveReimu.selectByName&quot;, &quot;八云&quot;);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            sqlSession.close();</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(JSON.toJSONString(userPojoList));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void insert() &#123;</span><br><span class="line">        SqlSession sqlSession = sqlSessionFactory.openSession();</span><br><span class="line">        UserPojo userPojo = new UserPojo();</span><br><span class="line">        userPojo.setName(&quot;八意永琳&quot;);</span><br><span class="line">        userPojo.setCreate_time(new Date());</span><br><span class="line">        try &#123;</span><br><span class="line">            // 该方法返回插入操作影响的记录数</span><br><span class="line">            sqlSession.insert(&quot;loveReimu.insert&quot;, userPojo);</span><br><span class="line">            sqlSession.commit();</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            sqlSession.close();</span><br><span class="line">        &#125;</span><br><span class="line">        // 因配置文件中设置了selectKey，userPojo中会填入新生成的自增主键值</span><br><span class="line">        System.out.println(JSON.toJSONString(userPojo));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void delete() &#123;</span><br><span class="line">        SqlSession sqlSession = sqlSessionFactory.openSession();</span><br><span class="line">        try &#123;</span><br><span class="line">            System.out.println(sqlSession.delete(&quot;loveReimu.delete&quot;, 1));</span><br><span class="line">            sqlSession.commit();</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            sqlSession.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void update() &#123;</span><br><span class="line">        SqlSession sqlSession = sqlSessionFactory.openSession();</span><br><span class="line">        UserPojo userPojo = new UserPojo();</span><br><span class="line">        userPojo.setId(4);</span><br><span class="line">        userPojo.setName(&quot;蓬莱山辉夜&quot;);</span><br><span class="line">        userPojo.setCreate_time(new Date());</span><br><span class="line">        try &#123;</span><br><span class="line">            System.out.println(sqlSession.update(&quot;loveReimu.update&quot;, userPojo));</span><br><span class="line">            sqlSession.commit();</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            sqlSession.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们使用SqlSession操作数据库，它的生成过程为：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SqlSessionFactoryBuilder - SqlSessionFactory - SqlSession</span><br></pre></td></tr></table></figure>
-<p><strong>SqlSessionFactoryBuilder</strong></p>
-<p>以工具类的方式使用(因SqlSessionFactory是单例的，因此创建完一次SqlSessionFactory后，即无需再管SqlSessionFactoryBuilder)，用于创建SqlSessionFactory。</p>
-<hr>
-<p><strong>SqlSessionFactory</strong></p>
-<p>正常开发时，以单例方式管理SqlSessionFactory。整个系统运行过程中SqlSessionFactory只有一个实例。与Spring整合后，由Spring以单例的方式管理SqlSessionFactory。</p>
-<hr>
-<p><strong>SqlSession</strong></p>
-<p>SqlSession是一个面向用户(即程序员)的接口。程序员调用SqlSession的接口方法操作数据库。它在Mybatis架构中的层级为：</p>
-<p><img src="/images/blog_pic/传智springmvcmybatisday1/8sqlSession使用范围/0.jpg" alt="0.jpg"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public interface SqlSession extends Closeable</span><br></pre></td></tr></table></figure>
-<p>有两个实现类：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class DefaultSqlSession implements SqlSession</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class SqlSessionManager implements SqlSessionFactory, SqlSession</span><br></pre></td></tr></table></figure>
+<p>其中SqlSessionFactoryBuilder与SqlSessionFactory通常均是单例的，而SqlSession则应与查询一一对应。这是为什么呢？我们不妨看一下SqlSession的类定义：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">package org.apache.ibatis.session;</span><br><span class="line"></span><br><span class="line">public interface SqlSession extends Closeable</span><br></pre></td></tr></table></figure>
+<p>它有两个实现类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">package org.apache.ibatis.session.defaults;</span><br><span class="line"></span><br><span class="line">public class DefaultSqlSession implements SqlSession</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">package org.apache.ibatis.session;</span><br><span class="line"></span><br><span class="line">public class SqlSessionManager implements SqlSessionFactory, SqlSession</span><br></pre></td></tr></table></figure>
 <p>其中DefaultSqlSession为默认的实现类，在该类中，有一个成员变量为：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private Executor executor;</span><br></pre></td></tr></table></figure>
 <p>即为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public interface Executor</span><br></pre></td></tr></table></figure>
-<p>该接口即为数据库操作的执行器接口。SqlSession内部调用Excutor操作数据库。Excutor接口有两个实现：</p>
-<p>默认执行器，即：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public abstract class BaseExecutor implements Executor</span><br></pre></td></tr></table></figure>
-<p>缓存执行器，即：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class CachingExecutor implements Executor</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">package org.apache.ibatis.executor;</span><br><span class="line"></span><br><span class="line">public interface Executor</span><br></pre></td></tr></table></figure>
+<p>SqlSession内部会调用Excutor接口操作数据库。它有两个实现：</p>
+<p>默认执行器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">package org.apache.ibatis.executor;</span><br><span class="line"></span><br><span class="line">public abstract class BaseExecutor implements Executor</span><br></pre></td></tr></table></figure>
+<p>缓存执行器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">package org.apache.ibatis.executor;</span><br><span class="line"></span><br><span class="line">public class CachingExecutor implements Executor</span><br></pre></td></tr></table></figure>
 <p>以默认执行器的某个子类(批量操作执行器)为例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public class BatchExecutor extends BaseExecutor</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">package org.apache.ibatis.executor;</span><br><span class="line"></span><br><span class="line">public class BatchExecutor extends BaseExecutor</span><br></pre></td></tr></table></figure>
 <p>BatchExecutor有如下成员变量：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private String currentSql;    // 封装SQL语句</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private MappedStatement currentStatement;    // 用于封装SQL的对象。其中有statement中定义的所有内容。</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">private String currentSql;    // 封装SQL语句</span><br><span class="line">private MappedStatement currentStatement;    // 用于封装SQL的对象。其中有statement中定义的所有内容。</span><br></pre></td></tr></table></figure>
 <p>MappedStatement类成员变量举例：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">private String resource;</span><br><span class="line">private Configuration configuration;</span><br><span class="line">private String id;</span><br><span class="line">private Integer fetchSize;</span><br><span class="line">private Integer timeout;</span><br><span class="line">private StatementType statementType;</span><br><span class="line">private ResultSetType resultSetType;</span><br><span class="line">private SqlSource sqlSource;</span><br><span class="line">private Cache cache;</span><br><span class="line">private ParameterMap parameterMap;</span><br><span class="line">private List&lt;ResultMap&gt; resultMaps;</span><br><span class="line">private boolean flushCacheRequired;</span><br><span class="line">private boolean useCache;</span><br><span class="line">private boolean resultOrdered;</span><br><span class="line">private SqlCommandType sqlCommandType;</span><br><span class="line">private KeyGenerator keyGenerator;</span><br><span class="line">private String[] keyProperties;</span><br><span class="line">private String[] keyColumns;</span><br><span class="line">private boolean hasNestedResultMaps;</span><br><span class="line">private String databaseId;</span><br><span class="line">private Log statementLog;</span><br><span class="line">private LanguageDriver lang;</span><br><span class="line">private String[] resultSets;</span><br></pre></td></tr></table></figure>
-<p>SqlSession是线程不安全的:在多线程环境下，SqlSession不能使用单例，因为SqlSession中的Executor的成员变量中有currentSql这样的数据字段，换句话说，SqlSession是线程不安全的。因此SqlSession的最佳应用范围在方法体内，即在方法体内定义局部变量来使用SqlSession。</p>
+<p>显然，SqlSession是线程不安全的。诸如currentSql这样的属性必须要与查询一一对应。</p>
+<hr>
+<p>selectById()方法在查询单条纪录时，调用了sqlSession.selectOne()方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;T&gt; T selectOne(String statement, Object parameter);</span><br></pre></td></tr></table></figure>
+<p>selectByName()方法在查询多条纪录时，调用了sqlSession.selectList()方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;E&gt; List&lt;E&gt; selectList(String statement, Object parameter);</span><br></pre></td></tr></table></figure>
+<p>这两个方法的第一个参数statement，均是mapper配置文件中namespace+id构成的唯一值。</p>
+<p>selectOne()不能用于查询复数结果，会报错；反之，selectList()则可用于查询单条记录(可以认为list中只有一条记录)。</p>
+<hr>
+<p>与Spring整合后，诸如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlSession.commit();</span><br></pre></td></tr></table></figure>
+<p>或</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlSession.close();</span><br></pre></td></tr></table></figure>
+<p>均可交由Spring管理。</p>
 
       
     </div>
@@ -616,7 +633,7 @@
     <strong>本文作者： </strong>王艺凯</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yoursite.com/2017/07/02/传智springmvcmybatisday1-8sqlSession使用范围/" title="传智 springmvc+mybatis day1-8.sqlSession使用范围">http://yoursite.com/2017/07/02/传智springmvcmybatisday1-8sqlSession使用范围/</a>
+    <a href="http://yoursite.com/2018/10/04/Mybatis-原始开发方式/" title="Mybatis-原始开发方式">http://yoursite.com/2018/10/04/Mybatis-原始开发方式/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -629,11 +646,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag"># java</a>
-          
-            <a href="/tags/jdbc/" rel="tag"># jdbc</a>
-          
-            <a href="/tags/mybatis/" rel="tag"># mybatis</a>
+            <a href="/tags/Mybatis/" rel="tag"># Mybatis</a>
           
         </div>
       
@@ -646,8 +659,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/07/02/传智springmvcmybatisday1-7mybatis和hibernate的适用场景/" rel="next" title="传智 springmvc+mybatis day1-7.mybatis和hibernate的适用场景">
-                <i class="fa fa-chevron-left"></i> 传智 springmvc+mybatis day1-7.mybatis和hibernate的适用场景
+              <a href="/2018/10/04/Mybatis-概述/" rel="next" title="Mybatis-概述">
+                <i class="fa fa-chevron-left"></i> Mybatis-概述
               </a>
             
           </div>
@@ -656,8 +669,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/07/04/Java JDK7源码-javalangCloneable/" rel="prev" title="Java JDK7源码-java.lang.Cloneable">
-                Java JDK7源码-java.lang.Cloneable <i class="fa fa-chevron-right"></i>
+              <a href="/2018/10/04/Mybatis-DAO开发方式/" rel="prev" title="Mybatis-DAO开发方式">
+                Mybatis-DAO开发方式 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -735,7 +748,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">189</span>
+                    <span class="site-state-item-count">184</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1041,9 +1054,7 @@
                     
                       
                     
-                      
-                    
-                    <span class="site-state-item-count">117</span>
+                    <span class="site-state-item-count">116</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1129,7 +1140,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SqlMapConfig-xml总结"><span class="nav-number">1.</span> <span class="nav-text">SqlMapConfig.xml总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mapper-xml总结"><span class="nav-number">2.</span> <span class="nav-text">mapper.xml总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#selectOne"><span class="nav-number">3.</span> <span class="nav-text">selectOne</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mybatis开发DAO"><span class="nav-number">4.</span> <span class="nav-text">Mybatis开发DAO</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#sqlSession的使用范围"><span class="nav-number">5.</span> <span class="nav-text">sqlSession的使用范围</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引入依赖"><span class="nav-number">1.</span> <span class="nav-text">引入依赖</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#全局配置文件"><span class="nav-number">2.</span> <span class="nav-text">全局配置文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mapper配置文件"><span class="nav-number">3.</span> <span class="nav-text">mapper配置文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试类"><span class="nav-number">4.</span> <span class="nav-text">测试类</span></a></li></ol></div>
             
 
           </div>
@@ -1163,7 +1174,7 @@
     
       <span class="post-meta-item-text">站点总字数：</span>
     
-    <span title="站点总字数">1.2m</span>
+    <span title="站点总字数">1.1m</span>
   
 
   
@@ -1174,7 +1185,7 @@
     
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
     
-    <span title="站点阅读时长">17:47</span>
+    <span title="站点阅读时长">17:01</span>
   
 </div>
 
@@ -1772,5 +1783,5 @@
   </script>
 
 
-<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"live2d-widget-model-miku"},"display":{"position":"right","width":70,"height":130},"mobile":{"show":true},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
 </html>

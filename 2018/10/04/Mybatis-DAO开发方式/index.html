@@ -115,20 +115,18 @@
 
 
 
-  <meta name="description" content="Mybatis简介Mybatis因其较为灵活而流行。 Mybatis的前身是Apache的开源项目ibatis。2010年ibatis被apache software foundation迁移至google code，并改名为Mybatis，Mybatis是对ibatis的改进，目前Mybatis托管于github上。 Mybatis是一个持久层框架。使用Mybatis时，程序员只需要关注SQL本">
-<meta name="keywords" content="java,jdbc,mybatis">
+  <meta name="description" content="在Mybatis-原始开发方式的基础上，我们引入通用的DAO(Data Access Object)开发方式，此时DAO接口及DAO实现均需程序员编写。">
+<meta name="keywords" content="Mybatis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="传智 springmvc+mybatis day1-2.mybatis架构">
-<meta property="og:url" content="http://yoursite.com/2017/05/19/传智springmvcmybatisday1-2mybatis架构/index.html">
+<meta property="og:title" content="Mybatis-DAO开发方式">
+<meta property="og:url" content="http://yoursite.com/2018/10/04/Mybatis-DAO开发方式/index.html">
 <meta property="og:site_name" content="ReimuWang&#39;s Blog">
-<meta property="og:description" content="Mybatis简介Mybatis因其较为灵活而流行。 Mybatis的前身是Apache的开源项目ibatis。2010年ibatis被apache software foundation迁移至google code，并改名为Mybatis，Mybatis是对ibatis的改进，目前Mybatis托管于github上。 Mybatis是一个持久层框架。使用Mybatis时，程序员只需要关注SQL本">
+<meta property="og:description" content="在Mybatis-原始开发方式的基础上，我们引入通用的DAO(Data Access Object)开发方式，此时DAO接口及DAO实现均需程序员编写。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/images/blog_pic/传智springmvcmybatisday1/2mybatis架构/0.jpg">
-<meta property="og:updated_time" content="2018-10-01T09:30:10.717Z">
+<meta property="og:updated_time" content="2018-10-04T05:08:02.231Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="传智 springmvc+mybatis day1-2.mybatis架构">
-<meta name="twitter:description" content="Mybatis简介Mybatis因其较为灵活而流行。 Mybatis的前身是Apache的开源项目ibatis。2010年ibatis被apache software foundation迁移至google code，并改名为Mybatis，Mybatis是对ibatis的改进，目前Mybatis托管于github上。 Mybatis是一个持久层框架。使用Mybatis时，程序员只需要关注SQL本">
-<meta name="twitter:image" content="http://yoursite.com/images/blog_pic/传智springmvcmybatisday1/2mybatis架构/0.jpg">
+<meta name="twitter:title" content="Mybatis-DAO开发方式">
+<meta name="twitter:description" content="在Mybatis-原始开发方式的基础上，我们引入通用的DAO(Data Access Object)开发方式，此时DAO接口及DAO实现均需程序员编写。">
 
 
 
@@ -137,7 +135,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/05/19/传智springmvcmybatisday1-2mybatis架构/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/10/04/Mybatis-DAO开发方式/"/>
 
 
 
@@ -147,7 +145,7 @@
   };
 </script>
 
-  <title>传智 springmvc+mybatis day1-2.mybatis架构 | ReimuWang's Blog</title>
+  <title>Mybatis-DAO开发方式 | ReimuWang's Blog</title>
   
 
 
@@ -241,7 +239,7 @@
           
           <li class="menu-item menu-item-archives">
     <a href="/archives/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">189</span></a>
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档<span class="badge">184</span></a>
   </li>
         
         
@@ -249,7 +247,7 @@
           
           <li class="menu-item menu-item-tags">
     <a href="/tags/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">117</span></a>
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签<span class="badge">116</span></a>
   </li>
         
         
@@ -358,7 +356,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/19/传智springmvcmybatisday1-2mybatis架构/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/04/Mybatis-DAO开发方式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="王艺凯">
@@ -375,7 +373,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">传智 springmvc+mybatis day1-2.mybatis架构
+          <h1 class="post-title" itemprop="name headline">Mybatis-DAO开发方式
               
             
           </h1>
@@ -400,24 +398,12 @@
                 
               
 
-              <time title="创建时间：2017-05-19 09:29:09" itemprop="dateCreated datePublished" datetime="2017-05-19T09:29:09+08:00">2017-05-19</time>
+              <time title="创建时间：2018-10-04 12:58:08 / 修改时间：13:08:02" itemprop="dateCreated datePublished" datetime="2018-10-04T12:58:08+08:00">2018-10-04</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-10-01 17:30:10" itemprop="dateModified" datetime="2018-10-01T17:30:10+08:00">2018-10-01</time>
               
             
           </span>
@@ -434,7 +420,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/传智-springmvc-mybatis-day1/" itemprop="url" rel="index"><span itemprop="name">传智 springmvc+mybatis day1</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Mybatis/" itemprop="url" rel="index"><span itemprop="name">Mybatis</span></a></span>
 
                 
                 
@@ -449,8 +435,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/05/19/传智springmvcmybatisday1-2mybatis架构/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017/05/19/传智springmvcmybatisday1-2mybatis架构/" itemprop="commentCount"></span>
+                <a href="/2018/10/04/Mybatis-DAO开发方式/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018/10/04/Mybatis-DAO开发方式/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -458,7 +444,7 @@
 
           
           
-             <span id="/2017/05/19/传智springmvcmybatisday1-2mybatis架构/" class="leancloud_visitors" data-flag-title="传智 springmvc+mybatis day1-2.mybatis架构">
+             <span id="/2018/10/04/Mybatis-DAO开发方式/" class="leancloud_visitors" data-flag-title="Mybatis-DAO开发方式">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -483,7 +469,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">881</span>
+                <span title="本文字数">1.8k</span>
               
 
               
@@ -497,7 +483,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">1 分钟</span>
+                <span title="阅读时长">2 分钟</span>
               
             </div>
           
@@ -517,29 +503,11 @@
       
 
       
-        <h1 id="Mybatis简介"><a href="#Mybatis简介" class="headerlink" title="Mybatis简介"></a>Mybatis简介</h1><p>Mybatis因其较为灵活而流行。</p>
-<p>Mybatis的前身是Apache的开源项目ibatis。2010年ibatis被apache software foundation迁移至google code，并改名为Mybatis，Mybatis是对ibatis的改进，目前Mybatis托管于github上。</p>
-<p>Mybatis是一个持久层框架。使用Mybatis时，程序员只需要关注SQL本身而不需要关注使用JDBC时需进行的繁琐设置，Mybatis会将SQL很好的维护起来。</p>
-<p>Mybatis通过XML或注解的方式将要执行的各种statement（statement、preparedStatemnt、CallableStatement）配置起来，并通过Java对象和statement中的SQL进行映射生成最终执行的SQL语句，最后由Mybatis框架执行SQL并将结果映射成Java对象并返回。</p>
+        <p>在<a href="/2018/10/04/Mybatis-原始开发方式/">Mybatis-原始开发方式</a>的基础上，我们引入通用的DAO(Data Access Object)开发方式，此时DAO接口及DAO实现均需程序员编写。</p>
 <a id="more"></a>
-<h1 id="Mybatis架构"><a href="#Mybatis架构" class="headerlink" title="Mybatis架构"></a>Mybatis架构</h1><p><img src="/images/blog_pic/传智springmvcmybatisday1/2mybatis架构/0.jpg" alt="0.jpg"></p>
-<p><strong>配置文件</strong></p>
-<p>Mybatis有一个全局配置文件，其作用为加载Mybatis运行环境(数据源，事务)。通常命名为sqlMapConfig.xml。实际使用时根据需要可改为其他名称。</p>
-<p>除此之外，还有复数个mapper.xml文件，其中配置了SQL语句。</p>
-<p><strong>SqlSessionFactory</strong></p>
-<p>即会话工厂。其作用为创建SqlSession。</p>
-<p><strong>SqlSession</strong></p>
-<p>SqlSession是面向用户的接口，接口中封装了数据库的操作方法-增删改查。其作用为操作数据库。</p>
-<p><strong>Excutor</strong></p>
-<p>即为数据库操作的执行器接口。SqlSession内部调用Excutor操作数据库。Excutor接口有两个实现：</p>
-<ul>
-<li>默认执行器</li>
-<li>缓存执行器</li>
-</ul>
-<p><strong>MappedStatement</strong></p>
-<p>MappedStatement是Mybatis的底层封装对象。该对象封装了SQL语句。Excutor通过MappedStatement操作数据库。</p>
-<p>MappedStatement接收输入映射传入的参数封装为对象，由Excutor调用该对象操作数据库。操作结束后通过输出映射生成结果对象。</p>
-
+<h1 id="DAO接口"><a href="#DAO接口" class="headerlink" title="DAO接口"></a>DAO接口</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">package com.user.dao;</span><br><span class="line"></span><br><span class="line">import com.user.pojo.UserPojo;</span><br><span class="line"></span><br><span class="line">public interface UserDao &#123;</span><br><span class="line">    UserPojo selectById(int id) throws Exception;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="DAO实现"><a href="#DAO实现" class="headerlink" title="DAO实现"></a>DAO实现</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">package com.user.dao;</span><br><span class="line"></span><br><span class="line">import org.apache.ibatis.session.SqlSession;</span><br><span class="line">import org.apache.ibatis.session.SqlSessionFactory;</span><br><span class="line"></span><br><span class="line">import com.user.pojo.UserPojo;</span><br><span class="line"></span><br><span class="line">public class UserDaoImpl implements UserDao &#123;</span><br><span class="line"></span><br><span class="line">    private SqlSessionFactory sqlSessionFactory;</span><br><span class="line"></span><br><span class="line">    public UserDaoImpl(SqlSessionFactory sqlSessionFactory) &#123;</span><br><span class="line">        this.sqlSessionFactory = sqlSessionFactory;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public UserPojo selectById(int id) &#123;</span><br><span class="line">        SqlSession sqlSession = null;</span><br><span class="line">        UserPojo userPojo = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            sqlSession = this.sqlSessionFactory.openSession();</span><br><span class="line">            userPojo = sqlSession.selectOne(&quot;loveReimu.selectById&quot;, id);</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            if (null != sqlSession) sqlSession.close(); </span><br><span class="line">        &#125;</span><br><span class="line">        return userPojo;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="测试类"><a href="#测试类" class="headerlink" title="测试类"></a>测试类</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">package com;</span><br><span class="line"></span><br><span class="line">import org.apache.ibatis.io.Resources;</span><br><span class="line">import org.apache.ibatis.session.SqlSessionFactory;</span><br><span class="line">import org.apache.ibatis.session.SqlSessionFactoryBuilder;</span><br><span class="line">import org.junit.Before;</span><br><span class="line">import org.junit.Test;</span><br><span class="line"></span><br><span class="line">import com.alibaba.fastjson.JSON;</span><br><span class="line">import com.user.dao.UserDaoImpl;</span><br><span class="line"></span><br><span class="line">public class MybatisTest &#123;</span><br><span class="line"></span><br><span class="line">    private SqlSessionFactory sqlSessionFactory;</span><br><span class="line"></span><br><span class="line">    @Before</span><br><span class="line">    public void init() throws Exception &#123;</span><br><span class="line">        this.sqlSessionFactory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsStream(&quot;mybatis/SqlMapConfig.xml&quot;));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void selectById() &#123;</span><br><span class="line">        System.out.println(JSON.toJSONString(new UserDaoImpl(this.sqlSessionFactory).selectById(2)));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -589,7 +557,7 @@
     <strong>本文作者： </strong>王艺凯</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://yoursite.com/2017/05/19/传智springmvcmybatisday1-2mybatis架构/" title="传智 springmvc+mybatis day1-2.mybatis架构">http://yoursite.com/2017/05/19/传智springmvcmybatisday1-2mybatis架构/</a>
+    <a href="http://yoursite.com/2018/10/04/Mybatis-DAO开发方式/" title="Mybatis-DAO开发方式">http://yoursite.com/2018/10/04/Mybatis-DAO开发方式/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -602,11 +570,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/java/" rel="tag"># java</a>
-          
-            <a href="/tags/jdbc/" rel="tag"># jdbc</a>
-          
-            <a href="/tags/mybatis/" rel="tag"># mybatis</a>
+            <a href="/tags/Mybatis/" rel="tag"># Mybatis</a>
           
         </div>
       
@@ -619,8 +583,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/18/传智springmvcmybatisday1-1原生态jdbc编程中的问题总结/" rel="next" title="传智 springmvc+mybatis day1-1.原生态jdbc编程中的问题总结">
-                <i class="fa fa-chevron-left"></i> 传智 springmvc+mybatis day1-1.原生态jdbc编程中的问题总结
+              <a href="/2018/10/04/Mybatis-原始开发方式/" rel="next" title="Mybatis-原始开发方式">
+                <i class="fa fa-chevron-left"></i> Mybatis-原始开发方式
               </a>
             
           </div>
@@ -629,8 +593,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/05/19/传智springmvcmybatisday1-3mybatis工程结构/" rel="prev" title="传智 springmvc+mybatis day1-3.mybatis工程结构">
-                传智 springmvc+mybatis day1-3.mybatis工程结构 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/10/04/Mybatis-全局配置文件/" rel="prev" title="Mybatis-全局配置文件">
+                Mybatis-全局配置文件 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -708,7 +672,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">189</span>
+                    <span class="site-state-item-count">184</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1014,9 +978,7 @@
                     
                       
                     
-                      
-                    
-                    <span class="site-state-item-count">117</span>
+                    <span class="site-state-item-count">116</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1102,7 +1064,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Mybatis简介"><span class="nav-number">1.</span> <span class="nav-text">Mybatis简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mybatis架构"><span class="nav-number">2.</span> <span class="nav-text">Mybatis架构</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#DAO接口"><span class="nav-number">1.</span> <span class="nav-text">DAO接口</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DAO实现"><span class="nav-number">2.</span> <span class="nav-text">DAO实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试类"><span class="nav-number">3.</span> <span class="nav-text">测试类</span></a></li></ol></div>
             
 
           </div>
@@ -1136,7 +1098,7 @@
     
       <span class="post-meta-item-text">站点总字数：</span>
     
-    <span title="站点总字数">1.2m</span>
+    <span title="站点总字数">1.1m</span>
   
 
   
@@ -1147,7 +1109,7 @@
     
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
     
-    <span title="站点阅读时长">17:47</span>
+    <span title="站点阅读时长">17:01</span>
   
 </div>
 
@@ -1745,5 +1707,5 @@
   </script>
 
 
-<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"live2d-widget-model-miku"},"display":{"position":"right","width":70,"height":130},"mobile":{"show":true},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
 </html>
